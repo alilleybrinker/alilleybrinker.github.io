@@ -5,21 +5,15 @@ html {
 body {
 	font-size: 1rem;
 	line-height: 1.5em;
-	/*
 	background-color: #f5f3ef;
 	color: #403726;
-	*/
-
-	background-color: #ffffff;
-	color: #000000;
-
 	font-family:
-	/* "IBM Plex Sans", */
-	-apple-system, blinkmacsystemfont,
-	"Helvetica Neue", Helvetica,
-	"Segoe UI", roboto,
-	oxygen-sans, ubuntu,
-	cantarell, sans-serif;
+		"IBM Plex Sans",
+		-apple-system, blinkmacsystemfont,
+		"Helvetica Neue", Helvetica,
+		"Segoe UI", roboto,
+		oxygen-sans, ubuntu,
+		cantarell, sans-serif;
 }
 
 a {
@@ -40,15 +34,8 @@ h6 {
 }
 
 h2 {
-	font-size: 1.5rem;
+	font-size: 1rem;
 	line-height: 1.5em;
-}
-
-@media min-width(54rem) {
-	h2 {
-		font-size: 2.25rem;
-		line-height: 1.3em;
-	}
 }
 
 code {
@@ -57,7 +44,7 @@ code {
 	color: hsla(0, 0%, 0%, 0.9);
 }
 
-* + * {
+*+* {
 	margin-bottom: 1rem;
 }
 
@@ -72,19 +59,6 @@ code {
 		margin: 6rem;
 	}
 }
-
-.Me {
-	display: block;
-	max-width: 10rem;
-
-	margin: 0;
-	margin-bottom: 1.5rem;
-	/* border-radius: 0.5rem; */
-	border: 2px solid #000;
-	filter: grayscale(1.0);
-}
-
-.ContainerHeader {}
 
 .ContainerNav-List {
 	list-style: none;
@@ -101,9 +75,18 @@ code {
 	margin-top: 3rem;
 	text-transform: uppercase;
 	letter-spacing: 0.1em;
-	/* color: hsla(30, 50%, 35%, 1); */
-	color: #000;
-	font-weight: 900;
+	color: hsla(30, 50%, 35%, 1);
+	font-weight: 300;
+	position: relative;
+}
+
+.ContainerNav-ListItem--Section::before {
+	content: "⌜";
+	position: absolute;
+	top: 0;
+	left: -1rem;
+	font-size: 1rem;
+	line-height: 0;
 }
 
 .ContainerNav-ListItem--Quoted {
@@ -129,4 +112,3 @@ code {
 .Info {
 	opacity: 0.7;
 }
-
