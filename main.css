@@ -92,13 +92,13 @@ h2 {
 
 .Container {
 	margin: calc(1rem * var(--rhythm)) 0;
-	padding: calc(1rem * var(--rhythm));
+	padding: 0 calc(1rem * var(--rhythm));
 }
 
 @media (min-width: 40rem) {
 	.Container {
 		margin: calc(2rem * var(--rhythm)) 0;
-		padding: calc(2rem * var(--rhythm));
+		padding: 0 calc(2rem * var(--rhythm));
 	}
 }
 
@@ -106,7 +106,6 @@ h2 {
 	.Container {
 		max-width: calc(30rem * var(--rhythm));
 		margin: calc(4rem * var(--rhythm));
-		border-radius: calc(0.75rem * var(--rhythm));
 	}
 }
 
@@ -128,6 +127,13 @@ h2 {
 
 .ContainerContent ul > li.Quoted {
 	text-indent: -0.45rem;
+}
+
+.Me {
+	display: block;
+	border-bottom-right-radius: calc(1rem * var(--rhythm));
+	width: calc(5rem * var(--rhythm));
+	border: 3px solid var(--color-body);
 }
 
 .SiteName {
