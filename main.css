@@ -42,6 +42,8 @@ body {
 	font-family: var(--font-body);
 	font-weight: var(--weight-body);
 	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: auto;
+	-moz-osx-font-smoothing: auto;
 }
 
 p,
@@ -134,6 +136,40 @@ h2 {
 	border-bottom-right-radius: calc(1rem * var(--rhythm));
 	width: calc(5rem * var(--rhythm));
 	border: 3px solid var(--color-body);
+}
+
+.ContainerHeader h1 {
+	position: relative;
+	display: block;
+}
+
+.ContainerHeader h1::before {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	content: "A";
+	font-size: calc(1rem * var(--rhythm));
+	letter-spacing: 0.05em;
+
+	background-color: var(--color-body);
+	color: var(--color-background);
+
+	width: calc(3rem * var(--rhythm));
+	height: calc(3rem * var(--rhythm));
+	border: 3px solid var(--color-body);
+	margin-bottom: calc(1rem * var(--rhythm));
+
+	border-bottom-right-radius: calc(1rem * var(--rhythm));
+}
+
+@media screen and (min-width: 54rem) {
+	.ContainerHeader h1::before {
+		display: inline-flex;
+
+		margin-left: calc(-4.5rem * var(--rhythm));
+		margin-right: calc(1.5rem * var(--rhythm));
+	}
 }
 
 .SiteName {
