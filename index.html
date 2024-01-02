@@ -4,71 +4,96 @@
 		<meta charset="utf-8">
 		<title>Andrew Lilley Brinker</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=IBM+Plex+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-
-		<link rel="stylesheet" href="base.css">
 		<link rel="stylesheet" href="main.css">
 	</head>
 	<body>
 		<div class="Container">
 			<header class="ContainerHeader">
-				<nav class="ContainerNav">
-					<ul class="ContainerNav-List">
-						<li class="ContainerNav-ListItem"><a href="/" class="SiteName">Andrew Lilley Brinker</a></li>
-
-						<li class="ContainerNav-ListItem ContainerNav-ListItem--Section">About</li>
-						<li class="ContainerNav-ListItem">I work on software supply chain security at <a href="https://www.mitre.org">MITRE</a>, including serving as a member of the <a href="https://omnibor.io">OmniBOR Working Group</a> where I lead development of the <a href="https://github.com/omnibor/omnibor-rs">OmniBOR Rust implementation</a>. I also previously lead development of <a href="https://github.com/mitre/hipcheck">Hipcheck</a>, a tool for automated supply chain risk assessment of software packages. In my spare time, I work on <a href="https://github.com/alilleybrinker/cargo-spdx"><code>cargo-spdx</code></a>, a work-in-progress generator for SPDX Software Bills of Material (SBOMs) for Rust packages</li>
-						<li class="ContainerNav-ListItem">I&rsquo;m also a programming languages enthusiast! I maintain a <a href="https://github.com/alilleybrinker/langs-in-rust">list of languages implemented in Rust</a>, and have my own past language projects, <a href="https://github.com/alilleybrinker/tin">Tin</a> and <a href="https://github.com/alilleybrinker/ruse">Ruse</a>, though both are minimally implemented.</li>
-						<li class="ContainerNav-ListItem">I used to write educational articles about Rust on a site called <a href="https://www.possiblerust.com">Possible Rust</a>. Some of my personal favorites include &ldquo;<a href="https://www.possiblerust.com/pattern/3-things-to-try-when-you-can-t-make-a-trait-object">3 Things to Try When You Can&rsquo;t Make a Trait Object</a>&rdquo; and &ldquo;<a href="https://www.possiblerust.com/pattern/non-generic-inner-functions">Non-Generic Inner Functions</a>.&rdquo;</li>
-
-						<li class="ContainerNav-ListItem ContainerNav-ListItem--Section">Elsewhere</li>
-						<li class="ContainerNav-ListItem">GitHub: <a href="https://github.com/alilleybrinker">@alilleybrinker</a></li>
-						<li class="ContainerNav-ListItem">Crates.io: <a href="https://crates.io/users/alilleybrinker">@alilleybrinker</a></li>
-						<li class="ContainerNav-ListItem">Mastodon: <a rel="me" href="https://hachyderm.io/@alilleybrinker">@alilleybrinker@hachyderm.io</a></li>
-						<li class="ContainerNav-ListItem">Bluesky: <a href="https://bsky.app/profile/alilleybrinker.bsky.social">@alilleybrinker@bsky.social</a></li>
-						<li class="ContainerNav-ListItem">Twitter: <a href="https://twitter.com/alilleybrinker">@alilleybrinker</a> <span class="Info">&mdash; no longer active</span></li>
-
-						<li class="ContainerNav-ListItem ContainerNav-ListItem--Section">Writing</li>
-						<li class="ContainerNav-ListItem ContainerNav-ListItem--Quoted"><a href="https://www.possiblerust.com/guide/what-can-coerce-and-where-in-rust">&ldquo;What Can Coerce, and Where, in Rust&rdquo;</a> published by Possible Rust</li>
-						<li class="ContainerNav-ListItem ContainerNav-ListItem--Quoted"><a href="https://www.possiblerust.com/pattern/naming-your-lifetimes">&ldquo;Naming Your Lifetimes&rdquo;</a> published by Possible Rust</li>
-						<li class="ContainerNav-ListItem ContainerNav-ListItem--Quoted"><a href="https://www.possiblerust.com/pattern/3-things-to-try-when-you-can-t-make-a-trait-object">&ldquo;3 Things to Try When You Can&rsquo;t Make a Trait Object&rdquo;</a> published by Possible Rust</li>
-						<li class="ContainerNav-ListItem ContainerNav-ListItem--Quoted"><a href="https://www.possiblerust.com/guide/how-to-read-rust-functions-part-1">&ldquo;How to Read Rust Functions, Part 1&rdquo;</a> published by Possible Rust</li>
-						<li class="ContainerNav-ListItem ContainerNav-ListItem--Quoted"><a href="https://www.possiblerust.com/pattern/non-generic-inner-functions">&ldquo;Non-Generic Inner Functions&rdquo;</a> published by Possible Rust</li>
-						<li class="ContainerNav-ListItem ContainerNav-ListItem--Quoted"><a href="https://www.possiblerust.com/community/how-to-read-first-impression-posts">&ldquo;How to Read First Impression Posts&rdquo;</a> published by Possible Rust</li>
-						<li class="ContainerNav-ListItem ContainerNav-ListItem--Quoted"><a href="https://www.possiblerust.com/guide/inbound-outbound-ffi">&ldquo;Inbound and Outbound FFI&rdquo;</a> published by Possible Rust</li>
-						<li class="ContainerNav-ListItem ContainerNav-ListItem--Quoted"><a href="https://www.possiblerust.com/guide/enum-or-trait-object">&ldquo;Enum or Trait Object&rdquo;</a> published by Possible Rust</li>
-						<li class="ContainerNav-ListItem ContainerNav-ListItem--Quoted"><a href="https://www.possiblerust.com/pattern/rust-lints-you-may-not-know">&ldquo;Rust Lints You May Not Know&rdquo;</a> published by Possible Rust</li>
-						<li class="ContainerNav-ListItem ContainerNav-ListItem--Quoted"><a href="https://inkstickmedia.com/ai-national-security-a-primer/">&ldquo;AI &amp; National Security &mdash; A Primer&rdquo;</a> published by Inkstick Media</li>
-						<li class="ContainerNav-ListItem ContainerNav-ListItem--Quoted"><a href="https://github.com/rust-lang/prev.rust-lang.org/pull/202">&ldquo;Rust Frequently Asked Questions&rdquo;</a> published on the Rust website</li>
-						<li class="ContainerNav-ListItem ContainerNav-ListItem--Quoted"><a href="https://www.spiedigitallibrary.org/conference-proceedings-of-spie/9420/94200O/Toward-consistent-cell-segmentation--quality-assessment-of-cell-segments/10.1117/12.2082329.short?SSO=1">&ldquo;Quality assessment of cell segments via appearance and geometry features&rdquo;</a> published in SPIE Medical Imaging 2015: Digital Pathology</li>
-
-
-						<li class="ContainerNav-ListItem ContainerNav-ListItem--Section">Projects</li>
-						<li class="ContainerNav-ListItem"><a href="https://github.com/alilleybrinker/langs-in-rust">Langs in Rust</a>: A list of programming languages implemented in Rust, for inspiration</li>
-						<li class="ContainerNav-ListItem"><a href="https://www.possiblerust.com">Possible Rust</a>: Educational material for intermediate Rustaceans</li>
-
-						<li class="ContainerNav-ListItem ContainerNav-ListItem--Section">Tools</li>
-						<li class="ContainerNav-ListItem"><a href="https://github.com/mitre/hipcheck">Hipcheck</a>: Automatically assess software projects for supply chain risk</li>
-						<li class="ContainerNav-ListItem"><a href="https://github.com/alilleybrinker/cargo-spdx">cargo-spdx</a>: Generate an SPDX Software Bill of Materials (SBOM) for a Rust crate</li>
-						<li class="ContainerNav-ListItem"><a href="https://github.com/alilleybrinker/dcalc">dcalc</a>: Add or subtract durations to find out how long something takes</li>
-						<li class="ContainerNav-ListItem"><a href="https://github.com/alilleybrinker/semver-explain">semver-explain</a>: Explain SemVer requirements by converting to more obvious forms</li>
-						<li class="ContainerNav-ListItem"><a href="https://github.com/alilleybrinker/gccarch">gccarch</a>: Query information about architectures supported by GCC</li>
-						<li class="ContainerNav-ListItem"><a href="https://github.com/alilleybrinker/good-cat">good-cat</a>: A cat that can't be piped</li>
-						
-						<li class="ContainerNav-ListItem ContainerNav-ListItem--Section">Libraries</li>
-						<li class="ContainerNav-ListItem"><a href="https://github.com/alilleybrinker/woah/">woah</a>: A Result type that supports both local and fatal errors</li>
-						<li class="ContainerNav-ListItem"><a href="https://github.com/alilleybrinker/replace_err">replace_err</a>: Extends Result to enable replacing the error type</li>
-						<li class="ContainerNav-ListItem"><a href="https://github.com/pact-foundation/pact-reference/pull/97">Pact FFI</a>: Exposes Pact&rsquo;s Rust reference implementation to other languages</li>
-
-						<li class="ContainerNav-ListItem ContainerNav-ListItem--Section">Speaking</li>
-						<li class="ContainerNav-ListItem ContainerNav-ListItem--Quoted"><a href="https://www.youtube.com/watch?v=0PhfaFkzdBA">&ldquo;A Tale of Teaching Rust&rdquo;</a> at RustConf 2017</li>
-						<li class="ContainerNav-ListItem ContainerNav-ListItem--Quoted"><a href="https://www.youtube.com/watch?v=Wz2oFEDwiOk">&ldquo;Hello and Welcome: Documentation in the Rust Ecosystem&rdquo;</a> at RustBeltRust 2016</li>
-					</ul>
-				</nav>
+				<h1><a href="/" class="SiteName">Andrew Lilley Brinker</a></h1>
 			</header>
+
+			<main class="ContainerContent">
+				<section id="about">
+					<h2>About</h2>
+
+					<p>I work on software supply chain security at <a href="https://www.mitre.org">MITRE</a>, including serving as a member of the <a href="https://omnibor.io">OmniBOR Working Group</a> where I lead development of the <a href="https://github.com/omnibor/omnibor-rs">OmniBOR Rust implementation</a>. I also previously lead development of <a href="https://github.com/mitre/hipcheck">Hipcheck</a>, a tool for automated supply chain risk assessment of software packages. In my spare time, I work on <a href="https://github.com/alilleybrinker/cargo-spdx">cargo-spdx</a>, a work-in-progress generator for SPDX Software Bills of Material (SBOMs) for Rust packages</p>
+					<p>I&rsquo;m also a programming languages enthusiast! I maintain a <a href="https://github.com/alilleybrinker/langs-in-rust">list of languages implemented in Rust</a>, and have my own past language projects, <a href="https://github.com/alilleybrinker/tin">Tin</a> and <a href="https://github.com/alilleybrinker/ruse">Ruse</a>, though both are minimally implemented.</p>
+					<p>I used to write educational articles about Rust on a site called <a href="https://www.possiblerust.com">Possible Rust</a>. Some of my personal favorites include &ldquo;<a href="https://www.possiblerust.com/pattern/3-things-to-try-when-you-can-t-make-a-trait-object">3 Things to Try When You Can&rsquo;t Make a Trait Object</a>&rdquo; and &ldquo;<a href="https://www.possiblerust.com/pattern/non-generic-inner-functions">Non-Generic Inner Functions</a>.&rdquo;</p>	
+				</section>
+
+				<section id="elsewhere">
+					<h2>Elsewhere</h2>
+
+					<ul>
+						<li>GitHub: <a href="https://github.com/alilleybrinker">@alilleybrinker</a></li>
+						<li>Crates.io: <a href="https://crates.io/users/alilleybrinker">@alilleybrinker</a></li>
+						<li>Mastodon: <a rel="me" href="https://hachyderm.io/@alilleybrinker">@alilleybrinker@hachyderm.io</a></li>
+						<li>Bluesky: <a href="https://bsky.app/profile/alilleybrinker.bsky.social">@alilleybrinker@bsky.social</a></li>
+						<li>Twitter: <a href="https://twitter.com/alilleybrinker">@alilleybrinker</a> <span class="Info">&mdash; no longer active</span></li>
+						<li>Signal: <span class="Info">(Message me on one of the above platforms)</span></li>
+					</ul>
+				</section>
+
+				<section id="writing">
+					<h2>Writing</h2>
+
+					<ul>
+						<li class="Quoted">&ldquo;<a href="https://www.possiblerust.com/guide/what-can-coerce-and-where-in-rust">What Can Coerce, and Where, in Rust</a>&rdquo; published by Possible Rust</li>
+						<li class="Quoted">&ldquo;<a href="https://www.possiblerust.com/pattern/naming-your-lifetimes">Naming Your Lifetimes</a>&rdquo; published by Possible Rust</li>
+						<li class="Quoted">&ldquo;<a href="https://www.possiblerust.com/pattern/3-things-to-try-when-you-can-t-make-a-trait-object">3 Things to Try When You Can&rsquo;t Make a Trait Object</a>&rdquo; published by Possible Rust</li>
+						<li class="Quoted">&ldquo;<a href="https://www.possiblerust.com/guide/how-to-read-rust-functions-part-1">How to Read Rust Functions, Part 1</a>&rdquo; published by Possible Rust</li>
+						<li class="Quoted">&ldquo;<a href="https://www.possiblerust.com/pattern/non-generic-inner-functions">Non-Generic Inner Functions</a>&rdquo; published by Possible Rust</li>
+						<li class="Quoted">&ldquo;<a href="https://www.possiblerust.com/community/how-to-read-first-impression-posts">How to Read First Impression Posts</a>&rdquo; published by Possible Rust</li>
+						<li class="Quoted">&ldquo;<a href="https://www.possiblerust.com/guide/inbound-outbound-ffi">Inbound and Outbound FFI</a>&rdquo; published by Possible Rust</li>
+						<li class="Quoted">&ldquo;<a href="https://www.possiblerust.com/guide/enum-or-trait-object">Enum or Trait Object</a>&rdquo; published by Possible Rust</li>
+						<li class="Quoted">&ldquo;<a href="https://www.possiblerust.com/pattern/rust-lints-you-may-not-know">Rust Lints You May Not Know</a>&rdquo; published by Possible Rust</li>
+						<li class="Quoted">&ldquo;<a href="https://inkstickmedia.com/ai-national-security-a-primer/">AI &amp; National Security &mdash; A Primer</a>&rdquo; published by Inkstick Media</li>
+						<li class="Quoted">&ldquo;<a href="https://github.com/rust-lang/prev.rust-lang.org/pull/202">Rust Frequently Asked Questions</a>&rdquo; published on the Rust website</li>
+						<li class="Quoted">&ldquo;<a href="https://www.spiedigitallibrary.org/conference-proceedings-of-spie/9420/94200O/Toward-consistent-cell-segmentation--quality-assessment-of-cell-segments/10.1117/12.2082329.short?SSO=1">Quality assessment of cell segments via appearance and geometry features</a>&rdquo; published in SPIE Medical Imaging 2015: Digital Pathology</li>
+					</ul>
+				</section>
+
+				<section id="projects">
+					<h2>Projects</h2>
+
+					<ul>
+						<li><a href="https://github.com/alilleybrinker/langs-in-rust">Langs in Rust</a>: A list of programming languages implemented in Rust, for inspiration</li>
+						<li><a href="https://www.possiblerust.com">Possible Rust</a>: Educational material for intermediate Rustaceans</li>
+					</ul>
+				</section>
+
+				<section id="tools">
+					<h2>Tools</h2>
+
+					<ul>
+						<li><a href="https://github.com/mitre/hipcheck">Hipcheck</a>: Automatically assess software projects for supply chain risk</li>
+						<li><a href="https://github.com/alilleybrinker/cargo-spdx">cargo-spdx</a>: Generate an SPDX Software Bill of Materials (SBOM) for a Rust crate</li>
+						<li><a href="https://github.com/alilleybrinker/dcalc">dcalc</a>: Add or subtract durations to find out how long something takes</li>
+						<li><a href="https://github.com/alilleybrinker/semver-explain">semver-explain</a>: Explain SemVer requirements by converting to more obvious forms</li>
+						<li><a href="https://github.com/alilleybrinker/gccarch">gccarch</a>: Query information about architectures supported by GCC</li>
+						<li><a href="https://github.com/alilleybrinker/good-cat">good-cat</a>: A cat that can't be piped</li>
+					</ul>
+				</section>
+
+				<section id="libraries">
+					<h2>Libraries</h2>
+					
+					<ul>
+						<li><a href="https://github.com/alilleybrinker/woah/">woah</a>: A Result type that supports both local and fatal errors</li>
+						<li><a href="https://github.com/alilleybrinker/replace_err">replace_err</a>: Extends Result to enable replacing the error type</li>
+						<li><a href="https://github.com/pact-foundation/pact-reference/pull/97">Pact FFI</a>: Exposes Pact&rsquo;s Rust reference implementation to other languages</li>	
+					</ul>
+				</section>
+
+				<section id="speaking">
+					<h2>Speaking</h2>
+
+					<ul>
+						<li class="Quoted">&ldquo;<a href="https://www.youtube.com/watch?v=0PhfaFkzdBA">A Tale of Teaching Rust</a>&rdquo; at RustConf 2017</li>
+						<li class="Quoted">&ldquo;<a href="https://www.youtube.com/watch?v=Wz2oFEDwiOk">Hello and Welcome: Documentation in the Rust Ecosystem</a>&rdquo; at Rust Belt Rust 2016</li>
+					</ul>
+				</section>
+			</main>
 		</div>
 	</body>
 </html>
