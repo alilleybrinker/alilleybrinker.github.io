@@ -130,6 +130,7 @@ h2 {
 	display: flex;
 	justify-content: flex-start;
 	align-items: stretch;
+	flex-wrap: wrap;
 	gap: calc(0.75rem * var(--rhythm));
 }
 
