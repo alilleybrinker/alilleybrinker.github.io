@@ -12,6 +12,7 @@
 	/* Theme colors */
 	--color-background: hsl(var(--hue), var(--sat), 100%);
 	--color-body:       hsl(var(--hue), var(--sat), 0%);
+	--color-info:       hsl(var(--hue), var(--sat), 50%);
 
 	/* Theme font stacks */
 	--font-body: "Helvetica Neue", Helvetica, "Segoe UI", roboto, oxygen-sans, ubuntu, cantarell, sans-serif;
@@ -32,6 +33,12 @@
 
 html {
 	font-size: var(--base);
+}
+
+@media screen and (min-width: 58rem) {
+	html {
+		font-size: calc(1.2 * var(--base));
+	}
 }
 
 body {
@@ -59,12 +66,14 @@ a {
 	text-underline-offset: calc(0.03125rem * var(--rhythm));
 	text-decoration-thickness: 1px;
 	text-decoration-color: var(--color-body);
+	text-decoration-skip-ink: all;
 }
 
 a:hover,
 a:focus {
 	text-decoration-thickness: 2px;
 	text-decoration-color: var(--color-body);
+	text-decoration-skip-ink: all;
 }
 
 h1,
@@ -73,9 +82,8 @@ h2 {
 }
 
 h1 {
-	font-size: calc(1rem * var(--rhythm) * var(--rhythm));
+	font-size: calc(1rem * var(--rhythm));
 	line-height: calc(1em * var(--rhythm));
-
 	font-weight: 900;
 
 }
@@ -83,7 +91,6 @@ h1 {
 h2 {
 	font-size: 1rem;
 	line-height: calc(1em * var(--rhythm));
-
 	font-weight: 900;
 	text-transform: uppercase;
 }
@@ -111,6 +118,29 @@ h2 {
 	}
 }
 
+.ContainerHeader {
+	padding-bottom: calc(2rem * var(--rhythm));
+	border-bottom: 1px solid #ccc;
+}
+
+.ContainerNav-List {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	justify-content: flex-start;
+	align-items: stretch;
+	gap: calc(0.75rem * var(--rhythm));
+}
+
+.ContainerNav-ListItem {
+	margin-top: 0;
+}
+
+.ContainerContent section {
+	padding: calc(2rem * var(--rhythm)) 0;
+}
+
 .ContainerContent ul {
 	list-style: none;
 	margin: 0;
@@ -120,11 +150,6 @@ h2 {
 .ContainerContent ul > li {
 	display: block;
 	margin: calc(0.5rem * var(--rhythm)) 0 0 0;
-}
-
-.ContainerContent section > h2 {
-	margin-top: calc(2rem * var(--rhythm));
-	position: relative;
 }
 
 .ContainerContent ul > li.Quoted {
@@ -138,44 +163,10 @@ h2 {
 	border: 3px solid var(--color-body);
 }
 
-.ContainerHeader h1 {
-	position: relative;
-	display: block;
-}
-
-.ContainerHeader h1::before {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-
-	content: "A";
-	font-size: calc(1rem * var(--rhythm));
-	letter-spacing: 0.05em;
-
-	background-color: var(--color-body);
-	color: var(--color-background);
-
-	width: calc(3rem * var(--rhythm));
-	height: calc(3rem * var(--rhythm));
-	border: 3px solid var(--color-body);
-	margin-bottom: calc(1rem * var(--rhythm));
-
-	border-bottom-right-radius: calc(1rem * var(--rhythm));
-}
-
-@media screen and (min-width: 54rem) {
-	.ContainerHeader h1::before {
-		display: inline-flex;
-
-		margin-left: calc(-4.5rem * var(--rhythm));
-		margin-right: calc(1.5rem * var(--rhythm));
-	}
-}
-
 .SiteName {
 	text-decoration: none;
 }
 
 .Info {
-	opacity: 0.7;
+	color: var(--color-info);
 }
