@@ -1,114 +1,179 @@
+:root {
+	/* The baseline font size on which everything else is set. */
+	--base: 100%;
+
+	/* Defines the vertical rhythm and font scale of the site. */
+	--rhythm: 1.5;
+
+	/* Hue saturation and lightness on which all colors are based. */
+	--hue: 40;
+	--sat: 0%;
+
+	/* Theme colors */
+	--color-background: hsl(var(--hue), var(--sat), 100%);
+	--color-body:       hsl(var(--hue), var(--sat), 0%);
+
+	/* Theme font stacks */
+	--font-body: "Helvetica Neue", Helvetica, "Segoe UI", roboto, oxygen-sans, ubuntu, cantarell, sans-serif;
+
+	/* Theme font weights */
+	--weight-body: 400;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+* {
+	margin: 0;
+}
+
 html {
-	font-size: 100%;
+	font-size: var(--base);
 }
 
 body {
 	font-size: 1rem;
-	line-height: 1.5em;
-	background-color: #f5f3ef;
-	color: #403726;
-	font-family:
-		"IBM Plex Sans",
-		-apple-system, blinkmacsystemfont,
-		"Helvetica Neue", Helvetica,
-		"Segoe UI", roboto,
-		oxygen-sans, ubuntu,
-		cantarell, sans-serif;
+	line-height: calc(1em * var(--rhythm));
+	background-color: var(--color-background);
+	color: var(--color-body);
+	font-family: var(--font-body);
+	font-weight: var(--weight-body);
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: auto;
+	-moz-osx-font-smoothing: auto;
+}
+
+p,
+h1,
+h2,
+li {
+	overflow-wrap: break-word;
 }
 
 a {
-	color: #000;
+	color: var(--color-body);
 	text-decoration-line: underline;
-	text-decoration-color: #ccc;
-	font-weight: 600;
+	text-underline-offset: calc(0.03125rem * var(--rhythm));
+	text-decoration-thickness: 1px;
+	text-decoration-color: var(--color-body);
+}
+
+a:hover,
+a:focus {
+	text-decoration-thickness: 2px;
+	text-decoration-color: var(--color-body);
 }
 
 h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-	font-size: 1rem;
-	line-height: 1.5em;
+h2 {
+	font-weight: var(--weight-body);
+}
+
+h1 {
+	font-size: calc(1rem * var(--rhythm) * var(--rhythm));
+	line-height: calc(1em * var(--rhythm));
+
+	font-weight: 900;
+
 }
 
 h2 {
 	font-size: 1rem;
-	line-height: 1.5em;
+	line-height: calc(1em * var(--rhythm));
+
+	font-weight: 900;
+	text-transform: uppercase;
 }
 
-code {
-	font-family: "IBM Plex Mono", monospace;
-	background-color: hsla(40, 23%, 83%, 0.5);
-	font-weight: 400;
-	padding: 0 0.25rem;
-	border-radius: 0.333rem;
-}
-
-*+* {
-	margin-bottom: 1rem;
+* + * {
+	margin-top: calc(1rem * var(--rhythm));
 }
 
 .Container {
-	margin: 3rem 0;
-	padding: 0 1.5rem;
+	margin: calc(1rem * var(--rhythm)) 0;
+	padding: 0 calc(1rem * var(--rhythm));
 }
 
-@media (min-width: 54rem) {
+@media (min-width: 40rem) {
 	.Container {
-		max-width: 42rem;
-		margin: 6rem;
+		margin: calc(2rem * var(--rhythm)) 0;
+		padding: 0 calc(2rem * var(--rhythm));
 	}
 }
 
-.ContainerNav-List {
+@media (min-width: 58rem) {
+	.Container {
+		max-width: calc(30rem * var(--rhythm));
+		margin: calc(4rem * var(--rhythm));
+	}
+}
+
+.ContainerContent ul {
 	list-style: none;
 	margin: 0;
-	padding: 0;
+	padding: calc(0.5rem * var(--rhythm)) 0 0 0;
 }
 
-.ContainerNav-ListItem {
+.ContainerContent ul > li {
 	display: block;
-	margin: 0.75rem 0;
+	margin: calc(0.5rem * var(--rhythm)) 0 0 0;
 }
 
-.ContainerNav-ListItem--Section {
-	margin-top: 3rem;
-	text-transform: uppercase;
-	letter-spacing: 0.1em;
-	color: hsla(30, 50%, 35%, 1);
-	font-weight: 300;
+.ContainerContent section > h2 {
+	margin-top: calc(2rem * var(--rhythm));
 	position: relative;
 }
 
-.ContainerNav-ListItem--Section::before {
-	content: "⌜";
-	position: absolute;
-	top: 0;
-	left: -1rem;
-	font-size: 1rem;
-	line-height: 0;
-}
-
-.ContainerNav-ListItem--Quoted {
+.ContainerContent ul > li.Quoted {
 	text-indent: -0.45rem;
 }
 
-.ContainerNav-ListItem a {
-	text-decoration: none;
-	color: #000;
+.Me {
+	display: block;
+	border-bottom-right-radius: calc(1rem * var(--rhythm));
+	width: calc(5rem * var(--rhythm));
+	border: 3px solid var(--color-body);
 }
 
-.ContainerNav-ListItem a:hover,
-.ContainerNav-ListItem a:focus {
-	text-decoration: underline;
+.ContainerHeader h1 {
+	position: relative;
+	display: block;
+}
+
+.ContainerHeader h1::before {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	content: "A";
+	font-size: calc(1rem * var(--rhythm));
+	letter-spacing: 0.05em;
+
+	background-color: var(--color-body);
+	color: var(--color-background);
+
+	width: calc(3rem * var(--rhythm));
+	height: calc(3rem * var(--rhythm));
+	border: 3px solid var(--color-body);
+	margin-bottom: calc(1rem * var(--rhythm));
+
+	border-bottom-right-radius: calc(1rem * var(--rhythm));
+}
+
+@media screen and (min-width: 54rem) {
+	.ContainerHeader h1::before {
+		display: inline-flex;
+
+		margin-left: calc(-4.5rem * var(--rhythm));
+		margin-right: calc(1.5rem * var(--rhythm));
+	}
 }
 
 .SiteName {
-	font-weight: 700;
-	font-size: 1.5rem;
-	line-height: 1.5em;
+	text-decoration: none;
 }
 
 .Info {
