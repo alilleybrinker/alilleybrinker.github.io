@@ -5,14 +5,19 @@
 	/* Defines the vertical rhythm and font scale of the site. */
 	--rhythm: 1.5;
 
-	/* Hue saturation and lightness on which all colors are based. */
-	--hue: 40;
-	--sat: 0%;
+	/* Theme colors - light */
+	--color-background: hsl(0, 0%,  98%);
+	--color-body:       hsl(0, 0%,  30%);
+	--color-info:       hsl(0, 0%,  50%);
+	--color-button:     hsl(0, 0%,  90%);
 
-	/* Theme colors */
-	--color-background: hsl(var(--hue), var(--sat), 100%);
-	--color-body:       hsl(var(--hue), var(--sat), 0%);
-	--color-info:       hsl(var(--hue), var(--sat), 50%);
+	/* Theme colors - dark */
+	/*
+	--color-background: hsl(0, 0%,  10%);
+	--color-body:       hsl(0, 0%,  75%);
+	--color-info:       hsl(0, 0%,  50%);
+	--color-button:     hsl(0, 0%,  20%);
+	*/
 
 	/* Theme font stacks */
 	--font-body: "Helvetica Neue", Helvetica, "Segoe UI", roboto, oxygen-sans, ubuntu, cantarell, sans-serif;
@@ -35,7 +40,7 @@ html {
 	font-size: var(--base);
 }
 
-@media screen and (min-width: 58rem) {
+@media screen and (min-width: 50rem) {
 	html {
 		font-size: calc(1.2 * var(--base));
 	}
@@ -82,17 +87,17 @@ h2 {
 }
 
 h1 {
-	font-size: calc(1rem * var(--rhythm));
+	font-size: calc(1rem);
 	line-height: calc(1em * var(--rhythm));
 	font-weight: 900;
-
 }
 
 h2 {
 	font-size: 1rem;
 	line-height: calc(1em * var(--rhythm));
-	font-weight: 900;
+	font-weight: 400;
 	text-transform: uppercase;
+	letter-spacing: 0.2em;
 }
 
 * + * {
@@ -100,27 +105,36 @@ h2 {
 }
 
 .Container {
-	margin: calc(1rem * var(--rhythm)) 0;
+	margin: calc(1rem * var(--rhythm)) 0 calc(4rem * var(--rhythm));
 	padding: 0 calc(1rem * var(--rhythm));
 }
 
 @media (min-width: 40rem) {
 	.Container {
-		margin: calc(2rem * var(--rhythm)) 0;
+		margin: calc(2rem * var(--rhythm)) 0 calc(4rem * var(--rhythm));
 		padding: 0 calc(2rem * var(--rhythm));
 	}
 }
 
-@media (min-width: 58rem) {
+@media (min-width: 50rem) {
 	.Container {
 		max-width: calc(30rem * var(--rhythm));
 		margin: calc(4rem * var(--rhythm));
+		margin-bottom: calc(8rem * var(--rhythm));
 	}
 }
 
 .ContainerHeader {
 	padding-bottom: calc(2rem * var(--rhythm));
-	border-bottom: 1px solid #ccc;
+	display: flex;
+	align-items: start;
+	align-content: stretch;
+	justify-items: flex-start;
+	gap: calc(1rem * var(--rhythm));
+}
+
+.ContainerNav {
+	margin-top: 0;
 }
 
 .ContainerNav-List {
@@ -131,11 +145,22 @@ h2 {
 	justify-content: flex-start;
 	align-items: stretch;
 	flex-wrap: wrap;
-	gap: calc(0.75rem * var(--rhythm));
+	gap: calc(0.25rem * var(--rhythm));
 }
 
 .ContainerNav-ListItem {
 	margin-top: 0;
+}
+
+.ContainerNav-ListItem a {
+	text-decoration: none;
+	padding: 0.25rem 0.5rem;
+	border-radius: 0.35rem;
+}
+
+.ContainerNav-ListItem a:hover,
+.ContainerNav-ListItem a:focus {
+	background-color: var(--color-button);
 }
 
 .ContainerContent section {
@@ -170,4 +195,34 @@ h2 {
 
 .Info {
 	color: var(--color-info);
+}
+
+.Copy {
+	color: var(--color-info);
+	display: inline-block;
+	margin: 0;
+	margin-left: calc(1rem * var(--rhythm));
+}
+
+.Button {
+	text-decoration: none;
+	padding: 0.25rem 0.5rem;
+	border-radius: 0.35rem;
+	background-color: var(--color-button);
+}
+
+.Button:hover,
+.Button:focus {
+	background-color: var(--color-body);
+	color: var(--color-background);
+}
+
+@media screen and (min-width: 50rem) {
+	.Standard,
+	.Platform,
+	.Software {
+		display: inline-block;
+		min-width: calc(5rem * var(--rhythm));
+	}
+	
 }
