@@ -204,9 +204,15 @@ abbr {
 
 .Copy {
 	color: var(--color-info);
-	display: inline-block;
-	margin: 0;
-	margin-left: calc(1rem * var(--rhythm));
+	display: block;
+}
+
+@media screen and (min-width: 50rem) {
+	.Copy {
+		display: inline-block;
+		margin: 0;
+		margin-left: calc(1rem * var(--rhythm));
+	}
 }
 
 .Button {
