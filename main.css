@@ -8,7 +8,7 @@
 	/* Theme colors - light */
 	--color-background: hsl(  0,   0%, 98%);
 	--color-body:       hsl(  0,   0%, 30%);
-	--color-accent:     hsl(210, 100%, 51%);
+	--color-accent:     hsl(210, 100%, 44%);
 
 	/* Theme font stacks */
 	--font-body: "Inter", "Helvetica Neue", Helvetica, "Segoe UI", roboto,
@@ -23,7 +23,7 @@
 		/* Theme colors - dark */
 		--color-background: hsl(0,  0%, 10%);
 		--color-body:       hsl(0,  0%, 75%);
-		--color-accent:     hsl(3, 67%, 47%);
+		--color-accent:     hsl(3, 67%, 59%);
 	}
 }
 
