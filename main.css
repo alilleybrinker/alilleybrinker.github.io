@@ -94,15 +94,6 @@ h2 {
 	font-size: 1rem;
 	line-height: calc(1em * var(--rhythm));
 	font-weight: var(--weight-body);
-
-	position: relative;
-}
-
-h2::before {
-	position: absolute;
-	display: block;
-	content: "\25CB";
-	margin-left: calc(-0.75rem * var(--rhythm));
 }
 
 abbr {
