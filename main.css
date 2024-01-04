@@ -223,6 +223,12 @@ abbr {
 }
 
 @media screen and (min-width: 50rem) {
+	.Copy::before {
+		content: "— ";
+	}
+}
+
+@media screen and (min-width: 50rem) {
 	.Copy {
 		display: inline-block;
 		margin: 0;
