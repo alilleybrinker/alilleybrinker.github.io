@@ -6,8 +6,9 @@
 	--rhythm: 1.5625;
 
 	/* Theme colors - light */
-	--color-background: hsl(0, 0%,  98%);
-	--color-body:       hsl(0, 0%,  30%);
+	--color-background: hsl(  0,   0%, 98%);
+	--color-body:       hsl(  0,   0%, 30%);
+	--color-accent:     hsl(210, 100%, 51%);
 
 	/* Theme font stacks */
 	--font-body: "Inter", "Helvetica Neue", Helvetica, "Segoe UI", roboto, oxygen-sans, ubuntu, cantarell, sans-serif;
@@ -19,8 +20,9 @@
 @media (prefers-color-scheme: dark) {
 	:root {
 		/* Theme colors - dark */
-		--color-background: hsl(0, 0%,  10%);
-		--color-body:       hsl(0, 0%,  75%);
+		--color-background: hsl(0,  0%, 10%);
+		--color-body:       hsl(0,  0%, 75%);
+		--color-accent:     hsl(3, 67%, 47%);
 	}
 }
 
@@ -100,6 +102,7 @@ h2 {
 	font-size: 1rem;
 	line-height: calc(1em * var(--rhythm));
 	font-weight: var(--weight-body);
+	color: var(--color-accent);
 }
 
 abbr {
