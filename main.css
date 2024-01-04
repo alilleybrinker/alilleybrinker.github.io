@@ -2,15 +2,8 @@
 	/* The baseline font size on which everything else is set. */
 	--base: 100%;
 
-	/**
-	 * Defines the vertical rhythm and font scale of the site.
-	 *
-	 * This value is set based on the font Inter, and is specific to that font.
-	 * It is intended to align the entire site to a consistent baseline,
-	 * meaning that all lines of text are aligned perfectly to a repeating
-	 * pattern of lines, and thus display consistent visual spacing.
-	 */
-	--rhythm: 1.5625;
+	/* Defines the vertical rhythm and font scale of the site. */
+	--rhythm: 1.5;
 
 	/* Theme colors - light */
 	--color-background: hsl(  0,   0%, 98%);
@@ -18,7 +11,8 @@
 	--color-accent:     hsl(210, 100%, 51%);
 
 	/* Theme font stacks */
-	--font-body: "Inter", "Helvetica Neue", Helvetica, "Segoe UI", roboto, oxygen-sans, ubuntu, cantarell, sans-serif;
+	--font-body: "Inter", "Helvetica Neue", Helvetica, "Segoe UI", roboto,
+	             oxygen-sans, ubuntu, cantarell, sans-serif;
 
 	/* Theme font weights */
 	--weight-body: 400;
@@ -49,12 +43,6 @@
 
 html {
 	font-size: var(--base);
-}
-
-@media screen and (min-width: 50rem) {
-	html {
-		font-size: calc(1.2 * var(--base));
-	}
 }
 
 body {
