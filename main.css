@@ -2,7 +2,14 @@
 	/* The baseline font size on which everything else is set. */
 	--base: 100%;
 
-	/* Defines the vertical rhythm and font scale of the site. */
+	/**
+	 * Defines the vertical rhythm and font scale of the site.
+	 *
+	 * This value is set based on the font Inter, and is specific to that font.
+	 * It is intended to align the entire site to a consistent baseline,
+	 * meaning that all lines of text are aligned perfectly to a repeating
+	 * pattern of lines, and thus display consistent visual spacing.
+	 */
 	--rhythm: 1.5625;
 
 	/* Theme colors - light */
