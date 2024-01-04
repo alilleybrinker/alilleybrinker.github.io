@@ -69,6 +69,7 @@ body {
 	-webkit-font-smoothing: auto;
 	-moz-osx-font-smoothing: auto;
 	font-feature-settings: 'liga' 1, 'calt' 1;
+	-webkit-text-size-adjust: 100%;
 }
 
 p,
@@ -119,7 +120,6 @@ abbr {
 
 .Container {
 	margin: 0;
-
 	padding: calc(1rem * var(--rhythm));
 	padding-bottom: calc(4rem * var(--rhythm));
 }
@@ -134,7 +134,6 @@ abbr {
 @media (min-width: 50rem) {
 	.Container {
 		max-width: calc(40rem * var(--rhythm));
-
 		padding: calc(6rem * var(--rhythm));
 		padding-bottom: calc(12rem * var(--rhythm));
 	}
@@ -218,6 +217,11 @@ abbr {
 
 .SiteName .LastName {
 	display: block;
+}
+
+.SiteName:hover,
+.SiteName:focus {
+	text-decoration: underline;
 }
 
 .Info {
