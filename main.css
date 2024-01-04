@@ -9,6 +9,7 @@
 	--color-background: hsl(  0,   0%, 98%);
 	--color-body:       hsl(  0,   0%, 30%);
 	--color-accent:     hsl(210, 100%, 44%);
+	--color-button:     hsl(  0,   0%, 92%);
 
 	/* Theme font stacks */
 	--font-body: "Inter", "Helvetica Neue", Helvetica, "Segoe UI", roboto,
@@ -24,6 +25,7 @@
 		--color-background: hsl(0,  0%, 10%);
 		--color-body:       hsl(0,  0%, 75%);
 		--color-accent:     hsl(3, 67%, 59%);
+		--color-button:     hsl(0,  0%, 18%);
 	}
 }
 
@@ -202,11 +204,14 @@ abbr {
 	text-indent: -0.45rem;
 }
 
-.Me {
-	display: block;
-	border-bottom-right-radius: calc(1rem * var(--rhythm));
-	width: calc(5rem * var(--rhythm));
-	border: 3px solid var(--color-body);
+.ContainerContent section#lede {
+	padding-bottom: 0;
+}
+
+.Lede {
+	font-size: calc(1rem * var(--rhythm) * var(--rhythm));
+	line-height: 1.35em;
+	color: var(--color-accent);
 }
 
 .SiteName {
@@ -286,7 +291,7 @@ abbr {
 	padding-right: calc(0.35rem * var(--rhythm));
 	margin: calc(calc(-0.25rem * var(--rhythm)));
 	border-radius: calc(0.25rem * var(--rhythm));
-	background-color: #eee;
+	background-color: var(--color-button);
 }
 
 .Button:hover,
