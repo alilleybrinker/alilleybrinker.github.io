@@ -53,10 +53,10 @@ body {
 	font-family: var(--font-body);
 	font-weight: var(--weight-body);
 	margin: 0;
+	font-feature-settings: 'liga' 1, 'calt' 1;
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: auto;
 	-moz-osx-font-smoothing: auto;
-	font-feature-settings: 'liga' 1, 'calt' 1;
 	-webkit-text-size-adjust: 100%;
 }
 
@@ -140,25 +140,34 @@ abbr {
 .ContainerHeader {
 	padding-bottom: calc(2rem * var(--rhythm));
 	display: grid;
-	grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
 	grid-template-rows: auto;
-	grid-template-areas: "logo logo . nav nav .";
+	grid-template-columns: 1fr 1fr 1fr 1fr;
+	grid-template-areas: "logo logo nav nav";
 	gap: calc(1rem * var(--rhythm));
 	justify-items: start;
 	align-items: stretch;
 }
 
+@media screen and (min-width: 40rem) {
+	.ContainerHeader {
+		grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+		grid-template-areas: "logo logo . nav nav .";	
+	}
+}
+
+.ContainerNav {
+	display: block;
+	width: 100%;
+}
 
 .ContainerNav-List {
 	list-style: none;
 	margin: 0;
 	padding: 0;
-
 	display: grid;
-	grid-auto-flow: row;
 	grid-template-columns: 1fr 1fr;
 	grid-template-rows: auto;
-	gap: 0 calc(1rem * var(--rhythm));
+	column-gap: calc(1rem * var(--rhythm));
 }
 
 .ContainerNav-ListItem {
@@ -213,18 +222,14 @@ abbr {
 	text-decoration: underline;
 }
 
-.Info {
-	color: var(--color-body);
-}
-
 .Copy {
-	color: var(--color-body);
 	display: block;
 }
 
 @media screen and (min-width: 50rem) {
 	.Copy::before {
-		content: "— ";
+		content: "—";
+		margin-right: calc(0.5rem * var(--rhythm));
 	}
 }
 
@@ -232,7 +237,28 @@ abbr {
 	.Copy {
 		display: inline-block;
 		margin: 0;
-		margin-left: calc(1rem * var(--rhythm));
+		margin-left: calc(0.5rem * var(--rhythm));
+	}
+}
+
+.Made {
+	margin: 0;
+	display: block;
+}
+
+@media screen and (min-width: 50rem) {
+	.Made::before {
+		content: "—";
+		margin-right: calc(0.5rem * var(--rhythm));
+		font-size: 0.8rem;
+		line-height: 1em;
+		vertical-align: 1px;
+	}
+
+	.Made {
+		display: inline-block;
+		margin: 0;
+		margin-left: calc(0.5rem * var(--rhythm));
 	}
 }
 
@@ -246,11 +272,26 @@ abbr {
 	
 }
 
+.FooterIcon {
+	margin: 0;
+	display: inline-block;
+	width: calc(0.75rem * var(--rhythm));
+	text-align: center;
+}
+
 .Button {
+	display: inline-block;
 	text-decoration: none;
+	padding: calc(0.25rem * var(--rhythm));
+	padding-right: calc(0.35rem * var(--rhythm));
+	margin: calc(calc(-0.25rem * var(--rhythm)));
+	border-radius: calc(0.25rem * var(--rhythm));
+	background-color: #eee;
 }
 
 .Button:hover,
 .Button:focus {
-	text-decoration: underline;
+	text-decoration: none;
+	background-color: var(--color-accent);
+	color: var(--color-background);
 }
