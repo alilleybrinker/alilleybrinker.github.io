@@ -145,7 +145,7 @@ abbr {
 	grid-template-rows: auto;
 	grid-template-columns: 1fr 1fr 1fr 1fr;
 	grid-template-areas: "logo logo nav nav";
-	gap: calc(1rem * var(--rhythm));
+	column-gap: calc(0.5rem * var(--rhythm));
 	justify-items: start;
 	align-items: stretch;
 }
@@ -169,7 +169,17 @@ abbr {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	grid-template-rows: auto;
-	column-gap: calc(1rem * var(--rhythm));
+	column-gap: calc(0.5rem * var(--rhythm));
+}
+
+@media screen and (min-width: 40rem) {
+	.ContainerHeader {
+		column-gap: calc(1rem * var(--rhythm));
+	}
+
+	.ContainerNav-List {
+		column-gap: calc(1rem * var(--rhythm));
+	}
 }
 
 .ContainerNav-ListItem {
