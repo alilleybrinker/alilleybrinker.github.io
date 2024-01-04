@@ -8,8 +8,6 @@
 	/* Theme colors - light */
 	--color-background: hsl(0, 0%,  98%);
 	--color-body:       hsl(0, 0%,  30%);
-	--color-info:       hsl(0, 0%,  50%);
-	--color-button:     hsl(0, 0%,  90%);
 
 	/* Theme font stacks */
 	--font-body: "Helvetica Neue", Helvetica, "Segoe UI", roboto, oxygen-sans, ubuntu, cantarell, sans-serif;
@@ -23,8 +21,6 @@
 		/* Theme colors - dark */
 		--color-background: hsl(0, 0%,  10%);
 		--color-body:       hsl(0, 0%,  75%);
-		--color-info:       hsl(0, 0%,  50%);
-		--color-button:     hsl(0, 0%,  20%);
 	}
   }
 
@@ -91,15 +87,22 @@ h2 {
 h1 {
 	font-size: calc(1rem);
 	line-height: calc(1em * var(--rhythm));
-	font-weight: 900;
+	font-weight: var(--weight-body);
 }
 
 h2 {
 	font-size: 1rem;
 	line-height: calc(1em * var(--rhythm));
-	font-weight: 400;
-	text-transform: uppercase;
-	letter-spacing: 0.2em;
+	font-weight: var(--weight-body);
+
+	position: relative;
+}
+
+h2::before {
+	position: absolute;
+	display: block;
+	content: "\25CB";
+	margin-left: calc(-0.75rem * var(--rhythm));
 }
 
 abbr {
@@ -161,7 +164,7 @@ abbr {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	grid-template-rows: auto;
-	gap: calc(0.25rem * var(--rhythm));
+	gap: 0 calc(1rem * var(--rhythm));
 }
 
 .ContainerNav-ListItem {
@@ -170,13 +173,11 @@ abbr {
 
 .ContainerNav-ListItem a {
 	text-decoration: none;
-	padding: 0.25rem 0.5rem;
-	border-radius: 0.35rem;
 }
 
 .ContainerNav-ListItem a:hover,
 .ContainerNav-ListItem a:focus {
-	background-color: var(--color-button);
+	text-decoration: underline;
 }
 
 .ContainerContent section {
@@ -209,12 +210,16 @@ abbr {
 	text-decoration: none;
 }
 
+.SiteName .LastName {
+	display: block;
+}
+
 .Info {
-	color: var(--color-info);
+	color: var(--color-body);
 }
 
 .Copy {
-	color: var(--color-info);
+	color: var(--color-body);
 	display: block;
 }
 
@@ -226,19 +231,6 @@ abbr {
 	}
 }
 
-.Button {
-	text-decoration: none;
-	padding: 0.25rem 0.5rem;
-	border-radius: 0.35rem;
-	background-color: var(--color-button);
-}
-
-.Button:hover,
-.Button:focus {
-	background-color: var(--color-body);
-	color: var(--color-background);
-}
-
 @media screen and (min-width: 50rem) {
 	.Standard,
 	.Platform,
@@ -247,4 +239,13 @@ abbr {
 		min-width: calc(5rem * var(--rhythm));
 	}
 	
+}
+
+.Button {
+	text-decoration: none;
+}
+
+.Button:hover,
+.Button:focus {
+	text-decoration: underline;
 }
