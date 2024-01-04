@@ -34,6 +34,10 @@
 	margin: 0;
 }
 
+* + * {
+	margin-top: calc(1rem * var(--rhythm));
+}
+
 html {
 	font-size: var(--base);
 }
@@ -51,6 +55,7 @@ body {
 	color: var(--color-body);
 	font-family: var(--font-body);
 	font-weight: var(--weight-body);
+	margin: 0;
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: auto;
 	-moz-osx-font-smoothing: auto;
@@ -101,27 +106,26 @@ abbr {
 	text-decoration-style: dotted;
 }
 
-* + * {
-	margin-top: calc(1rem * var(--rhythm));
-}
-
 .Container {
-	margin: calc(1rem * var(--rhythm)) 0 calc(4rem * var(--rhythm));
-	padding: 0 calc(1rem * var(--rhythm));
+	margin: 0;
+
+	padding: calc(1rem * var(--rhythm));
+	padding-bottom: calc(4rem * var(--rhythm));
 }
 
 @media (min-width: 40rem) {
 	.Container {
-		margin: calc(2rem * var(--rhythm)) 0 calc(4rem * var(--rhythm));
-		padding: 0 calc(2rem * var(--rhythm));
+		padding: calc(2rem * var(--rhythm));
+		padding-bottom: calc(4rem * var(--rhythm));
 	}
 }
 
 @media (min-width: 50rem) {
 	.Container {
 		max-width: calc(30rem * var(--rhythm));
-		margin: calc(4rem * var(--rhythm));
-		margin-bottom: calc(8rem * var(--rhythm));
+
+		padding: calc(6rem * var(--rhythm));
+		padding-bottom: calc(12rem * var(--rhythm));
 	}
 }
 
@@ -178,12 +182,12 @@ abbr {
 .ContainerContent ul {
 	list-style: none;
 	margin: 0;
-	padding: calc(0.5rem * var(--rhythm)) 0 0 0;
+	padding: 0;
 }
 
 .ContainerContent ul > li {
 	display: block;
-	margin: calc(0.5rem * var(--rhythm)) 0 0 0;
+	margin: calc(1rem * var(--rhythm)) 0 0 0;
 }
 
 .ContainerContent ul > li.Quoted {
