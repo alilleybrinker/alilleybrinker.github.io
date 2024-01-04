@@ -131,27 +131,36 @@ abbr {
 	}
 }
 
-.ContainerHeader {
-	padding-bottom: calc(2rem * var(--rhythm));
-	display: flex;
-	align-items: start;
-	align-content: stretch;
-	justify-items: flex-start;
-	gap: calc(1rem * var(--rhythm));
+.ContainerLogo {
+	grid-area: logo;
 }
 
 .ContainerNav {
 	margin-top: 0;
+
+	grid-area: nav;
 }
+
+.ContainerHeader {
+	padding-bottom: calc(2rem * var(--rhythm));
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+	grid-template-rows: auto;
+	grid-template-areas: "logo logo . nav nav .";
+	gap: calc(1rem * var(--rhythm));
+	justify-items: start;
+	align-items: stretch;
+}
+
 
 .ContainerNav-List {
 	list-style: none;
 	margin: 0;
 	padding: 0;
-	display: flex;
-	justify-content: flex-start;
-	align-items: stretch;
-	flex-wrap: wrap;
+
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-template-rows: auto;
 	gap: calc(0.25rem * var(--rhythm));
 }
 
