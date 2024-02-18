@@ -6,10 +6,10 @@
 	--rhythm: 1.5;
 
 	/* Theme colors - light */
-	--color-background: hsl(30,  15%, 98%);
-	--color-body:       hsl(30,  15%, 30%);
-	--color-accent:     hsl(30, 100%, 44%);
-	--color-button:     hsl(30,  15%, 92%);
+	--color-background: hsl(210,  15%, 98%);
+	--color-body:       hsl(210,  15%, 30%);
+	--color-accent:     hsl(210, 100%, 44%);
+	--color-button:     hsl(210,  15%, 92%);
 
 	/* Theme font stacks */
 	--font-body: "Inter", "Helvetica Neue", Helvetica, "Segoe UI", roboto,
