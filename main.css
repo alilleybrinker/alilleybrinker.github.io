@@ -226,6 +226,7 @@ abbr {
 
 .SiteName {
 	text-decoration: none;
+	font-weight: 600;
 }
 
 .SiteName .LastName {
@@ -234,7 +235,7 @@ abbr {
 
 .SiteName:hover,
 .SiteName:focus {
-	text-decoration: underline;
+	text-decoration: none;
 }
 
 .Copy {
