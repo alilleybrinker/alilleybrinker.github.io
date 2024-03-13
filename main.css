@@ -277,14 +277,45 @@ abbr {
 	}
 }
 
+#elsewhere ul {
+	margin-top: calc(1.333rem * var(--rhythm));
+	font-size: 1rem;
+	line-height: 1.667em;
+}
+
+#elsewhere li {
+	margin: 0 0 calc(.9rem * var(--rhythm)) 0;
+}
+
+#elsewhere li:last-child {
+	margin-bottom: calc(-0.5rem * var(--rhythm));
+}
+
+#elsewhere a {
+	font-weight: 500;
+}
+
+.Platform-Icon {
+	width: 1.25rem;
+	margin-bottom: -0.25rem;
+}
+
 @media screen and (min-width: 50rem) {
 	.Standard,
 	.Platform,
 	.Software {
 		display: inline-block;
-		min-width: calc(5rem * var(--rhythm));
+		min-width: calc(1rem * var(--rhythm));
 	}
-	
+
+	#elsewhere ul {
+		columns: 2;
+	}
+}
+
+.Footer {
+	font-size: 0.75rem;
+	line-height: 1.5em;
 }
 
 .FooterIcon {
