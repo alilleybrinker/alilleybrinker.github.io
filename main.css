@@ -278,6 +278,7 @@ abbr {
 }
 
 #elsewhere ul {
+	columns: 2;
 	margin-top: calc(1.333rem * var(--rhythm));
 	font-size: 1rem;
 	line-height: 1.667em;
@@ -306,10 +307,6 @@ abbr {
 	.Software {
 		display: inline-block;
 		min-width: calc(1rem * var(--rhythm));
-	}
-
-	#elsewhere ul {
-		columns: 2;
 	}
 }
 
