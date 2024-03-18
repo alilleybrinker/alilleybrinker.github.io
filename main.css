@@ -126,6 +126,9 @@ abbr {
 		max-width: calc(40rem * var(--rhythm));
 		padding: calc(6rem * var(--rhythm));
 		padding-bottom: calc(12rem * var(--rhythm));
+
+		margin-left: auto;
+		margin-right: auto;
 	}
 }
 
