@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if section.title %}
+        {{ section.title }}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {{ section.content | markdown | safe }}
+{% endblock %}
+
+{% block sidebar %}
+    {% include "includes/sidebar.html" %}
+{% endblock %}

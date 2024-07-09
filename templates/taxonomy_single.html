@@ -1,0 +1,33 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+    {% if section.title %}
+        {{ section.title }}
+    {% endif %}
+{% endblock %}
+
+{% block header %}
+    <h1 class="block mb-6 text-2xl font-bold">Topic: {{ term.name }}</h1>
+{% endblock %}
+
+{% block content %}
+    <p>
+        The following is a list of posts covered on my
+        <a href="{{ get_url(path="@/blog/_index.md") }}">Blog</a>,
+        under the topic &ldquo;{{ term.name }}&rdquo;, sorted from
+        most to least recent.
+    </p>
+
+    <ul>
+        {% for page in term.pages %}
+            <li>
+                <a href="{{ page.permalink }}">{{ page.title }}</a> <span class="ml-4 text-sm text-gray-500">Posted on {{ page.date | date(format="%B %-d, %Y") }}</span>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+
+{% block sidebar %}
+    {% include "includes/sidebar.html" %}
+{% endblock %}

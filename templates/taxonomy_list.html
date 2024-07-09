@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if section.title %}
+        {{ section.title }}
+    {% endif %}
+{% endblock %}
+
+{% block header %}
+    <h1 class="block mb-6 text-2xl font-bold">Topics</h1>
+{% endblock %}
+
+{% block content %}
+    <p>
+        The following is a list of topics covered on my
+        <a href="{{ get_url(path="@/blog/_index.md") }}">Blog</a>.
+        This includes <em>any</em> topic I&rsquo;ve ever covered,
+        sorted by decreasing frequency.
+    </p>
+
+    <ul>
+        {% for term in terms %}
+            <li>
+                <a href="{{ term.permalink }}">{{ term.name }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+
+{% block sidebar %}
+    {% include "includes/sidebar.html" %}
+{% endblock %}

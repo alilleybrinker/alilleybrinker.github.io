@@ -1,0 +1,35 @@
+base_url = "https://www.alilleybrinker.com"
+title = "Andrew Lilley Brinker — Software Supply Chain Security"
+description = """\
+    I work on software supply chain security at MITRE, including serving as a\
+    member of the OmniBOR Working Group, where I lead development of the Rust\
+    implementation, and as the project manager for Hipcheck, a tool for\
+    automated supply chain risk assessment of software packages.
+"""
+
+compile_sass = false
+build_search_index = true
+
+taxonomies = [{ name = "topics", feed = true }]
+
+[markdown]
+highlight_code = true
+
+[extra]
+
+nav = [
+    { name = "<span class='h-card'><span class='p-given-name'>Andrew</span> <span class='p-family-name'>Lilley Brinker</span></span>", url = "@/_index.md", bold = true },
+    { sep = true },
+    { name = "Blog", url = "@/blog/_index.md" },
+]
+
+social = [
+    { name = "GitHub", url = "https://github.com/alilleybrinker" },
+    { name = "Twitter <span class='text-gray-500/75'>/</span> X", url = "https://x.com/alilleybrinker" },
+    { name = "Bluesky", url = "https://bsky.app/profile/alilleybrinker.com" },
+    { name = "Mastodon", url = "https://hachyderm.io/@alilleybrinker" },
+    { name = "LinkedIn", url = "https://www.linkedin.com/in/alilleybrinker" },
+    { name = "Hacker News", url = "https://news.ycombinator.com/user?id=alilleybrinker" },
+    { name = "Lobste.rs", url = "https://lobste.rs/~alilleybrinker" },
+    { name = "Reddit", url = "https://www.reddit.com/user/alilleybrinker/" },
+]

@@ -1,0 +1,21 @@
+<figure class="mb-8">
+    <img class="rounded-md max-w-48" src="{{ get_url(path="/image/andrew.png") }}">
+</figure>
+
+<p class="block text-xs mb-4 uppercase font-semibold">Elsewhere</p>
+
+<ul class="mb-8 flex flex-wrap gap-x-1 gap-y-2">
+    {% for entry in config.extra.social %}
+        <li>
+            <a href="{{ entry.url }}" class="
+                    text-sm
+                    py-1 px-2
+                    rounded-md
+                    bg-gray-100 hover:bg-gray-600
+                    hover:text-gray-100
+                    ">
+                {{ entry.name | safe }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>
