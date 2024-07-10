@@ -1,0 +1,131 @@
+#!/usr/bin/env cargo-eval
+
+//! ```cargo
+//! [dependencies]
+//! anyhow = "1.0.86"
+//! clap = { version = "4.5.9", features = ["derive"] }
+//! clap-verbosity-flag = "2.2.0"
+//! log = "0.4.2"
+//! which = "6.0.1"
+//! xshell = "0.2.6"
+//! ```
+
+use anyhow::anyhow;
+use anyhow::Context as _;
+use anyhow::Result;
+use clap::Parser as _;
+use clap_verbosity_flag::InfoLevel;
+use clap_verbosity_flag::Verbosity;
+use std::path::Path;
+use std::path::PathBuf;
+use std::process::ExitCode;
+use std::thread::spawn;
+use xshell::Shell;
+
+fn main() -> ExitCode {
+    let args = Args::parse();
+
+    if run(args).is_ok() {
+        ExitCode::SUCCESS
+    } else {
+        ExitCode::FAILURE
+    }
+}
+
+/// Website task runner.
+#[derive(Debug, clap::Parser)]
+#[clap(about, version, long_about = None)]
+struct Args {
+    #[clap(flatten)]
+    verbose: Verbosity<InfoLevel>,
+
+    /// The environment to use when running the site.
+    #[clap(short, long)]
+    env: Option<SiteEnvironment>,
+}
+
+impl Args {
+    fn env(&self) -> SiteEnvironment {
+        self.env.unwrap_or_default()
+    }
+}
+
+#[derive(Debug, Copy, Clone, Default, clap::ValueEnum)]
+enum SiteEnvironment {
+    #[default]
+    Dev,
+    Prod,
+}
+
+macro_rules! cmd {
+    ($cmd:literal) => {
+        move || {
+            let sh = Shell::new()?;
+            sh.change_dir(&root()?);
+            xshell::cmd!(sh, $cmd).quiet().run()?;
+            Ok::<(), anyhow::Error>(())
+        }
+    };
+}
+
+/// Execute the `site serve` task.
+fn run(args: Args) -> Result<()> {
+    // Check our dependencies.
+    which::which("tailwindcss").context("requires `tailwindcss` to be installed")?;
+    which::which("zola").context("requires `zola` to be installed")?;
+
+    // When building for a dev environment, specify the base_url explicitly.
+    // Otherwise use the default one from the Zola configuration.
+    let base_url = match args.env() {
+        SiteEnvironment::Dev => &["--base-url", "localhost"][..],
+        SiteEnvironment::Prod => &[],
+    };
+
+    // Start the subcommands.
+    let handles = vec![
+        ("zola", spawn(cmd!("zola serve {base_url...}"))),
+        (
+            "tailwind",
+            spawn(cmd!(
+                "tailwindcss -i styles/main.css -o public/main.css --watch=always"
+            )),
+        ),
+    ];
+
+    // Let the user know the site is up.
+    log::info!("Serving at 'localhost:1111'. Press Ctrl-C to stop.");
+
+    // Wait for the subcommands and report errors.
+    let mut error = false;
+    for handle in handles {
+        match handle.1.join() {
+            Ok(Ok(_)) => {}
+            Ok(Err(err)) => {
+                for err in err.chain() {
+                    log::error!("{}: {}", handle.0, err);
+                }
+
+                error = true;
+            }
+            Err(_) => {
+                log::error!("an unknown error occured");
+                error = true;
+            }
+        }
+    }
+
+    if error {
+        return Err(anyhow!("1 or more errors occured during site generation"));
+    }
+
+    Ok(())
+}
+
+/// Get the root directory of the workspace.
+fn root() -> Result<PathBuf> {
+    Path::new(&env!("CARGO_MANIFEST_DIR"))
+        .ancestors()
+        .nth(1)
+        .ok_or_else(|| anyhow!("can't find cargo root"))
+        .map(Path::to_path_buf)
+}
