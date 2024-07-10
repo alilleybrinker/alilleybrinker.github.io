@@ -43,7 +43,7 @@
 		<link rel="stylesheet" href="{{ get_url(path="main.css") }}">
 	</head>
 	<body>
-	    <div class="m-4 md:m-16 px-4 md:px-0 md:mx-auto subpixel-antialiased w-fit">
+	    <div class="my-4 md:m-16 px-4 md:px-0 md:mx-auto subpixel-antialiased w-fit text-sm md:text-base">
 			<div class="mb-6 md:mb-8">
 			    <nav>
 					<ul class="flex gap-4">
@@ -60,13 +60,13 @@
 
 			{% block header %}
                 {% if original_title %}
-                    <h1 class="block mb-6 text-2xl font-bold">
+                    <h1 class="block mb-6 text-xl md:text-2xl font-bold">
                         {{ original_title }}
                         {% if page and page.date %}
-                            <span class="text-base text-gray-500 font-normal ml-4">Posted on {{ page.date | date(format="%B %-d, %Y") }}</span >
+                            <span class="block md:inline text-sm md:text-base text-gray-500 font-normal md:ml-4">Posted on {{ page.date | date(format="%B %-d, %Y") }}</span >
                         {% endif %}
                         {% if page and page.taxonomies['topics'] %}
-                            <span class="text-base text-gray-500 font-normal ml-4">
+                            <span class="text-sm md:text-base text-gray-500 font-normal mr-2 md:mr-0 md:ml-4">
                                 {% for topic in page.taxonomies['topics'] %}
                                     <a class="text-xs relative -top-[2px] py-1 px-2 rounded-md bg-gray-100 hover:bg-gray-600 hover:text-gray-100" href="{{ get_taxonomy_url(kind="topics", name=topic) }}">{{ topic }}</a >
                                 {% endfor %}
@@ -79,6 +79,7 @@
 			<div class="md:flex gap-16">
     	        <div class="
     					prose
+                        prose-sm md:prose-base
     					prose-p:text-black
     					prose-li:text-black
     					prose-a:text-black

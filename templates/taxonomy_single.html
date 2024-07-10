@@ -22,7 +22,7 @@
     <ul>
         {% for page in term.pages %}
             <li>
-                <a href="{{ page.permalink }}">{{ page.title }}</a> <span class="ml-4 text-sm text-gray-500">Posted on {{ page.date | date(format="%B %-d, %Y") }}</span>
+                <a href="{{ page.permalink }}">{{ page.title }}</a> <span class="block md:inline md:ml-4 text-sm text-gray-500">Posted on {{ page.date | date(format="%B %-d, %Y") }}</span>
             </li>
         {% endfor %}
     </ul>
