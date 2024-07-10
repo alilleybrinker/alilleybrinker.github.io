@@ -9,11 +9,14 @@ description = """\
 
 compile_sass = false
 build_search_index = true
-
+minify_html = true
 taxonomies = [{ name = "topics", feed = true }]
 
 [markdown]
+extra_syntaxes_and_themes = ["highlight"]
 highlight_code = true
+highlight_theme = "catppuccin-latte"
+smart_punctuation = true
 
 [extra]
 
