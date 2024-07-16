@@ -38,8 +38,6 @@
 		<meta property="twitter:description" content="{{ description }}">
 		<meta property="twitter:image" content="{{ get_url(path="social.png") }}">
 
-		<link rel="preconnect" href="https://rsms.me/">
-		<link rel="stylesheet" href="https://rsms.me/inter/inter.css">
 		<link rel="stylesheet" href="{{ get_url(path="main.css") }}">
 	</head>
 	<body>
@@ -86,8 +84,15 @@
     					prose-a:font-normal
     					prose-a:decoration-1 hover:prose-a:decoration-2
     					prose-a:underline-offset-2 hover:prose-a:underline-offset-auto
-    					prose-a:decoration-gray-300 hover:prose-a:decoration-gray-800
+    					prose-a:decoration-gray-400 hover:prose-a:decoration-gray-800
     					prose-code:after:content-[''] prose-code:before:content-['']
+                        prose-blockquote:font-normal prose-blockquote:not-italic
+                        prose-blockquote:text-base
+                        prose-figure:bg-sky-50 prose-figure:p-4
+                        prose-figure:rounded-md
+                        prose-blockquote:border-l-sky-200
+                        prose-blockquote:text-sky-900
+                        prose-figcaption:text-sky-900 prose-figcaption:opacity-70
     					">
     				{% block content %}{% endblock %}
     			</div>

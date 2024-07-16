@@ -46,7 +46,7 @@ html,
   -o-tab-size: 4;
      tab-size: 4;
   /* 3 */
-  font-family: "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   /* 4 */
   font-feature-settings: normal;
   /* 5 */
@@ -1835,6 +1835,10 @@ video {
   text-decoration-color: #d1d5db;
 }
 
+.prose-a\:decoration-gray-400 :is(:where(a):not(:where([class~="not-prose"] *))) {
+  text-decoration-color: #9ca3af;
+}
+
 .prose-a\:decoration-1 :is(:where(a):not(:where([class~="not-prose"] *))) {
   text-decoration-thickness: 1px;
 }
@@ -1853,6 +1857,119 @@ video {
 
 .hover\:prose-a\:underline-offset-auto :is(:where(a):not(:where([class~="not-prose"] *))):hover {
   text-underline-offset: auto;
+}
+
+.prose-blockquote\:border-l-sky-200 :is(:where(blockquote):not(:where([class~="not-prose"] *))) {
+  --tw-border-opacity: 1;
+  border-left-color: rgb(186 230 253 / var(--tw-border-opacity));
+}
+
+.prose-blockquote\:text-sm :is(:where(blockquote):not(:where([class~="not-prose"] *))) {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.prose-blockquote\:text-base :is(:where(blockquote):not(:where([class~="not-prose"] *))) {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.prose-blockquote\:font-normal :is(:where(blockquote):not(:where([class~="not-prose"] *))) {
+  font-weight: 400;
+}
+
+.prose-blockquote\:not-italic :is(:where(blockquote):not(:where([class~="not-prose"] *))) {
+  font-style: normal;
+}
+
+.prose-blockquote\:text-sky-800 :is(:where(blockquote):not(:where([class~="not-prose"] *))) {
+  --tw-text-opacity: 1;
+  color: rgb(7 89 133 / var(--tw-text-opacity));
+}
+
+.prose-blockquote\:text-sky-900 :is(:where(blockquote):not(:where([class~="not-prose"] *))) {
+  --tw-text-opacity: 1;
+  color: rgb(12 74 110 / var(--tw-text-opacity));
+}
+
+.prose-figure\:rounded-md :is(:where(figure):not(:where([class~="not-prose"] *))) {
+  border-radius: 0.375rem;
+}
+
+.prose-figure\:border :is(:where(figure):not(:where([class~="not-prose"] *))) {
+  border-width: 1px;
+}
+
+.prose-figure\:border-dashed :is(:where(figure):not(:where([class~="not-prose"] *))) {
+  border-style: dashed;
+}
+
+.prose-figure\:bg-gray-300 :is(:where(figure):not(:where([class~="not-prose"] *))) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(209 213 219 / var(--tw-bg-opacity));
+}
+
+.prose-figure\:bg-gray-100 :is(:where(figure):not(:where([class~="not-prose"] *))) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+}
+
+.prose-figure\:bg-gray-50 :is(:where(figure):not(:where([class~="not-prose"] *))) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(249 250 251 / var(--tw-bg-opacity));
+}
+
+.prose-figure\:bg-zinc-50 :is(:where(figure):not(:where([class~="not-prose"] *))) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(250 250 250 / var(--tw-bg-opacity));
+}
+
+.prose-figure\:bg-slate-50 :is(:where(figure):not(:where([class~="not-prose"] *))) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(248 250 252 / var(--tw-bg-opacity));
+}
+
+.prose-figure\:bg-green-50 :is(:where(figure):not(:where([class~="not-prose"] *))) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(240 253 244 / var(--tw-bg-opacity));
+}
+
+.prose-figure\:bg-sky-50 :is(:where(figure):not(:where([class~="not-prose"] *))) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(240 249 255 / var(--tw-bg-opacity));
+}
+
+.prose-figure\:p-4 :is(:where(figure):not(:where([class~="not-prose"] *))) {
+  padding: 1rem;
+}
+
+.prose-figure\:text-sky-800 :is(:where(figure):not(:where([class~="not-prose"] *))) {
+  --tw-text-opacity: 1;
+  color: rgb(7 89 133 / var(--tw-text-opacity));
+}
+
+.prose-figure\:text-sky-900 :is(:where(figure):not(:where([class~="not-prose"] *))) {
+  --tw-text-opacity: 1;
+  color: rgb(12 74 110 / var(--tw-text-opacity));
+}
+
+.prose-figcaption\:text-sky-800 :is(:where(figcaption):not(:where([class~="not-prose"] *))) {
+  --tw-text-opacity: 1;
+  color: rgb(7 89 133 / var(--tw-text-opacity));
+}
+
+.prose-figcaption\:text-sky-700 :is(:where(figcaption):not(:where([class~="not-prose"] *))) {
+  --tw-text-opacity: 1;
+  color: rgb(3 105 161 / var(--tw-text-opacity));
+}
+
+.prose-figcaption\:text-sky-900 :is(:where(figcaption):not(:where([class~="not-prose"] *))) {
+  --tw-text-opacity: 1;
+  color: rgb(12 74 110 / var(--tw-text-opacity));
+}
+
+.prose-figcaption\:opacity-70 :is(:where(figcaption):not(:where([class~="not-prose"] *))) {
+  opacity: 0.7;
 }
 
 .prose-code\:before\:content-\[\'\'\] :is(:where(code):not(:where([class~="not-prose"] *)))::before {

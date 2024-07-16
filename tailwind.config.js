@@ -9,15 +9,7 @@ module.exports = {
     "./content/**/*.md",
     "config.toml",
   ],
-  theme: {
-    extend: {
-      fontFamily: {
-        // Use Inter as the default font, but otherwise use
-        // the default sans-serif font.
-        sans: ['"Inter"', ...defaultTheme.fontFamily.sans],
-      },
-    },
-  },
+  theme: {},
   plugins: [
     // Use the standard typography plugin
     require("@tailwindcss/typography"),
