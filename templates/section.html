@@ -9,7 +9,7 @@
 {% block content %}
     {{ section.content | markdown | safe }}
 
-    <ul class="list-none border-t not-prose">
+    <ul class="list-none border-t not-prose p-0">
         {% for page in section.pages %}
             <li class="border-b py-8">
                 <a class="font-semibold" href="{{ page.permalink }}">{{ page.title }}</a> <span class="block md:inline md:ml-4 text-sm text-gray-500">Posted on {{ page.date | date(format="%B %-d, %Y") }}</span>
