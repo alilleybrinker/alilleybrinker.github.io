@@ -17,6 +17,8 @@ case better than I can. C is not the computer. C is (maybe) the only interface t
 syscalls exposed by the operating system, depending on the system. C is (definitely)
 an important part of computing history and computing today.
 
+<!-- more -->
+
 And yet... "[Some Were Meant for C][3]." When I was an undergraduate I had a classmate
 who insisted on doing every assignment, regardless of the class we were taking, in C.
 This was in a program which used C++ almost exclusively, except for the "Software

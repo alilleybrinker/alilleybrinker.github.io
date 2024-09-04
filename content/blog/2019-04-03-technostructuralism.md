@@ -6,6 +6,13 @@ taxonomies:
     - Memory Safety
 ---
 
+So Steve Klabnik posted a really thoughtful piece on open source and free software
+([read it if you haven't][steve]),
+and the responses on places like Hacker News made an error that seems common in these
+circles: believing working harder will solve a problem.
+
+<!-- more -->
+
 {% info(title = "This is a reproduction of a Twitter thread") %}
 The following is a reproduction of a thread I'd posted
 on Twitter back in 2019. I am sharing it here because Twitter has
@@ -17,11 +24,6 @@ and hashtags which were used in the original.
 
 [twitter]: https://twitter.com/alilleybrinker/status/1113538427855757313
 {% end %}
-
-So Steve Klabnik posted a really thoughtful piece on open source and free software
-([read it if you haven't][steve]),
-and the responses on places like Hacker News made an error that seems common in these
-circles: believing working harder will solve a problem.
 
 This comes up with people defending C, who argue "people should write better C." Of
 course, this is nonsense. If a person can write better C consistently, we should

@@ -11,6 +11,8 @@ quality assurance testers missed some combination of steps that leads to an inab
 to complete the game. It's basically a video game version of "livelock" failures in
 concurrent programs, but "softlock" is (to me) the more fun term, so let's use it.
 
+<!-- more -->
+
 There are situations in API design where the API is softlocked into a broken design
 which can't be fixed. This can happen for a few reasons:
 

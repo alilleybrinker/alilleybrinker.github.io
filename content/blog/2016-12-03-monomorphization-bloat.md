@@ -5,18 +5,18 @@ taxonomies:
     - Rust
 ---
 
-{% info(title="This is a repost") %}
-The following is a reproduction of a blog post originally shared on my
-now-defunct blog Suspect Semantics. It was originally published on
-December 3rd, 2016.
-{% end %}
-
 In this post I will discuss monomorphization: what it is, why it's useful, and
 what problems can potentially arise from it, with a particular focus on the
 problem of monomorphization bloat. I will also look at options for dealing with
 monomorphization bloat in your codebase.
 
 <!-- more -->
+
+{% info(title="This is a repost") %}
+The following is a reproduction of a blog post originally shared on my
+now-defunct blog Suspect Semantics. It was originally published on
+December 3rd, 2016.
+{% end %}
 
 Monomorphization is a compilation strategy to allow polymorphism with static
 dispatch. To explain how it works, we'll look at the following function:

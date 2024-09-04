@@ -18,10 +18,11 @@
         sorted by decreasing frequency.
     </p>
 
-    <ul>
-        {% for term in terms %}
-            <li>
-                <a href="{{ term.permalink }}">{{ term.name }}</a>
+
+    <ul class="list-none border-t not-prose">
+        {% for page in terms %}
+            <li class="border-b py-8">
+                <a class="font-semibold" href="{{ page.permalink }}">{{ page.name }}</a>
             </li>
         {% endfor %}
     </ul>

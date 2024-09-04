@@ -15,6 +15,8 @@ and secondary impacts and recommended next steps like rotating SSH keys and
 detecting if individual systems have been compromised will no doubt come as
 well.
 
+<!-- more -->
+
 When big security events like this happen, people often quickly try to identify
 causes, and (more importantly) fixes to make sure it doesn’t happen again.
 Often, individuals are working on systems, tools, or standards which are in

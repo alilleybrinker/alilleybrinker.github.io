@@ -2,7 +2,7 @@
 title: Hi, I’m Andrew
 ---
 
-I work on software supply chain security at [MITRE][mitre], including:
+I&rsquo;m a Principal Engineer at [MITRE][mitre], where I work on things like&hellip;
 
 - Leading the development of [Hipcheck][hipcheck], a tool to empower open source
   maintainers and users to assess the supply chain risk of their dependencies.

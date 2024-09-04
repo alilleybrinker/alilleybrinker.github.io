@@ -3,16 +3,8 @@ title: String Types in Rust
 taxonomies:
   topics:
     - Rust
+summary: A discussion of the trade-offs and uses of Rust's different string types.
 ---
-
-{% info(title = "This was originally published on a different site.") %}
-This is a reproduction of a post of mine which was originally published on a
-now-defunct programming blog called "Suspect Semantics". I am reproducing it
-here to give me something to refer to, as there have been times where I wanted
-to point people to this article. I don't have any intent of bringing the
-original site back in full, but at least some of the content was good and is
-still reasonably correct and relevant to be worth preserving.
-{% end %}
 
 This seems to be a common issue, so let's talk about the different string types
 in the Rust programming language. In this post I'm going to explain the
@@ -23,6 +15,15 @@ and [`Path`][path]---and how the [`Cow`][cow] container can make working with
 Rust strings easier.
 
 <!-- more -->
+
+{% info(title = "This was originally published on a different site.") %}
+This is a reproduction of a post of mine which was originally published on a
+now-defunct programming blog called "Suspect Semantics". I am reproducing it
+here to give me something to refer to, as there have been times where I wanted
+to point people to this article. I don't have any intent of bringing the
+original site back in full, but at least some of the content was good and is
+still reasonably correct and relevant to be worth preserving.
+{% end %}
 
 The most important thing to understand is that string types in Rust come in
 pairs, which I'll call the "owned" variety and "slice" variety (_the term
