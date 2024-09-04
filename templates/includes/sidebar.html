@@ -1,5 +1,5 @@
 <figure class="mb-8">
-    <img class="rounded-md max-w-48" src="{{ get_url(path="/image/andrew.png") }}">
+    <img class="rounded-3xl max-w-48" src="{{ get_url(path="/image/andrew.png") }}">
 </figure>
 
 <p class="block text-xs mb-4 uppercase font-semibold">Elsewhere</p>
@@ -10,7 +10,7 @@
             <a href="{{ entry.url }}" class="
                     text-sm
                     py-1 px-2
-                    rounded-md
+                    rounded-50
                     bg-gray-100 hover:bg-gray-600
                     hover:text-gray-100
                     ">
@@ -19,3 +19,12 @@
         </li>
     {% endfor %}
 </ul>
+
+<hr class="mb-4">
+
+<p class="text-sm">
+    <a class="text-gray-500 hover:text-gray-800"
+       href="{{ get_url(path="@/_ai.md") }}">AI Policy</a>
+    &middot;
+    <a class="text-gray-500 hover:text-gray-800"
+       href="{{ get_url(path="@/_name.md") }}">My Name</a></p>

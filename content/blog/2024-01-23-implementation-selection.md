@@ -13,6 +13,8 @@ compact `if`/`else`. _Maybe_ you go whole-hog and have some array of function po
 to embed the selection into data. Whatever way you slice it, you have paths of control
 flow, and you want to choose between them in a structured fashion.
 
+<!-- more -->
+
 Another way to enable this kind of selection is through the use of polymorphism. In an
 Object-Oriented framing, this might mean subtype polymorphism via the use of child classes
 of some shared parent class. This notion is in some way an extension of the "array of
