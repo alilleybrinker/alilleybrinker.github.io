@@ -19,10 +19,14 @@
         most to least recent.
     </p>
 
-    <ul>
+    <ul class="list-none border-t not-prose p-0">
         {% for page in term.pages %}
-            <li>
-                <a href="{{ page.permalink }}">{{ page.title }}</a> <span class="block md:inline md:ml-4 text-sm text-gray-500">Posted on {{ page.date | date(format="%B %-d, %Y") }}</span>
+            <li class="border-b py-8">
+                <a class="font-semibold text-black" href="{{ page.permalink }}">{{ page.title }}</a> <span class="block md:inline md:ml-4 text-sm text-gray-500">Posted on {{ page.date | date(format="%B %-d, %Y") }}</span>
+                <div class="text-sm mt-4">
+                    {{ page.summary | safe }}
+                    <a class="inline-block mt-5 text-gray-700 hover:text-gray-900 hover:underline" href="{{ page.permalink }}#continue-reading">Continue Reading &rarr;</a>
+                </div>
             </li>
         {% endfor %}
     </ul>
