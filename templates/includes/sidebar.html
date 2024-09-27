@@ -1,30 +1,33 @@
-<figure class="mb-8">
-    <img class="rounded-full max-w-48" src="{{ get_url(path="/image/andrew.png") }}">
-</figure>
+<div class="flex gap-5 md:block md:gap-0">
+    <figure class="mb-5">
+        <img class="max-w-20" src="{{ get_url(path="/image/andrew.png") }}">
+    </figure>
 
-<p class="block text-xs mb-4 uppercase font-semibold">Elsewhere</p>
+    <div>
+        <p class="block mb-4">Elsewhere</p>
 
-<ul class="mb-8 flex flex-wrap gap-x-1 gap-y-2">
-    {% for entry in config.extra.social %}
-        <li>
-            <a href="{{ entry.url }}" class="
-                    text-sm
-                    py-1 px-2
-                    rounded-md
-                    bg-gray-100 hover:bg-gray-600
-                    hover:text-gray-100
-                    ">
-                {{ entry.name | safe }}
-            </a>
-        </li>
-    {% endfor %}
-</ul>
+        <ul class="mb-8 flex flex-wrap gap-x-1 gap-y-2">
+            {% for entry in config.extra.social %}
+                <li>
+                    <a href="{{ entry.url }}" class="
+                            text-sm
+                            py-1 px-2
+                            border border-gray-200 hover:border-black
+                            hover:text-black
+                            ">
+                        {{ entry.name | safe }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
 
-<hr class="mb-4">
+        <hr class="mb-4">
 
-<p class="text-sm">
-    <a class="text-gray-500 hover:text-gray-800"
-       href="{{ get_url(path="@/_ai.md") }}">AI Policy</a>
-    &middot;
-    <a class="text-gray-500 hover:text-gray-800"
-       href="{{ get_url(path="@/_name.md") }}">My Name</a></p>
+        <p class="text-sm">
+            <a class="text-gray-500 hover:text-gray-800 hover:underline"
+            href="{{ get_url(path="@/_ai.md") }}">AI Policy</a>
+            &middot;
+            <a class="text-gray-500 hover:text-gray-800 hover:underline"
+            href="{{ get_url(path="@/_name.md") }}">My Name</a></p>
+    </div>
+</div>

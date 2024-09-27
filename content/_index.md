@@ -2,24 +2,24 @@
 title: Hi, I’m Andrew
 ---
 
-I&rsquo;m a Principal Engineer at [MITRE][mitre], where I work on things like&hellip;
+I&rsquo;m a Principal Engineer at [MITRE][mitre], where I lead the
+development of [Hipcheck][hipcheck], a tool to empower open source
+maintainers and users to assess the supply chain risk of their dependencies;
+and serve as a member of the [OmniBOR Working Group][omnibor], leading
+creation of the [Rust library and `omnibor` CLI][omnibor-rs].
 
-- Leading the development of [Hipcheck][hipcheck], a tool to empower open source
-  maintainers and users to assess the supply chain risk of their dependencies.
-- Serving as a member of the [OmniBOR Working Group][omnibor] and leading creation
-  of the [Rust library and `omnibor` CLI][omnibor-rs].
+I&rsquo;ve also&hellip;
 
-Previously, I&rsquo;ve&hellip;
-
-* Served as Technical Editor for a [book on Rust procedural macros][rust-macros].
-* Earned a Master of Computer Science degree from [Rice University][rice].
-* Maintained a list of [programming languages written in Rust][langs-in-rust].
-* Written educational articles about Rust at [Possible Rust][possible-rust].
-* Written _other_ programming articles at [Suspect Semantics][suspect-semantics].
-* Taught &ldquo;Introduction to Rust&ldquo; at MITRE.
-* Contributed to the official Rust documentation and the Rustonomicon.
-* Spoken at [RustConf][rustconf] and [Rust Belt Rust][rust-belt-rust].
-* Taught &ldquo;[Introduction to Programming Language Theory][prog-langs]&rdquo; at [CSUSB][csusb].
+Served as Technical Editor for a [book on Rust procedural macros][rust-macros]
+&middot; Earned a Master of Computer Science degree from [Rice University][rice]
+&middot; Maintained a list of [programming languages written in Rust][langs-in-rust]
+&middot; Written educational articles about Rust at [Possible Rust][possible-rust]
+&middot; Written _other_ programming articles at [Suspect Semantics][suspect-semantics]
+&middot; Taught &ldquo;Introduction to Rust&ldquo; at MITRE
+&middot; Contributed to the official Rust documentation and the Rustonomicon
+&middot; Spoken at [RustConf][rustconf] and [Rust Belt Rust][rust-belt-rust]
+&middot; Taught &ldquo;[Introduction to Programming Language Theory][prog-langs]&rdquo; at [CSUSB][csusb]
+&middot; and more
 
 [mitre]: https://www.mitre.org
 [omnibor]: https://omnibor.io

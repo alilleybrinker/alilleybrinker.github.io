@@ -20,11 +20,7 @@ smart_punctuation = true
 
 [extra]
 
-nav = [
-    { name = "<span class='h-card'><span class='p-given-name'>Andrew</span> <span class='p-family-name'>Lilley Brinker</span></span>", url = "@/_index.md", bold = true },
-    { sep = true },
-    { name = "Blog", url = "@/blog/_index.md" },
-]
+nav = [{ name = "Blog", url = "@/blog/_index.md" }]
 
 social = [
     { name = "GitHub", url = "https://github.com/alilleybrinker" },

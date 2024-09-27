@@ -47,51 +47,55 @@
 		<link rel="stylesheet" href="{{ get_url(path="main.css") }}">
 	</head>
 	<body>
-	    <div class="my-4 md:m-16 px-4 md:px-0 md:mx-auto subpixel-antialiased w-fit text-sm md:text-base">
-			<div class="mb-6 md:mb-8">
-			    <nav>
-					<ul class="flex gap-4">
-				        {% for entry in config.extra.nav %}
-							{% if entry.sep %}
-		                        <li class="text-gray-400">/</li>
-						    {% else %}
-						        <li><a href="{{ get_url(path=entry.url) }}" class="hover:underline {% if entry.bold %}font-semibold{% endif %}">{{ entry.name | safe }}</a></li>
-						    {% endif %}
-					    {% endfor %}
+	    <div class="subpixel-antialiased">
+			<div class="mb-10 md:mb-20 pt-10 lg:pt-20 p-5 bg-[#0381ff] text-white">
+			    <nav class="md:max-w-screen-lg md:mx-auto">
+					<ul class="flex gap-8 justify-between">
+	                    <li><a href="{{ get_url(path="@/_index.md") }}" class="hover:underline whitespace-nowrap"><span class='h-card'><span class='p-given-name'>Andrew</span> <span class='p-family-name'>Lilley Brinker</span></span></a></li>
+						<li>
+						    <ul class="flex gap-8">
+                  		        {% for entry in config.extra.nav %}
+                 			        <li><a href="{{ get_url(path=entry.url) }}" class="hover:underline">{{ entry.name | safe }}</a></li>
+                 			    {% endfor %}
+							</ul>
+						</li>
 					</ul>
 				</nav>
 			</div>
 
-			{% block header %}
-                {% if original_title %}
-                    <h1 class="block mb-6 text-xl md:text-2xl font-bold">
-                        {{ original_title }}
-                        {% if page and page.date %}
-                            <span class="block md:inline text-sm md:text-base text-gray-500 font-normal md:ml-4">Posted on {{ page.date | date(format="%B %-d, %Y") }}</span >
-                        {% endif %}
-                        {% if page and page.taxonomies['topics'] %}
-                            <span class="text-sm md:text-base text-gray-500 font-normal mr-2 md:mr-0 md:ml-4">
-                                {% for topic in page.taxonomies['topics'] %}
-                                    <a class="text-xs relative -top-[2px] py-1 px-2 rounded-md bg-gray-100 hover:bg-gray-600 hover:text-gray-100" href="{{ get_taxonomy_url(kind="topics", name=topic) }}">{{ topic }}</a >
-                                {% endfor %}
-                            </span>
-                        {% endif %}
-                    </h1>
-                {% endif %}
-            {% endblock %}
+			<div class="px-5 lg:px-0 md:max-w-screen-lg md:mx-auto">
+    			{% block header %}
+                    {% if original_title %}
+                        <h1 class="block mb-5 text-3xl md:text-4xl">
+                            {{ original_title }}
 
-			<div class="md:flex gap-16">
-    	        <div class="
-    					prose
-                        prose-sm md:prose-base
-    					prose-p:text-black
-    					prose-li:text-black
-    					prose-a:text-black
-    					prose-a:font-normal
-    					prose-a:decoration-1 hover:prose-a:decoration-2
-    					prose-a:underline-offset-2 hover:prose-a:underline-offset-auto
-    					prose-a:decoration-gray-400 hover:prose-a:decoration-gray-800
-    					prose-code:after:content-[''] prose-code:before:content-['']
+                            {% if page and page.date %}
+                                <span class="block md:inline text-sm md:text-base mt-2 text-gray-500 font-normal md:ml-4">Posted on {{ page.date | date(format="%B %-d, %Y") }}</span >
+                            {% endif %}
+                            {% if page and page.taxonomies['topics'] %}
+                                <span class="text-sm md:text-base font-normal mr-2 md:mr-0 md:ml-4">
+                                    {% for topic in page.taxonomies['topics'] %}
+                                        <a class="text-xs relative -top-[2px] py-1 px-2 border border-gray-300 hover:border-black hover:text-black" href="{{ get_taxonomy_url(kind="topics", name=topic) }}">{{ topic }}</a >
+                                    {% endfor %}
+                                </span>
+                            {% endif %}
+                        </h1>
+                    {% endif %}
+                {% endblock %}
+
+    			<div class="lg:flex mt-10 gap-16">
+           	        <div class="
+                        mb-10
+       					prose
+                        prose-base md:prose-base
+       					prose-p:text-black
+       					prose-li:text-black
+       					prose-a:text-black
+       					prose-a:font-normal
+       					prose-a:decoration-1 hover:prose-a:decoration-2
+       					prose-a:underline-offset-2 hover:prose-a:underline-offset-auto
+       					prose-a:decoration-gray-400 hover:prose-a:decoration-gray-800
+       					prose-code:after:content-[''] prose-code:before:content-['']
                         prose-blockquote:font-normal prose-blockquote:not-italic
                         prose-blockquote:text-base
                         prose-figure:bg-sky-50 prose-figure:p-4
@@ -99,14 +103,15 @@
                         prose-blockquote:border-l-sky-200
                         prose-blockquote:text-sky-900
                         prose-figcaption:text-sky-900 prose-figcaption:opacity-70
-    					">
-    				{% block content %}{% endblock %}
-    			</div>
+       					">
+        				{% block content %}{% endblock %}
+         			</div>
 
-                <div class="mt-8 md:mt-0 md:max-w-60">
-                    {% block sidebar %}
-                    {% endblock %}
-                </div>
+                    <div class="mt-8 md:mt-0 md:max-w-60 mb-20">
+                        {% block sidebar %}
+                        {% endblock %}
+                    </div>
+    			</div>
 			</div>
 		</div>
 	</body >
