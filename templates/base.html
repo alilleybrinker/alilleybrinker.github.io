@@ -48,9 +48,9 @@
 	</head>
 	<body>
 	    <div class="subpixel-antialiased">
-			<div class="mb-10 md:mb-20 pt-10 lg:pt-20 p-5 bg-[#0381ff] text-white">
+			<div class="mb-10 pt-10 lg:pt-20 p-5 bg-white text-black">
 			    <nav class="md:max-w-screen-lg md:mx-auto">
-					<ul class="flex gap-8 justify-between">
+					<ul class="flex gap-8">
 	                    <li><a href="{{ get_url(path="@/_index.md") }}" class="hover:underline whitespace-nowrap"><span class='h-card'><span class='p-given-name'>Andrew</span> <span class='p-family-name'>Lilley Brinker</span></span></a></li>
 						<li>
 						    <ul class="flex gap-8">
@@ -70,10 +70,10 @@
                             {{ original_title }}
 
                             {% if page and page.date %}
-                                <span class="block md:inline text-sm md:text-base mt-2 text-gray-500 font-normal md:ml-4">Posted on {{ page.date | date(format="%B %-d, %Y") }}</span >
+                                <span class="block text-sm md:text-base mt-4 text-gray-500 font-normal">Posted on {{ page.date | date(format="%B %-d, %Y") }}</span >
                             {% endif %}
                             {% if page and page.taxonomies['topics'] %}
-                                <span class="text-sm md:text-base font-normal mr-2 md:mr-0 md:ml-4">
+                                <span class="block text-sm md:text-base font-normal mt-4 mr-2 md:mr-0">
                                     {% for topic in page.taxonomies['topics'] %}
                                         <a class="text-xs relative -top-[2px] py-1 px-2 border border-gray-300 hover:border-black hover:text-black" href="{{ get_taxonomy_url(kind="topics", name=topic) }}">{{ topic }}</a >
                                     {% endfor %}
@@ -83,7 +83,7 @@
                     {% endif %}
                 {% endblock %}
 
-    			<div class="lg:flex mt-10 gap-16">
+    			<div class="lg:flex mt-10 mb-20 gap-16">
            	        <div class="
                         mb-10
        					prose
