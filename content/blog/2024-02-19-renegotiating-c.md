@@ -6,6 +6,14 @@ taxonomies:
     - Memory Safety
 ---
 
+Amid the move to memory safe languages, the people who build and build on C and
+C++ ought to be recognized. Any of us could be hit by an upheaval of technology
+in which we've invested.
+
+<!-- more -->
+
+---
+
 I am tying myself in a knot.
 
 It all started when I read "[You (Probably) Don't Need to Learn C][1]," a good article
@@ -16,8 +24,6 @@ Chisnall's "[C is Not a Low-Level Language][2]," so I'll do the same because it 
 case better than I can. C is not the computer. C is (maybe) the only interface to
 syscalls exposed by the operating system, depending on the system. C is (definitely)
 an important part of computing history and computing today.
-
-<!-- more -->
 
 And yet... "[Some Were Meant for C][3]." When I was an undergraduate I had a classmate
 who insisted on doing every assignment, regardless of the class we were taking, in C.

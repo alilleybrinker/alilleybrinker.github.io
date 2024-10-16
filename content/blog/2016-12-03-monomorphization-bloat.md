@@ -5,12 +5,18 @@ taxonomies:
     - Rust
 ---
 
+Rust generics can trade off binary size for expressiveness. Learning to
+identify when the trade isn&rsquo;t worth it is a valuable skill that can help you
+write better code.
+
+<!-- more -->
+
+---
+
 In this post I will discuss monomorphization: what it is, why it's useful, and
 what problems can potentially arise from it, with a particular focus on the
 problem of monomorphization bloat. I will also look at options for dealing with
 monomorphization bloat in your codebase.
-
-<!-- more -->
 
 {% info(title="This is a repost") %}
 The following is a reproduction of a blog post originally shared on my

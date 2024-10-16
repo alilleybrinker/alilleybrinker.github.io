@@ -5,6 +5,14 @@ taxonomies:
     - Rust
 ---
 
+Rust types offer four ways to decide what happens next, along two axes:
+deciding at runtime vs. compile time, and permitting a closed or open set of
+types.
+
+<!-- more -->
+
+---
+
 A common problem in programming is when you want the path of options for "what happens
 next" to split. In structured programming this would generally come in the form of
 a series of `if`/`else if`/`else` (or whatever the syntax is in your preferred language),
@@ -12,8 +20,6 @@ or a `switch` if your language supports it. Maybe you have a ternary operator fo
 compact `if`/`else`. _Maybe_ you go whole-hog and have some array of function pointers
 to embed the selection into data. Whatever way you slice it, you have paths of control
 flow, and you want to choose between them in a structured fashion.
-
-<!-- more -->
 
 Another way to enable this kind of selection is through the use of polymorphism. In an
 Object-Oriented framing, this might mean subtype polymorphism via the use of child classes

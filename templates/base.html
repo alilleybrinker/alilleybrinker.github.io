@@ -46,12 +46,28 @@
 
 		<link rel="stylesheet" href="{{ get_url(path="main.css") }}">
 	</head>
-	<body>
+	<body class="bg-stone-50">
 	    <div class="subpixel-antialiased">
-			<div class="mb-10 pt-10 lg:pt-20 p-5 bg-white text-black">
-			    <nav class="md:max-w-screen-lg md:mx-auto">
+			<div class="py-20 text-black text-xl">
+			    <nav class="md:max-w-screen-md md:mx-auto">
 					<ul class="flex gap-8">
-	                    <li><a href="{{ get_url(path="@/_index.md") }}" class="hover:underline whitespace-nowrap"><span class='h-card'><span class='p-given-name'>Andrew</span> <span class='p-family-name'>Lilley Brinker</span></span></a></li>
+	                    <li>
+							<a href="{{ get_url(path='@/_index.md') }}"
+							   class="
+									whitespace-nowrap
+									relative
+									hover:underline
+									before:absolute
+									before:-left-8
+									before:top-1
+									before:rounded-sm
+									before:rotate-6
+									before:h-4
+									before:w-4
+									before:inline-block
+									before:bg-blue-500
+								">
+								<span class='h-card'><span class='p-given-name'>Andrew</span> <span class='p-family-name'>Lilley Brinker</span></span></a></li>
 						<li>
 						    <ul class="flex gap-8">
                   		        {% for entry in config.extra.nav %}
@@ -63,54 +79,50 @@
 				</nav>
 			</div>
 
-			<div class="px-5 lg:px-0 md:max-w-screen-lg md:mx-auto">
-    			{% block header %}
-                    {% if original_title %}
-                        <h1 class="block mb-5 text-3xl md:text-4xl">
-                            {{ original_title }}
-
-                            {% if page and page.date %}
-                                <span class="block text-sm md:text-base mt-4 text-gray-500 font-normal">Posted on {{ page.date | date(format="%B %-d, %Y") }}</span >
-                            {% endif %}
-                            {% if page and page.taxonomies['topics'] %}
-                                <span class="block text-sm md:text-base font-normal mt-4 mr-2 md:mr-0">
-                                    {% for topic in page.taxonomies['topics'] %}
-                                        <a class="text-xs relative -top-[2px] py-1 px-2 border border-gray-300 hover:border-black hover:text-black" href="{{ get_taxonomy_url(kind="topics", name=topic) }}">{{ topic }}</a >
-                                    {% endfor %}
-                                </span>
-                            {% endif %}
-                        </h1>
-                    {% endif %}
-                {% endblock %}
-
-    			<div class="lg:flex mt-10 mb-20 gap-16">
+			<div class="px-5 lg:px-0 md:max-w-screen-md md:mx-auto">
+    			<div class="mb-32">
            	        <div class="
                         mb-10
        					prose
-                        prose-base md:prose-base
-       					prose-p:text-black
-       					prose-li:text-black
+                        prose-base md:prose-base prose-stone
+                        prose-headings:font-normal
        					prose-a:text-black
        					prose-a:font-normal
        					prose-a:decoration-1 hover:prose-a:decoration-2
        					prose-a:underline-offset-2 hover:prose-a:underline-offset-auto
-       					prose-a:decoration-gray-400 hover:prose-a:decoration-gray-800
-       					prose-code:after:content-[''] prose-code:before:content-['']
+       					prose-a:decoration-stone-400 hover:prose-a:decoration-stone-800
+       					prose-code:after:content-none prose-code:before:content-none
                         prose-blockquote:font-normal prose-blockquote:not-italic
                         prose-blockquote:text-base
-                        prose-figure:bg-sky-50 prose-figure:p-4
+                        prose-figure:bg-blue-50 prose-figure:p-4
+                        prose-figure:border prose-figure:border-blue-100
                         prose-figure:rounded-md
-                        prose-blockquote:border-l-sky-200
-                        prose-blockquote:text-sky-900
-                        prose-figcaption:text-sky-900 prose-figcaption:opacity-70
+                        prose-blockquote:border-l-blue-200
+                        prose-blockquote:text-black
+                        prose-figcaption:text-blue-950 prose-figcaption:opacity-70
+                        prose-code:font-normal
        					">
+             			{% block header %}
+                             {% if original_title %}
+                                 <h1 class="block mb-5 text-3xl md:text-4xl">
+                                     {{ original_title }}
+
+                                     {% if page and page.date %}
+                                         <span class="block text-sm md:text-base mt-4 text-gray-500 font-normal">Posted on {{ page.date | date(format="%B %-d, %Y") }}</span >
+                                     {% endif %}
+                                     {% if page and page.taxonomies['topics'] %}
+                                         <span class="block text-sm md:text-base font-normal mt-4 mr-2 md:mr-0">
+                                             {% for topic in page.taxonomies['topics'] %}
+                                                 <a class="text-xs relative -top-[2px] py-1 px-2 no-underline bg-slate-200 text-black rounded-md hover:bg-blue-200" href="{{ get_taxonomy_url(kind="topics", name=topic) }}">{{ topic }}</a >
+                                             {% endfor %}
+                                         </span>
+                                     {% endif %}
+                                 </h1>
+                             {% endif %}
+                         {% endblock %}
+
         				{% block content %}{% endblock %}
          			</div>
-
-                    <div class="mt-8 md:mt-0 md:max-w-60 mb-20">
-                        {% block sidebar %}
-                        {% endblock %}
-                    </div>
     			</div>
 			</div>
 		</div>

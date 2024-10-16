@@ -19,19 +19,14 @@
         most to least recent.
     </p>
 
-    <ul class="list-none border-t not-prose p-0">
+    <ul class="pt-5 list-none not-prose p-0">
         {% for page in term.pages %}
-            <li class="border-b py-8">
-                <a class="font-semibold text-black" href="{{ page.permalink }}">{{ page.title }}</a> <span class="block md:inline md:ml-4 text-sm text-gray-500">Posted on {{ page.date | date(format="%B %-d, %Y") }}</span>
-                <div class="text-sm mt-4">
+            <li class="py-8">
+                <a class="text-black hover:underline text-xl" href="{{ page.permalink }}">{{ page.title }}</a> <span class="block md:inline md:ml-4 text-sm text-gray-500">{{ page.date | date(format="%Y / %m / %d") }}</span>
+                <div class="mt-4 prose prose-a:underline">
                     {{ page.summary | safe }}
-                    <a class="inline-block mt-5 text-gray-700 hover:text-gray-900 hover:underline" href="{{ page.permalink }}#continue-reading">Continue Reading &rarr;</a>
                 </div>
             </li>
         {% endfor %}
     </ul>
-{% endblock %}
-
-{% block sidebar %}
-    {% include "includes/sidebar.html" %}
 {% endblock %}
