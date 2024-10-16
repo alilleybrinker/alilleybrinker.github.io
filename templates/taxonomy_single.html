@@ -19,7 +19,7 @@
         most to least recent.
     </p>
 
-    <ul class="pt-5 list-none not-prose p-0">
+    <ul class="pt-5 list-none not-prose p-0 !ps-0">
         {% for page in term.pages %}
             <li class="py-8">
                 <a class="text-black hover:underline text-xl" href="{{ page.permalink }}">{{ page.title }}</a> <span class="block md:inline md:ml-4 text-sm text-gray-500">{{ page.date | date(format="%Y / %m / %d") }}</span>

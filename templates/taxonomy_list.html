@@ -18,7 +18,7 @@
         sorted by decreasing frequency.
     </p>
 
-    <ul class="list-none not-prose">
+    <ul class="list-none not-prose !ps-0">
         {% for term in terms | sort(attribute="page_count") | reverse %}
             <li class="py-2">
                 <a class="font-normal block text-black group" href="{{ term.permalink }}"><span class="inline-block mr-2 bg-stone-200 py-1 px-2 rounded-md text-xs font-normal">{{ term.page_count }}</span> <span class="group-hover:underline">{{ term.name }}</span></a>
