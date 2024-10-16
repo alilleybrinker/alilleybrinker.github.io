@@ -45,6 +45,8 @@
 		<meta property="twitter:image" content="{{ get_url(path="social.png") }}">
 
 		<link rel="stylesheet" href="{{ get_url(path="main.css") }}">
+
+		{% block scripts %}{% endblock %}
 	</head>
 	<body class="bg-stone-50">
 	    <div class="subpixel-antialiased">
@@ -109,16 +111,18 @@
                                  <h1 class="block mb-5 text-3xl md:text-4xl">
                                      {{ original_title }}
 
-                                     {% if page and page.date %}
-                                         <span class="block text-sm md:text-base mt-4 text-gray-500 font-normal">Posted on {{ page.date | date(format="%B %-d, %Y") }}</span >
-                                     {% endif %}
-                                     {% if page and page.taxonomies['topics'] %}
-                                         <span class="block text-sm md:text-base font-normal mt-4 mr-2 md:mr-0">
-                                             {% for topic in page.taxonomies['topics'] %}
-                                                 <a class="text-xs relative -top-[2px] py-1 px-2 no-underline bg-slate-200 text-black rounded-md hover:bg-blue-200" href="{{ get_taxonomy_url(kind="topics", name=topic) }}">{{ topic }}</a >
-                                             {% endfor %}
-                                         </span>
-                                     {% endif %}
+                                     <div class="block">
+                                        {% if page and page.date %}
+                                            <span class="inline-block text-sm md:text-base mt-4 text-gray-500 font-normal">{{ page.date | date(format="%Y / %m / %d") }}</span >
+                                        {% endif %}
+                                        {% if page and page.taxonomies['topics'] %}
+                                            <span class="mx-2 text-xl">&middot;</span> <span class="inline-block text-sm md:text-base font-normal mt-4 mr-2 md:mr-0">
+                                                {% for topic in page.taxonomies['topics'] %}
+                                                    <a class="text-xs relative -top-[2px] py-1 px-2 no-underline bg-slate-200 text-black rounded-md hover:bg-blue-200" href="{{ get_taxonomy_url(kind="topics", name=topic) }}">{{ topic }}</a >
+                                                {% endfor %}
+                                            </span>
+                                        {% endif %}
+                                     </div>
                                  </h1>
                              {% endif %}
                          {% endblock %}

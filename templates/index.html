@@ -7,5 +7,43 @@
 {% endblock %}
 
 {% block content %}
-    {{ section.content | markdown | safe }}
+    <p>I work on software security at <a href="https://www.mitre.org">MITRE</a>,
+        including leading development of <a href="https://mitre.github.io/hipcheck">Hipcheck</a>
+        and serving on the <a href="https://omnibor.io">OmniBOR</a> Core Team. You can <a href="{{ get_url(path='@/about.md#where-to-find-me') }}">find me around</a>.</p>
+
+    <h2 class="!mb-8 !text-lg text-slate-700 inline-block">Latest Post</h2>
+
+    {% set blog_section = get_section(path="blog/_index.md") %}
+    {% set latest_post = blog_section.pages | first %}
+
+    <div class="pb-8">
+        <a class="text-black hover:underline text-xl" href="{{ latest_post.permalink }}">{{ latest_post.title }}</a> <span class="block md:inline md:ml-4 text-sm text-gray-500">{{ latest_post.date | date(format="%Y / %m / %d") }}</span>
+        <div class="mt-4 prose prose-a:underline">
+            {{ latest_post.summary | safe }}
+        </div>
+    </div>
+
+    <h2 class="!mb-0 !text-lg text-slate-700 inline-block">Favorite Topics</h2>
+
+    <div>
+        {% set topics = get_taxonomy(kind = "topics") %}
+        <ul class="list-none !ps-0 flex flex-wrap gap-x-2 gap-y-1">
+            {% for topic in topics.items | sort(attribute="page_count") | reverse %}
+                <li class="inline-block !ps-0 !m-0">
+                    <a class="px-2 py-1 whitespace-nowrap text-sm bg-slate-200 rounded-md no-underline hover:bg-blue-200" href="{{ topic.permalink }}">
+                        {{ topic.name }}&nbsp;&middot;&nbsp;{{ topic.page_count }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <h2 class="!mb-8 !text-lg text-slate-700 inline-block">Current Project</h2>
+
+    <a href="https://mitre.github.io/hipcheck" class="no-underline">
+        <div class="p-8 bg-white rounded-lg shadow-md w-fit group hover:scale-105 transition-transform">
+            <h2 class="!mt-0 !font-medium">Hipcheck <span class="text-green-500">✓</span></h2>
+            <p class="!mb-0">Automated supply chain risk assessment<br>for software packages.</p>
+        </div>
+    </a>
 {% endblock %}
