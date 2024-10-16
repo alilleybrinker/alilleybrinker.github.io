@@ -2,7 +2,7 @@
 title: About
 ---
 
-<img src="/image/andrew.png" alt="Grayscale and dithered picture of Andrew" class="max-w-36 md:max-w-48 rotate-3 shadow-xl rounded-md inline float-right ml-10 mb-10 -top-10 relative">
+<img src="/image/andrew.png" alt="Grayscale and dithered picture of Andrew" class="max-w-36 md:max-w-48 rotate-3 shadow-xl rounded-md inline float-right ml-5 md:ml-10 mb-5 md:mb-10 -top-10 relative">
 
 I&rsquo;m a Principal Engineer at [MITRE][mitre], where I&hellip;
 
