@@ -5,13 +5,19 @@ taxonomies:
     - API Design
 ---
 
+We can learn from case studies of APIs forever trapped by past decisions. Just
+like a video game can softlock and become impossible to progress, so too can
+APIs become softlocked by technical and social commitments.
+
+<!-- more -->
+
+---
+
 "Softlocking" is a term in the world of video games where a game is playable, but can't
 make forward progress. Usually this means the game has a bug, or that the designers and
 quality assurance testers missed some combination of steps that leads to an inability
 to complete the game. It's basically a video game version of "livelock" failures in
 concurrent programs, but "softlock" is (to me) the more fun term, so let's use it.
-
-<!-- more -->
 
 There are situations in API design where the API is softlocked into a broken design
 which can't be fixed. This can happen for a few reasons:

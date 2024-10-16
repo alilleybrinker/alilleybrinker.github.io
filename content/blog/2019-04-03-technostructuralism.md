@@ -6,12 +6,17 @@ taxonomies:
     - Memory Safety
 ---
 
+The systems we build are manifestations of our politics. So what is the
+philosophy of Rust and what does it offer for the state of software?
+
+<!-- more -->
+
+---
+
 So Steve Klabnik posted a really thoughtful piece on open source and free software
 ([read it if you haven't][steve]),
 and the responses on places like Hacker News made an error that seems common in these
 circles: believing working harder will solve a problem.
-
-<!-- more -->
 
 {% info(title = "This is a reproduction of a Twitter thread") %}
 The following is a reproduction of a thread I'd posted
@@ -44,7 +49,7 @@ This is all tied to the underlying politics of the software developers, often
 characterized as "technolibertarian," which believes strongly in the goodness of
 technology, and the primacy of the individual in determining outcomes.
 
-This ideology is diametrically opposed to the structuralist view the Steve appears to
+This ideology is diametrically opposed to the structuralist view that Steve appears to
 be taking in his piece, or that tech critics are often taking in their critiques of
 tech. It plays out in the thousand externalities of tech which go unaddressed.
 

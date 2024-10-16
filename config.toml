@@ -20,15 +20,7 @@ smart_punctuation = true
 
 [extra]
 
-nav = [{ name = "Blog", url = "@/blog/_index.md" }]
-
-social = [
-    { name = "GitHub", url = "https://github.com/alilleybrinker" },
-    { name = "Twitter <span class='text-gray-500/75'>/</span> X", url = "https://x.com/alilleybrinker" },
-    { name = "Bluesky", url = "https://bsky.app/profile/alilleybrinker.com" },
-    { name = "Mastodon", url = "https://hachyderm.io/@alilleybrinker" },
-    { name = "LinkedIn", url = "https://www.linkedin.com/in/alilleybrinker" },
-    { name = "Hacker News", url = "https://news.ycombinator.com/user?id=alilleybrinker" },
-    { name = "Lobste.rs", url = "https://lobste.rs/~alilleybrinker" },
-    { name = "Reddit", url = "https://www.reddit.com/user/alilleybrinker/" },
+nav = [
+    { name = "About", url = "@/about.md" },
+    { name = "Blog", url = "@/blog/_index.md" },
 ]

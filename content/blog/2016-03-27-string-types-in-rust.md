@@ -6,6 +6,13 @@ taxonomies:
 summary: A discussion of the trade-offs and uses of Rust's different string types.
 ---
 
+Rust has many pairs of string types, each with a distinct purpose. Understanding
+those purposes helps with understanding Rust itself.
+
+<!-- more -->
+
+---
+
 This seems to be a common issue, so let's talk about the different string types
 in the Rust programming language. In this post I'm going to explain the
 organization of Rust's string types with [`String`][string] and [`str`][str] as
@@ -13,8 +20,6 @@ examples, then get into the lesser-used string types---[`CString`][cstring],
 [`CStr`][cstr], [`OsString`][osstring], [`OsStr`][osstr], [`PathBuf`][pathbuf],
 and [`Path`][path]---and how the [`Cow`][cow] container can make working with
 Rust strings easier.
-
-<!-- more -->
 
 {% info(title = "This was originally published on a different site.") %}
 This is a reproduction of a post of mine which was originally published on a

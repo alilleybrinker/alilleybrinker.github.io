@@ -5,6 +5,14 @@ taxonomies:
     - Supply Chain Security
 ---
 
+Reduction is seductive in the information-sparse environment immediately after
+a security event. Resisting reduction, gathering facts, and breaking down
+multivariate causes and responses is more productive.
+
+<!-- more -->
+
+---
+
 Another big security event happened.
 
 This time, it’s that the “xz” project was backdoored. The full details
@@ -14,8 +22,6 @@ their antibodies and responding. This will continue as we figure out the scope,
 and secondary impacts and recommended next steps like rotating SSH keys and
 detecting if individual systems have been compromised will no doubt come as
 well.
-
-<!-- more -->
 
 When big security events like this happen, people often quickly try to identify
 causes, and (more importantly) fixes to make sure it doesn’t happen again.

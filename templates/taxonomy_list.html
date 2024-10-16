@@ -18,16 +18,11 @@
         sorted by decreasing frequency.
     </p>
 
-
-    <ul class="list-none border-t not-prose">
-        {% for page in terms %}
-            <li class="border-b py-8">
-                <a class="font-semibold text-black" href="{{ page.permalink }}">{{ page.name }}</a>
+    <ul class="list-none not-prose">
+        {% for term in terms | sort(attribute="page_count") | reverse %}
+            <li class="py-2">
+                <a class="font-normal block text-black group" href="{{ term.permalink }}"><span class="inline-block mr-2 bg-stone-200 py-1 px-2 rounded-md text-xs font-normal">{{ term.page_count }}</span> <span class="group-hover:underline">{{ term.name }}</span></a>
             </li>
         {% endfor %}
     </ul>
-{% endblock %}
-
-{% block sidebar %}
-    {% include "includes/sidebar.html" %}
 {% endblock %}
