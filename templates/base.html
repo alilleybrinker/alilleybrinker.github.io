@@ -44,6 +44,10 @@
 		<meta property="twitter:description" content="{{ social_description }}">
 		<meta property="twitter:image" content="{{ get_url(path="social.png") }}">
 
+		<!-- HTML in your document's head -->
+        <link rel="preconnect" href="https://rsms.me/">
+        <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+
 		<link rel="stylesheet" href="{{ get_url(path="main.css") }}">
 
 		{% block scripts %}{% endblock %}
@@ -52,7 +56,7 @@
 	    <div class="subpixel-antialiased">
 			<div class="py-10 md:py-20 text-black text-base md:text-xl px-5 md:px-0">
 			    <nav class="md:max-w-screen-md md:mx-auto">
-					<ul class="flex gap-4 md:gap-8">
+					<ul class="flex gap-6 md:gap-8">
 	                    <li>
 							<a href="{{ get_url(path='@/_index.md') }}"
 							   class="

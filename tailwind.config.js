@@ -9,7 +9,11 @@ module.exports = {
     "./content/**/*.md",
     "config.toml",
   ],
-  theme: {},
+  theme: {
+    fontFamily: {
+      sans: ["Inter", "sans-serif"],
+    },
+  },
   plugins: [
     // Use the standard typography plugin
     require("@tailwindcss/typography"),

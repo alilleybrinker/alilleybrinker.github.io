@@ -30,20 +30,29 @@
         <ul class="list-none !ps-0 flex flex-wrap gap-x-2 gap-y-1">
             {% for topic in topics.items | sort(attribute="page_count") | reverse %}
                 <li class="inline-block !ps-0 !m-0">
-                    <a class="px-2 py-1 whitespace-nowrap text-sm bg-slate-200 rounded-md no-underline hover:bg-blue-200" href="{{ topic.permalink }}">
-                        {{ topic.name }}&nbsp;&middot;&nbsp;{{ topic.page_count }}
+                    <a class="px-2 py-1 whitespace-nowrap text-sm bg-slate-200 rounded-md no-underline group hover:bg-blue-200" href="{{ topic.permalink }}">
+                        {{ topic.name }} <span class="py-1 px-2 ml-1 -my-1 -mr-2 bg-slate-300 rounded-tr-md rounded-br-md group-hover:bg-blue-300">{{ topic.page_count }}</span>
                     </a>
                 </li>
             {% endfor %}
         </ul>
     </div>
 
-    <h2 class="!mb-8 !text-lg text-slate-700 inline-block">Current Project</h2>
+    <h2 class="!mb-8 !text-lg text-slate-700 inline-block">Current Projects</h2>
 
-    <a href="https://mitre.github.io/hipcheck" class="no-underline">
-        <div class="p-8 bg-white rounded-lg shadow-md w-fit group hover:scale-105 transition-transform">
-            <h2 class="!mt-0 !font-medium">Hipcheck <span class="text-green-500">✓</span></h2>
-            <p class="!mb-0">Automated supply chain risk assessment<br>for software packages.</p>
-        </div>
-    </a>
+    <div class="grid grid-cols-2 gap-5 mb-5">
+        <a href="https://mitre.github.io/hipcheck" class="no-underline">
+            <div class="p-8 bg-white shadow-sm rounded-lg w-fit group hover:scale-105 transition-transform">
+                <h2 class="!mt-0 !font-semibold">Hipcheck <span class="text-green-600 font-black !text-2xl">✓</span></h2>
+                <p class="!mb-0">Automated supply chain risk assessment for software packages.</p>
+            </div>
+        </a>
+
+        <a href="https://omnibor.io" class="no-underline">
+            <div class="p-8 bg-white shadow-sm rounded-lg w-fit group hover:scale-105 transition-transform">
+                <h2 class="!mt-0 !font-black tracking-wide uppercase">OmniBOR</h2>
+                <p class="!mb-0">Reproducible identifiers & fine-grained build dependency tracking for software artifacts.</p>
+            </div>
+        </a>
+    </div>
 {% endblock %}
