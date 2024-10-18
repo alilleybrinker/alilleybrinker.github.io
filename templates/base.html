@@ -1,3 +1,5 @@
+{% import "macros/toc.html" as toc %}
+
 {% if page and page.title %}
     {% set title = page.title ~ " — " ~ config.title %}
     {% set original_title = page.title %}
@@ -23,7 +25,7 @@
 {% endif %}
 
 <!doctype html>
-<html lang="en-US">
+<html lang="en-US" class="">
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -50,14 +52,20 @@
 
 		<link rel="stylesheet" href="{{ get_url(path="main.css") }}">
 
+		<script>
+    		if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    		  document.documentElement.classList.add("dark");
+    		}
+        </script>
+
 		{% block scripts %}{% endblock %}
 	</head>
-	<body class="bg-stone-50">
+	<body class="bg-stone-50 dark:bg-neutral-900">
 	    <div class="subpixel-antialiased">
-			<div class="py-10 md:py-20 text-black text-base md:text-xl px-5 md:px-0">
+			<div class="py-10 md:py-20 text-black dark:text-neutral-100 text-base md:text-xl px-5 md:px-0">
 			    <nav class="md:max-w-screen-md md:mx-auto">
-					<ul class="flex gap-6 md:gap-8">
-	                    <li>
+					<ul class="md:flex gap-6 md:gap-8 max-5-[65ch] md:max-w-[52ch]">
+	                    <li class="block md:inline mb-8 md:mb-0">
 							<a href="{{ get_url(path='@/_index.md') }}"
 							   class="
 									whitespace-nowrap
@@ -75,56 +83,177 @@
 									before:inline-block
 									before:bg-blue-500
 								">
-								<span class='h-card'><span class='p-given-name'>Andrew</span> <span class='p-family-name'>Lilley Brinker</span></span></a></li>
-						<li>
-						    <ul class="flex gap-8">
+								<span class='h-card'><span class='p-given-name'>Andrew</span> <span class='p-family-name'>Lilley Brinker</span></span>
+							</a>
+						</li>
+						<li class="inline">
+						    <ul class="inline-flex md:flex gap-8">
                   		        {% for entry in config.extra.nav %}
                  			        <li><a href="{{ get_url(path=entry.url) }}" class="hover:underline">{{ entry.name | safe }}</a></li>
                  			    {% endfor %}
 							</ul>
 						</li>
+						<li class="inline float-right md:flex-grow">
+    						<div class="inline-flex md:flex justify-end">
+                                <div class="rounded-md px-2 py-0 border border-neutral-200 dark:border-neutral-700 flex">
+         							<a data-active="true" class="
+                                            group
+                                            m-0
+                                            -ml-2
+                                            rounded-l-md
+                                            p-0 px-2
+                                            data-[active]:-my-[1px]
+                                            data-[active]:-ml-[9px] /* 0.5rem + 1px */
+                                            data-[active]:-mr-[1px]
+                                            data-[active]:border
+                                            data-[active]:border-blue-200
+                                            data-[active]:bg-blue-50
+                                            dark:data-[active]:border-blue-800
+                                            dark:data-[active]:bg-blue-900
+                                            hover:bg-neutral-100
+                                            dark:hover:bg-neutral-600
+                                            hover:border hover:border-neutral-300
+                                            dark:hover:border-neutral-500
+                                            hover:-m-[1px] hover:-ml-[9px]
+                                            hover:data-[active]:border
+                                            hover:data-[active]:border-blue-500
+                                            hover:data-[active]:bg-blue-200
+                                            dark:hover:data-[active]:bg-blue-700
+                                            dark:hover:data-[active]:border-blue-600
+                                            " id="color-scheme-light" href="#">
+                                        <svg class="
+                                            inline-block
+                                            pb-[1px]
+                                            w-3 h-3
+                                            stroke-0
+                                            stroke-current
+                                            fill-neutral-400 dark:fill-slate-300
+                                            group-hover:fill-blue-500
+                                            dark:group-hover:fill-white
+                                            "><use xlink:href="/icons/symbol-defs.svg#icon-sun"></use></svg>
+                                    </a>
+         							<a class="
+                                            group
+                                            m-0
+                                            p-0 px-[9px] /* 0.5rem + 1px */
+                                            data-[active]:-my-[1px]
+                                            data-[active]:-mx-[1px]
+                                            data-[active]:border
+                                            data-[active]:border-blue-200
+                                            data-[active]:bg-blue-50
+                                            dark:data-[active]:border-blue-800
+                                            dark:data-[active]:bg-blue-900
+                                            hover:bg-neutral-100
+                                            dark:hover:bg-neutral-600
+                                            hover:border hover:border-neutral-300
+                                            dark:hover:border-neutral-500
+                                            hover:-m-[1px]
+                                            hover:data-[active]:border
+                                            hover:data-[active]:border-blue-500
+                                            hover:data-[active]:bg-blue-200
+                                            dark:hover:data-[active]:bg-blue-700
+                                            dark:hover:data-[active]:border-blue-600
+                                            " id="color-scheme-system" href="#">
+                                                <svg class="
+                                                    inline-block
+                                                    pb-[1px]
+                                                    w-3 h-3
+                                                    stroke-0
+                                                    stroke-current
+                                                    fill-neutral-400 dark:fill-slate-300
+                                                    group-hover:fill-blue-500
+                                                    dark:group-hover:fill-white
+                                                    "><use xlink:href="/icons/symbol-defs.svg#icon-hexagon"></use></svg>
+                                    </a>
+         							<a class="
+                                            group
+                                            m-0
+                                            -mr-2
+                                            rounded-r-md
+                                            p-0 px-2
+                                            data-[active]:-my-[1px]
+                                            data-[active]:-ml-[1px]
+                                            data-[active]:-mr-[9px] /* 0.5rem + 1px */
+                                            data-[active]:border
+                                            data-[active]:border-blue-200
+                                            data-[active]:bg-blue-50
+                                            dark:data-[active]:border-blue-800
+                                            dark:data-[active]:bg-blue-900
+                                            hover:bg-neutral-100
+                                            dark:hover:bg-neutral-600
+                                            hover:border hover:border-neutral-300
+                                            dark:hover:border-neutral-500
+                                            hover:-m-[1px] hover:-mr-[9px]
+                                            hover:data-[active]:border
+                                            hover:data-[active]:border-blue-500
+                                            hover:data-[active]:bg-blue-200
+                                            dark:hover:data-[active]:bg-blue-700
+                                            dark:hover:data-[active]:border-blue-600
+                                            " id="color-scheme-dark" href="#">
+                                                <svg class="
+                                                    inline-block
+                                                    pb-[1px]
+                                                    w-3 h-3
+                                                    stroke-0
+                                                    stroke-current
+                                                    fill-neutral-400 dark:fill-slate-300
+                                                    group-hover:fill-blue-500
+                                                    dark:group-hover:fill-white
+                                                    "><use xlink:href="/icons/symbol-defs.svg#icon-moon"></use></svg>
+                                    </a>
+                                </div>
+    						</div>
+						</li>
 					</ul>
 				</nav>
 			</div>
 
-			<div class="px-5 lg:px-0 md:max-w-screen-md md:mx-auto">
+			<div class="px-5 md:px-0 md:max-w-screen-md md:mx-auto">
     			<div class="mb-32">
            	        <div class="
                         mb-10
        					prose
-                        prose-base md:prose-base prose-stone
+                        prose-base md:prose-base prose-stone dark:prose-invert
                         prose-headings:font-normal
-       					prose-a:text-black
+       					prose-a:text-black dark:prose-a:text-white
        					prose-a:font-normal
        					prose-a:decoration-1 hover:prose-a:decoration-2
        					prose-a:underline-offset-2 hover:prose-a:underline-offset-auto
        					prose-a:decoration-stone-400 hover:prose-a:decoration-stone-800
+                        dark:prose-a:decoration-stone-500 dark:hover:prose-a:decoration-stone-300
        					prose-code:after:content-none prose-code:before:content-none
                         prose-blockquote:font-normal prose-blockquote:not-italic
                         prose-blockquote:text-base
                         prose-figure:bg-blue-50 prose-figure:p-4
+                        dark:prose-figure:bg-neutral-600
                         prose-figure:border prose-figure:border-blue-100
+                        dark:prose-figure:border-neutral-500
                         prose-figure:rounded-md
                         prose-blockquote:border-l-blue-200
+                        dark:prose-blockquote:border-l-blue-500
                         prose-blockquote:text-black
+                        dark:prose-blockquote:text-white
                         prose-figcaption:text-blue-950 prose-figcaption:opacity-70
+                        dark:prose-figcaption:text-blue-50
                         prose-code:font-normal
+                        text-pretty
        					">
              			{% block header %}
                              {% if original_title %}
                                  <h1 class="block mb-5 text-3xl md:text-4xl">
-                                     {{ original_title }}
+                                    {{ original_title }}
 
                                      <div class="block">
                                         {% if page and page.date %}
-                                            <span class="inline-block text-sm md:text-base mt-4 text-gray-500 font-normal">{{ page.date | date(format="%Y / %m / %d") }}</span >
+                                            <span class="inline-block text-sm md:text-base mt-4 text-neutral-500 font-normal">{{ page.date | date(format="%Y / %m / %d") }}</span >
                                         {% endif %}
                                         {% if page and page.taxonomies['topics'] %}
                                             <span class="mx-2 text-xl">&middot;</span> <span class="inline-block text-sm md:text-base font-normal mt-4 mr-2 md:mr-0">
                                                 {% for topic in page.taxonomies['topics'] %}
-                                                    <a class="text-xs relative -top-[2px] py-1 px-2 no-underline bg-slate-200 text-black rounded-md hover:bg-blue-200" href="{{ get_taxonomy_url(kind="topics", name=topic) }}">{{ topic }}</a >
+                                                    <a class="text-xs relative -top-[2px] py-1 px-2 no-underline bg-slate-200 dark:bg-slate-700 text-black rounded-md hover:bg-blue-200 dark:hover:bg-blue-500" href="{{ get_taxonomy_url(kind="topics", name=topic) }}">{{ topic }}</a >
                                                 {% endfor %}
                                             </span>
+                                            <span class="mr-2 text-xl">&middot;</span> <span class="-top-[0.125rem] relative text-sm md:text-base text-neutral-500">Reading&nbsp;time: <span class="whitespace-nowrap ">{{ page.reading_time }} minutes</span></span>
                                         {% endif %}
                                      </div>
                                  </h1>
@@ -133,8 +262,110 @@
 
         				{% block content %}{% endblock %}
          			</div>
+
+
+                    <div class="mt-14 text-xs text-neutral-400">
+                        <p>Copyright Andrew Lilley Brinker. Made with ❤ in California</p>
+                    </div>
     			</div>
 			</div>
 		</div>
-	</body >
+
+		<script>
+  		  var darkButton = document.querySelector("#color-scheme-dark");
+          var lightButton = document.querySelector("#color-scheme-light");
+          var systemButton = document.querySelector("#color-scheme-system");
+
+          class ThemeError extends Error {
+            constructor(msg) {
+              super(msg);
+              this.name = "ThemeError";
+            }
+          }
+
+          /**
+           * Set the active theme selector button.
+           *
+           * @param button {String} The name of the button to choose.
+           * @throws Throws
+           */
+          var setActiveButton = function (button) {
+            delete darkButton.dataset.active;
+            delete lightButton.dataset.active;
+            delete systemButton.dataset.active;
+
+            if (button == "dark") {
+              darkButton.dataset.active = true;
+            } else if (button == "light") {
+              lightButton.dataset.active = true;
+            } else if (button == "system") {
+              systemButton.dataset.active = true;
+            } else {
+              throw ThemeError(`Invalid button identifier: '${button}'`);
+            }
+          };
+
+          var setDarkMode = function (config) {
+            if (config?.isSystem) {
+              localStorage.removeItem("theme");
+              setActiveButton("system");
+            } else {
+              localStorage.theme = "dark";
+              setActiveButton("dark");
+            }
+
+    		document.documentElement.classList.add("dark");
+          };
+
+          var setLightMode = function (config) {
+            if (config?.isSystem) {
+              localStorage.removeItem("theme");
+              setActiveButton("system");
+            } else {
+              localStorage.theme = "light";
+              setActiveButton("light");
+            }
+
+    		document.documentElement.classList.remove("dark");
+          };
+
+          if (localStorage.theme === 'dark') {
+            setDarkMode();
+          } else if (localStorage.theme === 'light') {
+            setLightMode();
+          } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            setDarkMode({ isSystem: true });
+          } else {
+            setLightMode({ isSystem: true });
+          }
+
+          darkButton.addEventListener('click', () => {
+            setDarkMode();
+          });
+
+          lightButton.addEventListener('click', () => {
+            setLightMode();
+          });
+
+          systemButton.addEventListener('click', () => {
+            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+              setDarkMode({ isSystem: true });
+            } else {
+              setLightMode({ isSystem: true });
+            }
+          });
+
+          window.matchMedia('(prefers-color-scheme: dark)').addListener((e) => {
+            if (e.matches && !localStorage.theme) {
+              setDarkMode({ isSystem: true });
+            }
+          });
+
+          window.matchMedia('(prefers-color-scheme: light)').addListener((e) => {
+            if (e.matches && !localStorage.theme) {
+              setLightMode({ isSystem: true });
+            }
+          });
+		</script>
+	</body>
 </html>

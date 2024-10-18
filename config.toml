@@ -10,6 +10,8 @@ description = """\
 compile_sass = false
 build_search_index = true
 minify_html = true
+generate_feeds = true
+author = "Andrew Lilley Brinker"
 taxonomies = [{ name = "topics", feed = true }]
 
 [markdown]

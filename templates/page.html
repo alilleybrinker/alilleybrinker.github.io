@@ -7,5 +7,10 @@
 {% endblock %}
 
 {% block content %}
+    {% if page.extra.toc %}
+        {{ toc::toc(page=page) }}
+        <div id="introduction"></div>
+    {% endif %}
+
     {{ page.content | markdown | safe }}
 {% endblock %}

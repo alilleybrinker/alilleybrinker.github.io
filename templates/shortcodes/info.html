@@ -1,5 +1,5 @@
 
-<div class="text-sm leading-5 bg-gray-100 rounded-md p-4 pb-1 mb-4">
-    {% if title %}<span class="font-bold text-black block">{{ title }}</span>{% endif %}
+<div class="text-sm leading-5 bg-neutral-100 dark:bg-neutral-700 rounded-md p-4 pb-1 mb-4">
+    {% if title %}<span class="font-bold text-black dark:text-white block">{{ title }}</span>{% endif %}
     {{ body | markdown | safe }}
 </div>

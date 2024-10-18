@@ -1,0 +1,120 @@
+
+{% macro toc(page) %}
+    {% if page.toc %}
+        <div id="toc" class="
+                text-sm
+                p-5
+                mb-10
+                border-2 border-dashed border-neutral-200 dark:border-neutral-600
+                rounded-md
+                z-50
+                sticky -top-1
+                transition-all
+                max-h-screen
+                overflow-y-auto
+                duration-[50ms]
+                data-[stuck]:bg-white dark:data-[stuck]:bg-neutral-600
+                data-[stuck]:border-2
+                data-[stuck]:border-solid
+                data-[stuck]:border-white dark:data-[stuck]:border-neutral-600
+                data-[stuck]:shadow-md
+                data-[stuck]:rounded-none
+                data-[stuck]:rounded-b-md
+                data-[stuck]:-mx-5">
+            <div class="flex justify-between items-center">
+                <span class="font-medium align-middle pt-1 dark:text-neutral-300">Table of Contents</span>
+                <a href="#" id="toc-toggle" class="
+                    no-underline
+                    py-1 px-2
+                    rounded-full
+                    bg-neutral-50 dark:bg-neutral-700
+                    border border-neutral-200 dark:border-neutral-600
+                    align-top
+                    inline-block
+                    hover:bg-white dark:hover:bg-neutral-600
+                    hover:border-blue-500
+                    hover:outline-1 hover:outline-blue-500 hover:outline
+                    ">↓</a>
+            </div>
+
+            <ul class="list-disc hidden" id="toc-list">
+                <li><a href="#introduction">Introduction</a></li>
+                {% for h1 in page.toc %}
+                    <li>
+                        {% set h1_link = h1.permalink | split(pat='#') | nth(n=1) %}
+                        <a href="#{{ h1_link | safe }}">{{ h1.title }}</a>
+                        {% if h1.children %}
+                            <ul>
+                                {% for h2 in h1.children %}
+                                    <li>
+                                        {% set h2_link = h2.permalink | split(pat='#') | nth(n=1) %}
+                                        <a href="#{{ h2_link | safe }}">{{ h2.title }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <script>
+          (function () {
+            let button = document.querySelector("#toc-toggle");
+            let list = document.querySelector("#toc-list");
+            button.addEventListener("click", (e) => {
+              e.preventDefault();
+              button.classList.toggle("rotate-180");
+              list.classList.toggle("hidden");
+            });
+          })();
+
+          (function () {
+            var toc = document.querySelector('#toc');
+            var button = document.querySelector("#toc-toggle");
+            var list = document.querySelector("#toc-list");
+            document.body.addEventListener('click', function (event) {
+                if (toc.contains(event.target) && (button !== event.target) && (!list.classList.contains("hidden"))) {
+                    list.classList.toggle("hidden");
+                }
+            });
+          })();
+
+          (function () {
+            // This code copied from: https://stackoverflow.com/a/56678169
+            // Used under the CC BY-SA 3.0 license without modification.
+            const observer = new IntersectionObserver(
+              ([e]) => e.target.toggleAttribute('data-stuck', e.intersectionRatio < 1),
+              {threshold: [1]}
+            );
+
+            observer.observe(document.querySelector('#toc'));
+          })();
+
+          (function () {
+            /*
+             * This code from: https://stackoverflow.com/a/7717572
+             * Used under the CC BY-SA 3.0 license with modifications.
+             */
+            document.querySelectorAll('#toc-list a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', e => {
+                    e.preventDefault();
+
+                    // Math to figure out where to scroll to.
+                    let toc = document.querySelector("#toc");
+                    let tocHeight = toc.getBoundingClientRect().height;
+                    let headerOffset = tocHeight + 32; // 2rem
+                    let header = document.querySelector(event.target.getAttribute("href"));
+                    let headerPosition = header.getBoundingClientRect().top;
+                    let offsetPosition = (headerPosition + window.scrollY) - headerOffset;
+
+                    window.scrollTo({
+                      top: offsetPosition,
+                      behavior: "smooth"
+                    });
+                });
+            });
+          })();
+        </script>
+    {% endif %}
+{% endmacro %}

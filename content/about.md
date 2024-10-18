@@ -2,7 +2,7 @@
 title: About
 ---
 
-<img src="/image/andrew.png" alt="Grayscale and dithered picture of Andrew" class="max-w-36 md:max-w-48 rotate-3 shadow-xl rounded-md inline float-right ml-5 md:ml-10 mb-5 md:mb-10 -top-10 relative">
+<img src="/image/andrew.png" alt="Grayscale and dithered picture of Andrew" class="max-w-36 md:max-w-48 rotate-3 shadow-xl dark:shadow-none rounded-md inline float-right ml-5 md:ml-10 mb-5 md:mb-10 -top-10 relative">
 
 I&rsquo;m a Principal Engineer at [MITRE][mitre], where I&hellip;
 
@@ -16,6 +16,16 @@ creation of the [Rust library and `omnibor` CLI][omnibor-rs].
 
 [GitHub] &middot; [Bluesky] &middot; [Twitter / X] &middot; [Mastodon] &middot;
 [LinkedIn] &middot; [Hacker News] &middot; [Lobste.rs] &middot; [Reddit]
+
+### Getting in Touch
+
+I don't check every platform equally often. If you want to get in touch, the
+best ways to do it are to direct message me on [Bluesky] or [Twitter / X].
+
+My preference is Bluesky. I am still on Twitter / X because there are key
+communities I am part of which are still there. I would love to leave someday.
+
+If you want to chat securely, ask me for my Signal username.
 
 [GitHub]: https://github.com/alilleybrinker
 [Bluesky]: https://bsky.app/profile/alilleybrinker.com
