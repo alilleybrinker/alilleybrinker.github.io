@@ -51,12 +51,7 @@
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
 
 		<link rel="stylesheet" href="{{ get_url(path="main.css") }}">
-
-		<script>
-    		if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    		  document.documentElement.classList.add("dark");
-    		}
-        </script>
+		<script type="text/javascript" src="{{ get_url(path = 'js/header.mjs') }}"></script>
 
 		{% block scripts %}{% endblock %}
 	</head>
@@ -89,117 +84,60 @@
 						<li class="inline">
 						    <ul class="inline-flex md:flex gap-8">
                   		        {% for entry in config.extra.nav %}
-                 			        <li><a href="{{ get_url(path=entry.url) }}" class="hover:underline">{{ entry.name | safe }}</a></li>
+                 			        <li><a href="{{ get_url(path=entry.url) }}" class="font-light hover:underline">{{ entry.name | safe }}</a></li>
                  			    {% endfor %}
 							</ul>
 						</li>
 						<li class="inline float-right md:flex-grow">
     						<div class="inline-flex md:flex justify-end">
-                                <div class="rounded-md px-2 py-0 border border-neutral-200 dark:border-neutral-700 flex">
-         							<a data-active="true" class="
-                                            group
-                                            m-0
-                                            -ml-2
-                                            rounded-l-md
-                                            p-0 px-2
-                                            data-[active]:-my-[1px]
-                                            data-[active]:-ml-[9px] /* 0.5rem + 1px */
-                                            data-[active]:-mr-[1px]
-                                            data-[active]:border
-                                            data-[active]:border-blue-200
-                                            data-[active]:bg-blue-50
-                                            dark:data-[active]:border-blue-800
-                                            dark:data-[active]:bg-blue-900
-                                            hover:bg-neutral-100
-                                            dark:hover:bg-neutral-600
-                                            hover:border hover:border-neutral-300
-                                            dark:hover:border-neutral-500
-                                            hover:-m-[1px] hover:-ml-[9px]
-                                            hover:data-[active]:border
-                                            hover:data-[active]:border-blue-500
-                                            hover:data-[active]:bg-blue-200
-                                            dark:hover:data-[active]:bg-blue-700
-                                            dark:hover:data-[active]:border-blue-600
-                                            " id="color-scheme-light" href="#">
-                                        <svg class="
-                                            inline-block
-                                            pb-[1px]
-                                            w-3 h-3
-                                            stroke-0
-                                            stroke-current
-                                            fill-neutral-400 dark:fill-slate-300
-                                            group-hover:fill-blue-500
-                                            dark:group-hover:fill-white
-                                            "><use xlink:href="/icons/symbol-defs.svg#icon-sun"></use></svg>
+                                <div id="theme-selector" class="flex justify-stretch items-stretch bg-neutral-100 dark:bg-neutral-900 -mt-1 p-[2px] rounded-full w-9 hover:w-[6.25rem] transition-[width] ease-linear duration-75 delay-300 hover:delay-0 overflow-x-clip overflow-y-visible">
+                                    <a data-theme="light" class="
+                                        theme-option
+                                        data-[active]:bg-[radial-gradient(circle,_rgba(147,197,253,0.75)_0%,_rgba(147,197,253,0)_50%,_rgba(147,197,253,0)_100%)]
+                                        dark:data-[active]:bg-[radial-gradient(circle,_rgba(147,197,253,0.25)_0%,_rgba(147,197,253,0)_50%,_rgba(147,197,253,0)_100%)]
+                                        data-[active]:text-blue-600
+                                        py-[2px] px-2
+                                        rounded-full
+                                        text-neutral-400
+                                        hover:bg-blue-100
+                                        dark:hover:bg-blue-500/25
+                                        hover:text-blue-500
+                                        " href="#">
+                                            <svg class="icon icon-sun mt-[-2px]">
+                                                <use xlink:href="{{ get_url(path = "/icons/symbol-defs.svg") }}#icon-sun"></use>
+                                            </svg>
                                     </a>
-         							<a class="
-                                            group
-                                            m-0
-                                            p-0 px-[9px] /* 0.5rem + 1px */
-                                            data-[active]:-my-[1px]
-                                            data-[active]:-mx-[1px]
-                                            data-[active]:border
-                                            data-[active]:border-blue-200
-                                            data-[active]:bg-blue-50
-                                            dark:data-[active]:border-blue-800
-                                            dark:data-[active]:bg-blue-900
-                                            hover:bg-neutral-100
-                                            dark:hover:bg-neutral-600
-                                            hover:border hover:border-neutral-300
-                                            dark:hover:border-neutral-500
-                                            hover:-m-[1px]
-                                            hover:data-[active]:border
-                                            hover:data-[active]:border-blue-500
-                                            hover:data-[active]:bg-blue-200
-                                            dark:hover:data-[active]:bg-blue-700
-                                            dark:hover:data-[active]:border-blue-600
-                                            " id="color-scheme-system" href="#">
-                                                <svg class="
-                                                    inline-block
-                                                    pb-[1px]
-                                                    w-3 h-3
-                                                    stroke-0
-                                                    stroke-current
-                                                    fill-neutral-400 dark:fill-slate-300
-                                                    group-hover:fill-blue-500
-                                                    dark:group-hover:fill-white
-                                                    "><use xlink:href="/icons/symbol-defs.svg#icon-hexagon"></use></svg>
+                                    <a data-theme="system" class="
+                                        theme-option
+                                        data-[active]:bg-[radial-gradient(circle,_rgba(147,197,253,0.75)_0%,_rgba(147,197,253,0)_50%,_rgba(147,197,253,0)_100%)]
+                                        dark:data-[active]:bg-[radial-gradient(circle,_rgba(147,197,253,0.25)_0%,_rgba(147,197,253,0)_50%,_rgba(147,197,253,0)_100%)]
+                                        data-[active]:text-blue-600
+                                        py-[2px] px-2
+                                        rounded-full
+                                        text-neutral-400
+                                        hover:bg-blue-100
+                                        dark:hover:bg-blue-500/25
+                                        hover:text-blue-500
+                                        " href="#">
+                                            <svg class="icon icon-zap mt-[-2px]">
+                                                <use xlink:href="{{ get_url(path = "/icons/symbol-defs.svg") }}#icon-zap"></use>
+                                            </svg>
                                     </a>
-         							<a class="
-                                            group
-                                            m-0
-                                            -mr-2
-                                            rounded-r-md
-                                            p-0 px-2
-                                            data-[active]:-my-[1px]
-                                            data-[active]:-ml-[1px]
-                                            data-[active]:-mr-[9px] /* 0.5rem + 1px */
-                                            data-[active]:border
-                                            data-[active]:border-blue-200
-                                            data-[active]:bg-blue-50
-                                            dark:data-[active]:border-blue-800
-                                            dark:data-[active]:bg-blue-900
-                                            hover:bg-neutral-100
-                                            dark:hover:bg-neutral-600
-                                            hover:border hover:border-neutral-300
-                                            dark:hover:border-neutral-500
-                                            hover:-m-[1px] hover:-mr-[9px]
-                                            hover:data-[active]:border
-                                            hover:data-[active]:border-blue-500
-                                            hover:data-[active]:bg-blue-200
-                                            dark:hover:data-[active]:bg-blue-700
-                                            dark:hover:data-[active]:border-blue-600
-                                            " id="color-scheme-dark" href="#">
-                                                <svg class="
-                                                    inline-block
-                                                    pb-[1px]
-                                                    w-3 h-3
-                                                    stroke-0
-                                                    stroke-current
-                                                    fill-neutral-400 dark:fill-slate-300
-                                                    group-hover:fill-blue-500
-                                                    dark:group-hover:fill-white
-                                                    "><use xlink:href="/icons/symbol-defs.svg#icon-moon"></use></svg>
+                                    <a data-theme="dark" class="
+                                        theme-option
+                                        data-[active]:bg-[radial-gradient(circle,_rgba(147,197,253,0.75)_0%,_rgba(147,197,253,0)_50%,_rgba(147,197,253,0)_100%)]
+                                        dark:data-[active]:bg-[radial-gradient(circle,_rgba(147,197,253,0.25)_0%,_rgba(147,197,253,0)_50%,_rgba(147,197,253,0)_100%)]
+                                        data-[active]:text-blue-600
+                                        py-[2px] px-2
+                                        rounded-full
+                                        text-neutral-400
+                                        hover:bg-blue-100
+                                        dark:hover:bg-blue-500/25
+                                        hover:text-blue-500
+                                        " href="#">
+                                            <svg class="icon icon-moon mt-[-2px]">
+                                                <use xlink:href="{{ get_url(path = "/icons/symbol-defs.svg") }}#icon-moon"></use>
+                                            </svg>
                                     </a>
                                 </div>
     						</div>
@@ -253,7 +191,7 @@
                                                     <a class="text-xs relative -top-[2px] py-1 px-2 no-underline bg-slate-200 dark:bg-slate-700 text-black rounded-md hover:bg-blue-200 dark:hover:bg-blue-500" href="{{ get_taxonomy_url(kind="topics", name=topic) }}">{{ topic }}</a >
                                                 {% endfor %}
                                             </span>
-                                            <span class="mr-2 text-xl">&middot;</span> <span class="-top-[0.125rem] relative text-sm md:text-base text-neutral-500">Reading&nbsp;time: <span class="whitespace-nowrap ">{{ page.reading_time }} minutes</span></span>
+                                            <span class="ml-2 mr-2 text-xl">&middot;</span> <span class="-top-[0.125rem] relative text-sm md:text-base text-neutral-500">Reading&nbsp;time: <span class="whitespace-nowrap ">{{ page.reading_time }} minutes</span></span>
                                         {% endif %}
                                      </div>
                                  </h1>
@@ -271,101 +209,6 @@
 			</div>
 		</div>
 
-		<script>
-  		  var darkButton = document.querySelector("#color-scheme-dark");
-          var lightButton = document.querySelector("#color-scheme-light");
-          var systemButton = document.querySelector("#color-scheme-system");
-
-          class ThemeError extends Error {
-            constructor(msg) {
-              super(msg);
-              this.name = "ThemeError";
-            }
-          }
-
-          /**
-           * Set the active theme selector button.
-           *
-           * @param button {String} The name of the button to choose.
-           * @throws Throws
-           */
-          var setActiveButton = function (button) {
-            delete darkButton.dataset.active;
-            delete lightButton.dataset.active;
-            delete systemButton.dataset.active;
-
-            if (button == "dark") {
-              darkButton.dataset.active = true;
-            } else if (button == "light") {
-              lightButton.dataset.active = true;
-            } else if (button == "system") {
-              systemButton.dataset.active = true;
-            } else {
-              throw ThemeError(`Invalid button identifier: '${button}'`);
-            }
-          };
-
-          var setDarkMode = function (config) {
-            if (config?.isSystem) {
-              localStorage.removeItem("theme");
-              setActiveButton("system");
-            } else {
-              localStorage.theme = "dark";
-              setActiveButton("dark");
-            }
-
-    		document.documentElement.classList.add("dark");
-          };
-
-          var setLightMode = function (config) {
-            if (config?.isSystem) {
-              localStorage.removeItem("theme");
-              setActiveButton("system");
-            } else {
-              localStorage.theme = "light";
-              setActiveButton("light");
-            }
-
-    		document.documentElement.classList.remove("dark");
-          };
-
-          if (localStorage.theme === 'dark') {
-            setDarkMode();
-          } else if (localStorage.theme === 'light') {
-            setLightMode();
-          } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            setDarkMode({ isSystem: true });
-          } else {
-            setLightMode({ isSystem: true });
-          }
-
-          darkButton.addEventListener('click', () => {
-            setDarkMode();
-          });
-
-          lightButton.addEventListener('click', () => {
-            setLightMode();
-          });
-
-          systemButton.addEventListener('click', () => {
-            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-              setDarkMode({ isSystem: true });
-            } else {
-              setLightMode({ isSystem: true });
-            }
-          });
-
-          window.matchMedia('(prefers-color-scheme: dark)').addListener((e) => {
-            if (e.matches && !localStorage.theme) {
-              setDarkMode({ isSystem: true });
-            }
-          });
-
-          window.matchMedia('(prefers-color-scheme: light)').addListener((e) => {
-            if (e.matches && !localStorage.theme) {
-              setLightMode({ isSystem: true });
-            }
-          });
-		</script>
+		<script type="text/javascript" src="{{ get_url(path = 'js/footer.mjs') }}"></script>
 	</body>
 </html>

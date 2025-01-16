@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if section.title %}
+        {{ section.title }}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {{ section.content | markdown | safe }}
+
+    <ul class="pt-5 list-none p-0 !ps-0">
+        {% for page in section.pages %}
+            <li class="py-8">
+                <a class="text-black dark:text-white no-underline hover:underline text-xl" href="{{ page.permalink }}">{{ page.title }}</a> <span class="block md:inline md:ml-4 text-sm text-gray-500">{{ page.date | date(format="%Y / %m / %d") }}</span>
+                <div class="mt-4 prose dark:prose-invert prose-a:underline">
+                    {{ page.content | safe }}
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
