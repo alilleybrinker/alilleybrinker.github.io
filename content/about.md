@@ -14,16 +14,17 @@ creation of the [Rust library and `omnibor` CLI][omnibor-rs].
 
 ## Where to Find Me
 
-[GitHub] &middot; [Bluesky] &middot; [Twitter / X] &middot; [Mastodon] &middot;
+[GitHub] &middot; [Bluesky] &middot; [Mastodon] &middot;
 [LinkedIn] &middot; [Hacker News] &middot; [Lobste.rs] &middot; [Reddit]
+
+I still maintain a [Twitter / X] account because I sometimes need to be able
+to read things there, and I do not want to risk my old account being claimed
+by someone else.
 
 ### Getting in Touch
 
 I don't check every platform equally often. If you want to get in touch, the
-best ways to do it are to direct message me on [Bluesky] or [Twitter / X].
-
-My preference is Bluesky. I am still on Twitter / X because there are key
-communities I am part of which are still there. I would love to leave someday.
+best way to do it is to direct message me on [Bluesky].
 
 If you want to chat securely, ask me for my Signal username.
 
