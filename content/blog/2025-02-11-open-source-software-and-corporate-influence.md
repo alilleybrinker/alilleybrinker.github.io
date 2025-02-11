@@ -728,7 +728,7 @@ The author's affiliation with The MITRE Corporation is provided for identificati
 
 [Christine Peterson]: https://foresight.org/our-team/christine-peterson-co-founder-past-president/
 [Open Source Initiative]: https://opensource.org/about
-["Open Source Definition"]: https://opensource.org/osd
+["Open Source Definition,"]: https://opensource.org/osd
 ["The New Kingmakers" by Stephen O'Grady]: https://thenewkingmakers.com/
 [Heartbleed vulnerability]: https://en.wikipedia.org/wiki/Heartbleed
 ["Seeing Like a State,"]: https://yalebooks.yale.edu/book/9780300078152/seeing-like-a-state/
