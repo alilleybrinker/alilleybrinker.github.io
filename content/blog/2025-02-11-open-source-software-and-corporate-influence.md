@@ -715,10 +715,11 @@ Long live open source!
 
 ## Appreciation
 
-Thank you to [Ashley Williams] and [Hazel Weakly] for reviewing this post
-and providing feedback pre-publication. Your insights were instrumental
-both in shaping my thinking as I wrote the post, and in clarifying and
-improving it once drafted.
+Thank you to [Ashley Williams], former Executive Director of the [Rust Foundation]
+and founder of [Axo.dev], and [Hazel Weakly], Board Member for the [Haskell Foundation]
+and a [Nivenly Foundation Fellow], for reviewing this post and providing
+feedback pre-publication. Your insights were instrumental both in shaping my
+thinking as I wrote the post, and in clarifying and improving it once drafted.
 
 ## Disclaimer
 
@@ -751,6 +752,10 @@ The author's affiliation with The MITRE Corporation is provided for identificati
 [oss_lift]: https://changelog.com/friends/41
 [adam_fair]: https://www.youtube.com/watch?v=rmhYHzJpkuo
 [xz]: https://research.swtch.com/xz-timeline
-[Ashley Williams]: https://x.com/ag_dubs
+[Ashley Williams]: https://bsky.app/profile/agdubs.bsky.social
 [Hazel Weakly]: https://hazelweakly.me/
 [typescript]: https://bsky.app/profile/macwright.com/post/3lgiqobidzc2u
+[Nivenly Foundation Fellow]: https://nivenly.org/who/
+[Axo.dev]: https://axo.dev/
+[Rust Foundation]: https://rustfoundation.org/
+[Haskell Foundation]: https://haskell.foundation/who-we-are/
