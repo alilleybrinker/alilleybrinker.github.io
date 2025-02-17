@@ -4,7 +4,7 @@ name: Deploy Website
 # run manually from the GitHub Actions page.
 on:
   push:
-    branches: [$default-branch]
+    branches: [main]
   workflow_dispatch:
 
 # Sets permissions of the `GITHUB_TOKEN` to allow deployment to GitHub Pages
@@ -25,10 +25,7 @@ jobs:
   # Build the site with Zola and the Tailwindcss CLI
   #--------------------------------------------------------------------------
   build:
-    runs-on: ubuntu-latest
-
-    env:
-      TAILWIND_VERSION: 3.4.4
+    runs-on: ubuntu-24.04
 
     steps:
       # Check out the repository.
@@ -39,17 +36,12 @@ jobs:
       - name: Install Zola
         uses: taiki-e/install-action@v2
         with:
-          tool: zola@0.19.1
+          tool: zola@0.20.0
 
       # Install the latest version of the Tailwind CLI.
       - name: Install Tailwind CLI
         run: |
-          curl --proto '=https' --tlsv1.2 -sSLO https://github.com/tailwindlabs/tailwindcss/releases/download/v${TAILWIND_VERSION}/tailwindcss-linux-x64
-          chmod +x tailwindcss-linux-x64
-          mv tailwindcss-linux-x64 tailwindcss
-          mkdir -p "${HOME}/.local/bin"
-          mv tailwindcss "${HOME}/.local/bin/tailwindcss"
-          echo "${HOME}/.local/bin" >> $GITHUB_PATH
+          npm install tailwindcss @tailwindcss/cli
 
       # Setup GitHub Pages
       #
@@ -68,7 +60,7 @@ jobs:
       - name: Build Website
         run: |
           zola build
-          tailwindcss -i styles/main.css -o public/main.css
+          npx @tailwindcss/cli -i styles/main.css -o public/main.css
 
       # Upload the output of the build as an Actions artifact so the deploy
       # step can pick it up and use it.
@@ -84,7 +76,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: build
     steps:
       - name: Deploy to GitHub Pages
