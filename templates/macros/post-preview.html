@@ -8,7 +8,7 @@
         </h2>
 
         <div class="text-sm text-gray-500">
-            {{ post.date | date(format="%Y / %m / %d") }}
+            {{ post.date | date(format="%B %d, %Y") }}
             {% if post.taxonomies.type is containing("Mini") %}
                 &middot; <a href="{{ post.permalink }}">Permalink</a>
             {% endif %}

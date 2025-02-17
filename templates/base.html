@@ -135,19 +135,26 @@
              			{% block header %}
                              {% if original_title %}
                                  <h1 class="block mb-5 text-3xl md:text-4xl">
-                                    {{ original_title | regex_replace(pattern=`"(?P<title>.+)"`, rep=`“$title”`) }}
+                                    <span class="leading-snug block mb-4">
+                                        {{ original_title | regex_replace(pattern=`"(?P<title>.+)"`, rep=`“$title”`) }}
+                                    </span>
 
-                                     <div class="block">
+                                     <div class="flex flex-wrap items-center gap-2 content-center text-sm md:text-base text-neutral-500">
                                         {% if page and page.date %}
-                                            <span class="inline-block text-sm md:text-base mt-4 text-neutral-500 font-normal">{{ page.date | date(format="%Y / %m / %d") }}</span >
+                                            <span class="">{{ page.date | date(format="%B %d, %Y") }}</span>
                                         {% endif %}
                                         {% if page and page.taxonomies['topics'] %}
-                                            <span class="mx-2 text-xl">&middot;</span> <span class="inline-block text-sm md:text-base font-normal mt-4 mr-2 md:mr-0">
+                                            <span class="font-black text-neutral-400 dark:text-neutral-600">&middot;</span>
+                                            <span class="">
+                                                Read in <span class="whitespace-nowrap">{{ page.reading_time }} minutes</span>
+                                            </span>
+                                            <span class="font-black text-neutral-400 dark:text-neutral-600">&middot;</span>
+                                            <span class="">
+                                                Topics:
                                                 {% for topic in page.taxonomies['topics'] %}
-                                                    <a class="text-xs relative -top-[2px] py-1 px-2 no-underline bg-slate-200 dark:bg-slate-700 text-black rounded-md hover:bg-blue-200 dark:hover:bg-blue-500" href="{{ get_taxonomy_url(kind="topics", name=topic) }}">{{ topic }}</a >
+                                                    <a class="!text-neutral-500" href="{{ get_taxonomy_url(kind="topics", name=topic) }}">{{ topic }}</a>
                                                 {% endfor %}
                                             </span>
-                                            <span class="ml-2 mr-2 text-xl">&middot;</span> <span class="-top-[0.125rem] relative text-sm md:text-base text-neutral-500">Reading&nbsp;time: <span class="whitespace-nowrap ">{{ page.reading_time }} minutes</span></span>
                                         {% endif %}
                                      </div>
                                  </h1>
