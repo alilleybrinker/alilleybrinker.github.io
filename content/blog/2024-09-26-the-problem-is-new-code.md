@@ -1,6 +1,8 @@
 ---
 title: "The Problem is New Code"
 taxonomies:
+  type:
+    - Blog
   topics:
     - Memory Safety
 ---

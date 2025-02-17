@@ -1,6 +1,8 @@
 ---
 title: Renegotiating C
 taxonomies:
+  type:
+    - Blog
   topics:
     - Rust
     - Memory Safety

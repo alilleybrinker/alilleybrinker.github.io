@@ -1,0 +1,16 @@
+
+{% macro post_list(section, limit=-1) %}
+    <div class="!mt-16">
+        {% if limit != -1 %}
+            {% set pages = section.pages | slice(start=0, end=limit) %}
+        {% else %}
+            {% set pages = section.pages %}
+        {% endif %}
+
+        {% for page in pages %}
+            <div class="!mb-16">
+                {{ post::post_preview(post=page) }}
+            </div>
+        {% endfor %}
+    </div>
+{% endmacro %}

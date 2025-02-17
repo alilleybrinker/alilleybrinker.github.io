@@ -1,6 +1,8 @@
 ---
 title: "Jujutsu is the Future"
 taxonomies:
+  type:
+    - Mini
   topics:
     - Jujutsu
 ---

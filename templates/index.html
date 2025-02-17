@@ -9,50 +9,12 @@
 {% block content %}
     <p>I work on software security at <a href="https://www.mitre.org">MITRE</a>,
         including leading development of <a href="https://mitre.github.io/hipcheck">Hipcheck</a>
-        and serving on the <a href="https://omnibor.io">OmniBOR</a> Core Team. You can <a href="{{ get_url(path='@/about.md#where-to-find-me') }}">find me around</a>.</p>
+        and serving on the <a href="https://omnibor.io">OmniBOR</a> Core Team.
+        You can <a href="{{ get_url(path='@/about.md#where-to-find-me') }}">find me around</a>.</p>
 
-    <h2 class="!mb-8 !text-lg text-slate-700 dark:text-neutral-400 inline-block">Latest Post</h2>
-
-    {% set blog_section = get_section(path="blog/_index.md") %}
-    {% set latest_post = blog_section.pages | first %}
-
-    <div class="pb-8">
-        <a class="text-black hover:underline text-xl" href="{{ latest_post.permalink }}">{{ latest_post.title }}</a> <span class="block md:inline md:ml-4 text-sm text-gray-500">{{ latest_post.date | date(format="%Y / %m / %d") }}</span>
-        <div class="mt-4 prose dark:prose-invert prose-a:underline">
-            {{ latest_post.summary | safe }}
-        </div>
-    </div>
-
-    <h2 class="!mb-0 !text-lg text-slate-700 dark:text-neutral-400  inline-block">Favorite Topics</h2>
-
-    <div>
-        {% set topics = get_taxonomy(kind = "topics") %}
-        <ul class="list-none !ps-0 flex flex-wrap gap-x-2 gap-y-1">
-            {% for topic in topics.items | sort(attribute="page_count") | reverse %}
-                <li class="inline-block !ps-0 !m-0">
-                    <a class="px-2 py-1 whitespace-nowrap text-sm bg-slate-200 dark:bg-slate-700 rounded-md no-underline group hover:bg-blue-200 dark:hover:bg-blue-600" href="{{ topic.permalink }}">
-                        {{ topic.name }} <span class="py-1 px-2 ml-1 -my-1 -mr-2 bg-slate-300 dark:bg-slate-600 rounded-tr-md rounded-br-md group-hover:bg-blue-300 dark:group-hover:bg-blue-500">{{ topic.page_count }}</span>
-                    </a>
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
-
-    <h2 class="!mb-8 !text-lg text-slate-700 dark:text-neutral-400 inline-block">Current Projects</h2>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-        <a href="https://mitre.github.io/hipcheck" class="no-underline">
-            <div class="p-4 md:p-8 bg-white dark:bg-neutral-600 shadow-sm rounded-lg group hover:scale-105 transition-transform">
-                <h2 class="!mt-0 !font-semibold text-xl mb-2 md:mb-4">Hipcheck <span class="text-green-600 font-black !text-2xl">✓</span></h2>
-                <p class="!mb-0">Automated supply chain risk assessment for software packages.</p>
-            </div>
-        </a>
-
-        <a href="https://omnibor.io" class="no-underline">
-            <div class="p-4 md:p-8 bg-white dark:bg-neutral-600 shadow-sm rounded-lg group hover:scale-105 transition-transform">
-                <h2 class="!mt-0 !font-black tracking-wide uppercase text-xl mb-2 md:mb-4">OmniBOR</h2>
-                <p class="!mb-0">Reproducible identifiers & fine-grained build dependency tracking for software artifacts.</p>
-            </div>
-        </a>
+    <div class="pb-4">
+        <h2 class="!mb-0 !text-2xl text-slate-700 dark:text-neutral-400 inline-block">Latest Posts</h2>
+        {% set blog_section = get_section(path="blog/_index.md") %}
+        {{ list::post_list(section=blog_section, limit=3) }}
     </div>
 {% endblock %}

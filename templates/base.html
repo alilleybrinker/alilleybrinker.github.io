@@ -1,4 +1,6 @@
 {% import "macros/toc.html" as toc %}
+{% import "macros/post-preview.html" as post %}
+{% import "macros/post-list.html" as list %}
 
 {% if page and page.title %}
     {% set title = page.title ~ " — " ~ config.title %}
@@ -46,6 +48,10 @@
 		<meta property="twitter:description" content="{{ social_description }}">
 		<meta property="twitter:image" content="{{ get_url(path="social.png") }}">
 
+		{% block rss %}
+		  <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ get_url(path="rss.xml", trailing_slash=false) }}">
+		{% endblock %}
+
 		<!-- HTML in your document's head -->
         <link rel="preconnect" href="https://rsms.me/">
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
@@ -57,10 +63,10 @@
 	</head>
 	<body class="bg-stone-50 dark:bg-neutral-900">
 	    <div class="subpixel-antialiased">
-			<div class="py-10 md:py-20 text-black dark:text-neutral-100 text-base md:text-xl px-5 md:px-0">
+			<div class="py-8 mb-8 md:py-20 text-black dark:text-neutral-100 text-base md:text-xl px-5 md:px-0">
 			    <nav class="md:max-w-screen-md md:mx-auto">
-					<ul class="md:flex gap-6 md:gap-8 max-5-[65ch] md:max-w-[52ch]">
-	                    <li class="block md:inline mb-8 md:mb-0">
+					<ul class="md:flex gap-6 md:gap-8 max-5-[65ch]">
+	                    <li class="block md:inline mb-4 md:mb-0">
 							<a href="{{ get_url(path='@/_index.md') }}"
 							   class="
 									whitespace-nowrap
@@ -89,58 +95,7 @@
 							</ul>
 						</li>
 						<li class="inline float-right md:flex-grow">
-    						<div class="inline-flex md:flex justify-end">
-                                <div id="theme-selector" class="flex justify-stretch items-stretch bg-neutral-100 dark:bg-neutral-900 -mt-1 p-[2px] rounded-full w-9 hover:w-[6.25rem] transition-[width] ease-linear duration-75 delay-300 hover:delay-0 overflow-x-clip overflow-y-visible">
-                                    <a data-theme="light" class="
-                                        theme-option
-                                        data-[active]:bg-[radial-gradient(circle,_rgba(147,197,253,0.75)_0%,_rgba(147,197,253,0)_50%,_rgba(147,197,253,0)_100%)]
-                                        dark:data-[active]:bg-[radial-gradient(circle,_rgba(147,197,253,0.25)_0%,_rgba(147,197,253,0)_50%,_rgba(147,197,253,0)_100%)]
-                                        data-[active]:text-blue-600
-                                        py-[2px] px-2
-                                        rounded-full
-                                        text-neutral-400
-                                        hover:bg-blue-100
-                                        dark:hover:bg-blue-500/25
-                                        hover:text-blue-500
-                                        " href="#">
-                                            <svg class="icon icon-sun mt-[-2px]">
-                                                <use xlink:href="{{ get_url(path = "/icons/symbol-defs.svg") }}#icon-sun"></use>
-                                            </svg>
-                                    </a>
-                                    <a data-theme="system" class="
-                                        theme-option
-                                        data-[active]:bg-[radial-gradient(circle,_rgba(147,197,253,0.75)_0%,_rgba(147,197,253,0)_50%,_rgba(147,197,253,0)_100%)]
-                                        dark:data-[active]:bg-[radial-gradient(circle,_rgba(147,197,253,0.25)_0%,_rgba(147,197,253,0)_50%,_rgba(147,197,253,0)_100%)]
-                                        data-[active]:text-blue-600
-                                        py-[2px] px-2
-                                        rounded-full
-                                        text-neutral-400
-                                        hover:bg-blue-100
-                                        dark:hover:bg-blue-500/25
-                                        hover:text-blue-500
-                                        " href="#">
-                                            <svg class="icon icon-zap mt-[-2px]">
-                                                <use xlink:href="{{ get_url(path = "/icons/symbol-defs.svg") }}#icon-zap"></use>
-                                            </svg>
-                                    </a>
-                                    <a data-theme="dark" class="
-                                        theme-option
-                                        data-[active]:bg-[radial-gradient(circle,_rgba(147,197,253,0.75)_0%,_rgba(147,197,253,0)_50%,_rgba(147,197,253,0)_100%)]
-                                        dark:data-[active]:bg-[radial-gradient(circle,_rgba(147,197,253,0.25)_0%,_rgba(147,197,253,0)_50%,_rgba(147,197,253,0)_100%)]
-                                        data-[active]:text-blue-600
-                                        py-[2px] px-2
-                                        rounded-full
-                                        text-neutral-400
-                                        hover:bg-blue-100
-                                        dark:hover:bg-blue-500/25
-                                        hover:text-blue-500
-                                        " href="#">
-                                            <svg class="icon icon-moon mt-[-2px]">
-                                                <use xlink:href="{{ get_url(path = "/icons/symbol-defs.svg") }}#icon-moon"></use>
-                                            </svg>
-                                    </a>
-                                </div>
-    						</div>
+						    {% include "includes/theme-switcher.html" %}
 						</li>
 					</ul>
 				</nav>
@@ -175,11 +130,12 @@
                         dark:prose-figcaption:text-blue-50
                         prose-code:font-normal
                         text-pretty
+                        max-w-full
        					">
              			{% block header %}
                              {% if original_title %}
                                  <h1 class="block mb-5 text-3xl md:text-4xl">
-                                    {{ original_title }}
+                                    {{ original_title | regex_replace(pattern=`"(?P<title>.+)"`, rep=`“$title”`) }}
 
                                      <div class="block">
                                         {% if page and page.date %}

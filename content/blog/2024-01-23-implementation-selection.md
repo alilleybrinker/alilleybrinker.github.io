@@ -1,6 +1,8 @@
 ---
 title: “Implementation Selection” in Rust
 taxonomies:
+  type:
+    - Blog
   topics:
     - Rust
 ---

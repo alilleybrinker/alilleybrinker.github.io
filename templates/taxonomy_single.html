@@ -8,25 +8,25 @@
 {% endblock %}
 
 {% block header %}
-    <h1 class="block mb-6 text-2xl font-bold">Topic: {{ term.name }}</h1>
+    <h1 class="block mb-6">
+        <span class="text-base mb-1 block uppercase font-semibold tracking-widest text-slate-400">{{ taxonomy.name }}</span>
+        <span class="">{{ term.name }}</span>
+    </h1>
 {% endblock %}
 
 {% block content %}
-    <p>
+    <p class="">
         The following is a list of posts covered on my
         <a href="{{ get_url(path="@/blog/_index.md") }}">Blog</a>,
         under the topic &ldquo;{{ term.name }}&rdquo;, sorted from
         most to least recent.
     </p>
 
-    <ul class="pt-5 list-none not-prose p-0 !ps-0">
-        {% for page in term.pages %}
-            <li class="py-8">
-                <a class="text-black hover:underline text-xl" href="{{ page.permalink }}">{{ page.title }}</a> <span class="block md:inline md:ml-4 text-sm text-gray-500">{{ page.date | date(format="%Y / %m / %d") }}</span>
-                <div class="mt-4 prose prose-a:underline">
-                    {{ page.summary | safe }}
-                </div>
-            </li>
-        {% endfor %}
-    </ul>
+    <p>
+        <svg class="icon icon-rss mt-[-2px]"><use xlink:href="/icons/symbol-defs.svg#icon-rss"></use></svg>
+        Feeds:
+        <a href="/atom.xml">All Posts</a></li> &middot; <a href="/{{ taxonomy.slug }}/{{ term.slug }}/atom.xml">{{ term.name }} Posts</a>
+    </p>
+
+    {{ list::post_list(section=term) }}
 {% endblock %}

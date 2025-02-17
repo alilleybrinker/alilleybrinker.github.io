@@ -1,5 +1,14 @@
 {% extends "base.html" %}
 
+{% block rss %}
+    {% if section.generate_feeds %}
+        {% set rss_path = section.path ~ "/atom.xml" %}
+        <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ get_url(path=rss_path, trailing_slash=false) }}">
+    {% else %}
+        <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ get_url(path='atom.xml', trailing_slash=false) }}">
+    {% endif %}
+{% endblock %}
+
 {% block title %}
     {% if section.title %}
         {{ section.title }}
@@ -7,16 +16,9 @@
 {% endblock %}
 
 {% block content %}
-    {{ section.content | markdown | safe }}
+    <span class="">
+        {{ section.content | markdown | safe }}
+    </span>
 
-    <ul class="pt-5 list-none not-prose p-0 !ps-0">
-        {% for page in section.pages %}
-            <li class="py-8">
-                <a class="text-black dark:text-white hover:underline text-xl" href="{{ page.permalink }}">{{ page.title }}</a> <span class="block md:inline md:ml-4 text-sm text-gray-500">{{ page.date | date(format="%Y / %m / %d") }}</span>
-                <div class="mt-4 prose dark:prose-invert prose-a:underline">
-                    {{ page.summary | safe }}
-                </div>
-            </li>
-        {% endfor %}
-    </ul>
+    {{ list::post_list(section=section) }}
 {% endblock %}

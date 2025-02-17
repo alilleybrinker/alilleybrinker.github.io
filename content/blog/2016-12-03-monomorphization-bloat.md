@@ -1,6 +1,8 @@
 ---
 title: Monomorphization Bloat
 taxonomies:
+  type:
+    - Blog
   topics:
     - Rust
 ---

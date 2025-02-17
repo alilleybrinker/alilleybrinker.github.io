@@ -1,6 +1,8 @@
 ---
 title: String Types in Rust
 taxonomies:
+  type:
+    - Blog
   topics:
     - Rust
 summary: A discussion of the trade-offs and uses of Rust's different string types.

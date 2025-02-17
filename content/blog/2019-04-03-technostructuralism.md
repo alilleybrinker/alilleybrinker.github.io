@@ -1,6 +1,8 @@
 ---
 title: Technostructuralism
 taxonomies:
+  type:
+    - Blog
   topics:
     - Rust
     - Memory Safety

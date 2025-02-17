@@ -1,0 +1,28 @@
+
+{% macro post_preview(post) %}
+    <article>
+        <h2 class="!m-0 !mb-1">
+            <a class="text-black dark:text-white no-underline hover:underline text-xl !font-medium" href="{{ post.permalink }}">
+                {{ post.title | regex_replace(pattern=`"(?P<title>.+)"`, rep=`“$title”`) }}
+            </a>
+        </h2>
+
+        <div class="text-sm text-gray-500">
+            {{ post.date | date(format="%Y / %m / %d") }}
+            {% if post.taxonomies.type is containing("Mini") %}
+                &middot; <a href="{{ post.permalink }}">Permalink</a>
+            {% endif %}
+        </div>
+
+        <div class="mt-4 prose-a:underline">
+            {% if post.taxonomies.type is containing('Blog') and post.summary %}
+                {{ post.summary | markdown | safe }}
+                <div class="block -mt-2">
+                    <a class="inline-block !no-underline !font-medium !text-blue-500 hover:!underline hover:!decoration-blue-500" href="{{ post.permalink }}">Keep reading &nearr;</a>
+                </div>
+            {% elif post.taxonomies.type is containing('Mini') %}
+                {{ post.content | safe }}
+            {% endif %}
+        </div>
+    </article>
+{% endmacro %}

@@ -1,6 +1,8 @@
 ---
 title: Softlocking APIs
 taxonomies:
+  type:
+    - Blog
   topics:
     - API Design
 ---

@@ -1,6 +1,8 @@
 ---
 title: Open Source Software and Corporate Influence
 taxonomies:
+  type:
+    - Blog
   topics:
     - Open Source
 extra:

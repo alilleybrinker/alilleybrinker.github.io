@@ -1,6 +1,8 @@
 ---
 title: "Safety Hygiene"
 taxonomies:
+  type:
+    - Mini
   topics:
     - Rust
 ---

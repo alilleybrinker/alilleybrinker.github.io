@@ -1,6 +1,8 @@
 ---
 title: The “xz” Backdoor
 taxonomies:
+  type:
+    - Blog
   topics:
     - Supply Chain Security
 ---

@@ -12,5 +12,7 @@
         <div id="introduction"></div>
     {% endif %}
 
-    {{ page.content | markdown | safe }}
+    <div class="">
+        {{ page.content | markdown | safe }}
+    </div>
 {% endblock %}
