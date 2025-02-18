@@ -16,7 +16,9 @@
   },
   "imports": {
     "@luca/esbuild-deno-loader": "jsr:@luca/esbuild-deno-loader@^0.11.0",
-    "esbuild": "npm:esbuild@^0.24.0"
+    "esbuild": "npm:esbuild@^0.24.0",
+    "@tailwindcss/typography": "npm:@tailwindcss/typography",
+    "tailwindcss": "npm:tailwindcss"
   },
   "compilerOptions": {
     "lib": ["deno.window", "dom"]
