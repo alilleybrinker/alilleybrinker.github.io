@@ -32,11 +32,17 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # Install the latest version of Zola.
+      # Install Zola.
       - name: Install Zola
         uses: taiki-e/install-action@v2
         with:
           tool: zola@0.20.0
+
+      # Install Deno.
+      - name: Install Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
 
       # Setup GitHub Pages
       - name: Setup GitHub Pages
