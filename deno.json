@@ -1,0 +1,25 @@
+{
+  "tasks": {
+    "build-site": "zola build",
+    "build-js": "deno run -A scripts/tasks/bundle.ts",
+    "build-css": "deno run -A npm:@tailwindcss/cli -i styles/main.css -o public/main.css",
+    "watch-site": "zola serve",
+    "watch-js": "deno run -A --watch scripts/tasks/bundle.ts",
+    "watch-css": "deno run -A npm:@tailwindcss/cli -i styles/main.css -o public/main.css -w",
+    "build": {
+      "command": "echo \"Site built!\"",
+      "dependencies": ["build-site", "build-js", "build-css"]
+    },
+    "watch": {
+      "dependencies": ["watch-site", "watch-js", "watch-css"]
+    }
+  },
+  "imports": {
+    "@luca/esbuild-deno-loader": "jsr:@luca/esbuild-deno-loader@^0.11.0",
+    "esbuild": "npm:esbuild@^0.24.0"
+  },
+  "compilerOptions": {
+    "lib": ["deno.window", "dom"]
+  },
+  "nodeModulesDir": "auto"
+}

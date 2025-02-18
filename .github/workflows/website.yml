@@ -38,29 +38,15 @@ jobs:
         with:
           tool: zola@0.20.0
 
-      # Install the latest version of the Tailwind CLI.
-      - name: Install Tailwind CLI
-        run: |
-          npm install tailwindcss @tailwindcss/cli
-
       # Setup GitHub Pages
-      #
-      # Specifically, this sets some variables we can use in later steps that
-      # make life easier, namely:
-      #
-      # - `base_url`: The full base URL of the site, to which paths append.
-      # - `origin`: Just the protocol and domain portion of the `base_url`.
-      # - `host`: Just the domain portion of the `base_url`.
-      # - `base_path`: Just the path portion of the `base_url`.
       - name: Setup GitHub Pages
         id: pages
         uses: actions/configure-pages@v5
 
-      # Build the actual site with Zola and Tailwind.
+      # Build the site.
       - name: Build Website
         run: |
-          zola build
-          npx @tailwindcss/cli -i styles/main.css -o public/main.css
+          deno task build
 
       # Upload the output of the build as an Actions artifact so the deploy
       # step can pick it up and use it.

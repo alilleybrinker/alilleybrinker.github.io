@@ -3,7 +3,7 @@ import { denoPlugins } from "jsr:@luca/esbuild-deno-loader";
 
 const footerResult = await esbuild.build({
   plugins: [...denoPlugins()],
-  entryPoints: ["src/footer/main.ts"],
+  entryPoints: ["./scripts/src/footer/main.ts"],
   outfile: "../static/js/footer.mjs",
   bundle: true,
   minify: true,
@@ -21,7 +21,7 @@ for (const error in footerResult.errors) {
 
 const headerResult = await esbuild.build({
   plugins: [...denoPlugins()],
-  entryPoints: ["src/header/main.ts"],
+  entryPoints: ["./scripts/src/header/main.ts"],
   outfile: "../static/js/header.mjs",
   bundle: true,
   minify: true,
