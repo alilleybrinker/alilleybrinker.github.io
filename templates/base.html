@@ -2,6 +2,14 @@
 {% import "macros/post-preview.html" as post %}
 {% import "macros/post-list.html" as list %}
 
+{% if page %}
+    {% set permalink = page.permalink %}
+{% elif section %}
+    {% set permalink = section.permalink %}
+{% else %}
+    {% set permalink = config.base_url %}
+{% endif %}
+
 {% if page and page.title %}
     {% set title = page.title ~ " — " ~ config.title %}
     {% set original_title = page.title %}
@@ -37,16 +45,19 @@
 		<meta name="description" content="{{ social_description }}">
 
 		<meta property="og:type" content="website">
-		<meta property="og:url" content="{{ config.base_url }}">
+		<meta property="og:url" content="{{ permalink }}">
 		<meta property="og:title" content="{{ title }}">
 		<meta property="og:description" content="{{ social_description }}">
-		<meta property="og:image" content="{{ get_url(path="social.png") }}">
+		<meta property="og:image" content="{{ get_url(path='social.png') }}">
+		<meta property="og:site_name" content="Andrew Lilley Brinker">
 
 		<meta property="twitter:card" content="summary_large_image">
-		<meta property="twitter:url" content="{{ config.base_url }}">
+		<meta property="twitter:site" content="@alilleybrinker">
+		<meta property="twitter:creator" content="@alilleybrinker">
+		<meta property="twitter:url" content="{{ permalink }}">
 		<meta property="twitter:title" content="{{ title }}">
 		<meta property="twitter:description" content="{{ social_description }}">
-		<meta property="twitter:image" content="{{ get_url(path="social.png") }}">
+		<meta property="twitter:image" content="{{ get_url(path='social.png') }}">
 
 		{% block rss %}
 		  <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ get_url(path="rss.xml", trailing_slash=false) }}">
