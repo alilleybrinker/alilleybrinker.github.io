@@ -13,7 +13,7 @@
         You can <a href="{{ get_url(path='@/about.md#where-to-find-me') }}">find me around</a>.</p>
 
     <div class="pb-4">
-        <h2 class="mb-0! text-2xl! text-slate-700 dark:text-neutral-400 inline-block">Latest Posts</h2>
+        <h2 class="!mb-0 !text-2xl lg:!text-3xl text-slate-700 dark:text-neutral-400 inline-block">Latest Posts</h2>
         {% set blog_section = get_section(path="blog/_index.md") %}
         {{ list::post_list(section=blog_section, limit=3) }}
     </div>

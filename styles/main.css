@@ -20,6 +20,10 @@
     }
 }
 
+@theme {
+    --font-display: "Inter Tight", "Inter", "sans-serif";
+}
+
 .icon {
     @apply inline-block;
     @apply w-4;

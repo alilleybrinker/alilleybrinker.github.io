@@ -2,12 +2,12 @@
 {% macro post_preview(post) %}
     <article>
         <h2 class="m-0! mb-1!">
-            <a class="text-black dark:text-white no-underline hover:underline text-xl font-medium!" href="{{ post.permalink }}">
+            <a class="text-black dark:text-white no-underline hover:underline text-xl lg:text-2xl font-medium!" href="{{ post.permalink }}">
                 {{ post.title | regex_replace(pattern=`"(?P<title>.+)"`, rep=`“$title”`) }}
             </a>
         </h2>
 
-        <div class="text-sm text-gray-500">
+        <div class="text-sm lg:text-base text-gray-500">
             {{ post.date | date(format="%B %d, %Y") }}
             {% if post.taxonomies.type is containing("Mini") %}
                 &middot; <a href="{{ post.permalink }}">Permalink</a>
@@ -18,7 +18,12 @@
             {% if post.taxonomies.type is containing('Blog') and post.summary %}
                 {{ post.summary | markdown | safe }}
                 <div class="block -mt-2">
-                    <a class="inline-block no-underline! font-medium! text-blue-500! hover:underline! hover:decoration-blue-500!" href="{{ post.permalink }}">Keep reading &nearr;</a>
+                    <a class="inline-block !no-underline !text-blue-500 group" href="{{ post.permalink }}">
+                        <span class="group-hover:decoration-2 group-hover:underline-offset-auto group-hover:underline group-hover:decoration-blue-500">Keep reading</span>
+                        <svg class="icon icon-arrow-up-right">
+                            <use xlink:href="{{ get_url(path = '/icons/symbol-defs.svg') }}#icon-arrow-up-right"></use>
+                        </svg>
+                    </a>
                 </div>
             {% elif post.taxonomies.type is containing('Mini') %}
                 {{ post.content | safe }}

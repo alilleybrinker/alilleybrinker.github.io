@@ -2,7 +2,34 @@
 title: About
 ---
 
-<img src="/image/andrew.png" alt="Grayscale and dithered picture of Andrew" class="max-w-36 md:max-w-48 rotate-3 shadow-xl dark:shadow-none rounded-md inline float-right ml-5 md:ml-10 mb-5 md:mb-10 -top-10 relative">
+<div class="
+    inline-block
+    relative
+    group
+    max-w-36 md:max-w-48
+    transition-all
+    ease-in-out
+    duration-300
+    rotate-3 hover:rotate-0
+    float-right
+    ml-4 md:ml-8
+    mb-4 md:mb-8
+    -top-10
+    after:transition-color
+    after:ease-in-out
+    after:duration-300
+    after:rounded-md
+    after:absolute
+    after:block
+    after:top-8
+    after:left-0
+    after:bottom-8
+    after:right-0
+    hover:after:bg-blue-500
+    after:mix-blend-soft-light
+    after:content-['']">
+    <img src="/image/andrew.png" alt="Grayscale and dithered picture of Andrew" class="rounded-md block group-hover:ring-4 group-hover:ring-blue-500 transition-all ease-in-out duration-300">
+</div>
 
 I&rsquo;m a Principal Engineer at [MITRE][mitre], where I&hellip;
 
