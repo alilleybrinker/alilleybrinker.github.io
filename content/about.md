@@ -44,10 +44,6 @@ creation of the [Rust library and `omnibor` CLI][omnibor-rs].
 [GitHub] &middot; [Bluesky] &middot; [Mastodon] &middot;
 [LinkedIn] &middot; [Hacker News] &middot; [Lobste.rs] &middot; [Reddit]
 
-I still maintain a [Twitter / X] account because I sometimes need to be able
-to read things there, and I do not want to risk my old account being claimed
-by someone else.
-
 ### Getting in Touch
 
 I don't check every platform equally often. If you want to get in touch, the
@@ -57,7 +53,6 @@ If you want to chat securely, ask me for my Signal username.
 
 [GitHub]: https://github.com/alilleybrinker
 [Bluesky]: https://bsky.app/profile/alilleybrinker.com
-[Twitter / X]: https://x.com/alilleybrinker
 [Mastodon]: https://hachyderm.io/@alilleybrinker
 [LinkedIn]: https://www.linkedin.com/in/alilleybrinker
 [Hacker News]: https://news.ycombinator.com/user?id=alilleybrinker
