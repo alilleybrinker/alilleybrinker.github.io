@@ -26,6 +26,7 @@ nav = [
     { name = "About", url = "@/about.md" },
     { name = "Blog", url = "@/blog/_index.md" },
     { name = "Mini", url = "@/mini/_index.md" },
+    { name = "Talks", url = "@/talks/index.md" },
     { icon = "bluesky", url = "https://bsky.app/profile/alilleybrinker.com" },
     { icon = "github", url = "https://github.com/alilleybrinker" },
 ]
