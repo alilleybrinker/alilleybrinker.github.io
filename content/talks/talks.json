@@ -1,0 +1,43 @@
+{
+  "talks": [
+    {
+      "type": "talk",
+      "title": "Hello and Welcome: Documentation in the Rust Ecosystem",
+      "event": "Rust Belt Rust 2016",
+      "date": "2016-10-28",
+      "event_link": "https://conf2016.rust-belt-rust.com/",
+      "talk_link": "https://conf2016.rust-belt-rust.com/sessions/#:~:text=Hello%20and%20Welcome%20%2D%20Documentation%20in%20the%20Rust%20Ecosystem",
+      "video_link": "https://www.youtube.com/watch?v=Wz2oFEDwiOk",
+      "slides_link": "https://speakerdeck.com/alilleybrinker/hello-and-welcome-documentation-in-the-rust-ecosystem",
+      "description": "Documentation is important. It lowers the barrier for newcomers to use and understand libraries. It helps train and prepare new contributors. It opens up avenues of contribution that go beyond writing code. It makes open source more open, and makes libraries better by its existence. Rust has all the makings of a great ecosystem of well-documented libraries: a high-quality and ever-improving documentation generator ships with the compiler, and the language team leads by example with a strong focus on documentation. Yet the quality and availability of documentation for Rust crates remains spotty, with many crates providing incomplete documentation, or relying on the types they expose to describe their use and function. This talk takes an in-depth look at the state of documentation in the Rust ecosystem today—including how many crates provide easily-located documentation, and how complete that documentation is—and then describes ideas for improvement, including improvements to Rust's documentation-related tools and ideas for crate maintainers to both write better docs themselves and to encourage contributions from others via documentation-focused mentorship."
+    },
+    {
+      "type": "talk",
+      "title": "A Tale of Teaching Rust",
+      "event": "RustConf 2017",
+      "date": "2017-08-19",
+      "event_link": "https://2017.rustconf.com/",
+      "talk_link": "https://2017.rustconf.com/program.html#teaching",
+      "video_link": "https://www.youtube.com/watch?v=0PhfaFkzdBA",
+      "slides_link": "https://speakerdeck.com/alilleybrinker/a-tale-of-teaching-rust",
+      "description": "Rust has a reputation of having a very steep learning curve, but is this reputation justified? In this talk I share my experiences teaching Rust to a group of 26 undergraduates as part of a class on programming language theory. None of the students knew Rust going in. Most knew only one language. I walk through the key concepts from Rust that programmers in all languages can use, and that language designers may want to steal, and I talk about how this class of fledgling programmers handled and understood those concepts, what they think of Rust now, and what all of this might mean for teaching Rust effectively in the future."
+    },
+    {
+      "type": "panel",
+      "title": "Software Identity in the Vulnerability Management Ecosystem",
+      "event": "VulnCon 2025",
+      "date": "2025-04-08",
+      "talk_link": "https://www.first.org/conference/vulncon2025/program#pSoftware-Identity-in-the-Vulnerability-Management-Ecosystem",
+      "event_link": "https://www.first.org/conference/vulncon2025/",
+      "description": "As vulnerabilities proliferate in an evolving and complex ecosystem, software identity remains a fundamental challenge in vulnerability management. This panel, \"Software Identity in the Vulnerability Management Ecosystem,\" convenes distinguished experts from industry and government to cover such efforts as CPE, pURL, OmniBOR, and others to dissect the current and future dynamics of software identity standards and practices. Acknowledging the reality of a multi-identifier ecosystem, the discussion will cover a variety of topics including the integration of software identification data elements into the Common Vulnerabilities and Exposures (CVE) Record, exploring both the challenges and opportunities this presents. Panelists will debate and offers diverse perspectives on what success looks like in managing software identity within the enterprise and across industry. Attendees will gain valuable insights into ongoing standards development and the strategic importance of software identification across the vulnerability management ecosystem."
+    },
+    {
+      "type": "talk",
+      "title": "Memory Safety and the Future of Vulnerabilities",
+      "event": "Cal Poly Pomona SWIFT Tech Symposium 2025",
+      "talk_link": "https://techsymposium.calpolyswift.org/#schedule",
+      "event_link": "https://techsymposium.calpolyswift.org/",
+      "date": "2025-04-12"
+    }
+  ]
+}

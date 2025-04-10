@@ -1,0 +1,67 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+    {% if page.title %}
+        {{ page.title }}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if page.extra.toc %}
+        {{ toc::toc(page=page) }}
+        <div id="introduction"></div>
+    {% endif %}
+
+    <div class="">
+        {{ page.content | markdown | safe }}
+
+        {% set data = load_data(path="content/talks/talks.json") %}
+        {% set talks = data.talks | sort(attribute="date") | reverse %}
+
+        {% for talk in talks %}
+            <div class="mb-16!">
+
+                <h2 class="m-0! mb-1!">
+                    <a class="text-black dark:text-white no-underline hover:underline text-xl lg:text-2xl font-medium!" href="{{ talk.talk_link }}">
+                        {{ talk.title | regex_replace(pattern=`"(?P<title>.+)"`, rep=`“$title”`) }}
+                    </a>
+                </h2>
+
+                <div class="flex gap-4 flex-wrap text-sm lg:text-base text-gray-500">
+                    {% if talk.type == "talk" %}
+                        {% set intro = "Presented at" %}
+                    {% elif talk.type == "panel" %}
+                        {% set intro = "Participated in panel at" %}
+                    {% else %}
+                        {{ throw(msg = "Unknown talk type") }}
+                    {% endif %}
+
+                    <span>{{ intro }} <a href="{{ talk.event_link }}">{{ talk.event }}</a> on {{ talk.date | date(format="%B %d, %Y") }}</span>
+                    {% if talk.video_link %}
+                        <span>
+                            <svg class="icon icon-youtube -mt-[2px] !h-4 !w-4">
+                                <use xlink:href="{{ get_url(path = '/icons/symbol-defs.svg') }}#icon-youtube"></use>
+                            </svg>
+                            <a href="{{ talk.video_link }}">Watch the Recording</a>
+                        </span>
+                    {% endif %}
+                    {% if talk.slides_link %}
+                        <span>
+                            <svg class="icon icon-speakerdeck -mt-[2px] !h-4 !w-4">
+                                    <use xlink:href="{{ get_url(path = '/icons/symbol-defs.svg') }}#icon-speakerdeck"></use>
+                                </svg>
+                            <a href="{{ talk.slides_link }}">View the Slides</a>
+                        </span>
+                    {% endif %}
+                </div>
+
+                {% if talk.description %}
+                    <div class="mt-6 prose-a:underline">
+                        {{ talk.description | safe }}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
