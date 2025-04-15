@@ -38,7 +38,8 @@
       "talk_link": "https://techsymposium.calpolyswift.org/#schedule",
       "event_link": "https://techsymposium.calpolyswift.org/",
       "slides_link": "https://speakerdeck.com/alilleybrinker/memory-safety-and-the-future-of-vulnerabilities",
-      "date": "2025-04-12"
+      "date": "2025-04-12",
+      "description": "As memory safety becomes more popular, and the active development of code in memory unsafe by default languages slows, the balance of vulnerabilities will likely shift away from weaknesses like buffer overflows and use-after-free. In this talk, I cover some interesting other kinds of vulnerabilities that may become more relevant over the next decades."
     }
   ]
 }
