@@ -7,8 +7,6 @@ taxonomies:
     - Authentication
 ---
 
-(assume the reader has heard of passkeys but not the PRF extension)
-
 Yesterday, [Ars Technica reported][ars] on [Confer][confer], an AI company
 created by [Moxie Marlinspike][moxie], who also created the secure messaging
 app/protocol [Signal][signal].
