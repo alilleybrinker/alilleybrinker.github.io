@@ -1,5 +1,7 @@
 ---
 title: String Types in Rust
+description: "Rust has many pairs of string types, each with a distinct
+  purpose. Understanding them helps you understand Rust itself."
 taxonomies:
   type:
     - Blog

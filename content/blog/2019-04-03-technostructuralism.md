@@ -1,5 +1,7 @@
 ---
 title: Technostructuralism
+description: "The systems we build are manifestations of our politics, so what
+  is the philosophy of Rust?"
 taxonomies:
   type:
     - Blog

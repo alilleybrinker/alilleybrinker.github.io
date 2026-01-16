@@ -1,5 +1,7 @@
 ---
 title: “Implementation Selection” in Rust
+description: "Exploring options for selecting branching paths in Rust code
+  at compile time and runtime."
 taxonomies:
   type:
     - Blog

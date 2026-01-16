@@ -1,5 +1,7 @@
 ---
 title: Softlocking APIs
+description: "Exploring how APIs can become 'softlocked', stuck and unable to
+  evolve or fix issues."
 taxonomies:
   type:
     - Blog

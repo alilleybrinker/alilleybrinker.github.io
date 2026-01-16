@@ -1,5 +1,6 @@
 ---
 title: "Jujutsu is the Future"
+description: "Staking my position that Jujutsu will displace Git in 5 years."
 taxonomies:
   type:
     - Mini

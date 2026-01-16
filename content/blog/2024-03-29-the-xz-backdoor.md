@@ -1,5 +1,7 @@
 ---
 title: The “xz” Backdoor
+description: "A case for avoiding reductive analyses in the immediate aftermath
+  of the xz supply chain attack."
 taxonomies:
   type:
     - Blog

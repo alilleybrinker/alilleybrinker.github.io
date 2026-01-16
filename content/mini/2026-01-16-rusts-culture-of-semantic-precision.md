@@ -1,5 +1,7 @@
 ---
 title: "Rust's Culture of Semantic Precision"
+description: "Explaining how Rust's culture of semantic precision pays dividends
+  for system robustness while complicating adoption in projects like Linux."
 taxonomies:
   type:
     - Mini

@@ -1,5 +1,7 @@
 ---
 title: "The Best Monad Tutorial Ever Written"
+description: "Rain Paharia has done it, they've explained monads with real,
+  practical examples."
 taxonomies:
   type:
     - Mini

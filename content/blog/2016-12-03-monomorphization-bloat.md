@@ -1,5 +1,7 @@
 ---
 title: Monomorphization Bloat
+description: "Rust generics can trade off binary size for expressiveness.
+  Learning to identify when the trade off isn't worth it is a valuable skill."
 taxonomies:
   type:
     - Blog

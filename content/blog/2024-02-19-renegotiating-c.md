@@ -1,5 +1,7 @@
 ---
 title: Renegotiating C
+description: "Expressing empathy for C programmers as they grapple with fear
+  and uncertainty amid the rise of Rust."
 taxonomies:
   type:
     - Blog

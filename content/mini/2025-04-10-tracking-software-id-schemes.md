@@ -1,5 +1,7 @@
 ---
 title: "Tracking Software ID Schemes"
+description: "Introducing a small tracker for known software ID schemes such
+  as Package URLs, CPEs, and more."
 taxonomies:
   type:
     - Mini

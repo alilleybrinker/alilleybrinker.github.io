@@ -1,5 +1,7 @@
 ---
 title: "The Problem is New Code"
+description: "Identifying that assuring memory safety in new code is the
+  highest leverage point for assuring existing codebases."
 taxonomies:
   type:
     - Blog

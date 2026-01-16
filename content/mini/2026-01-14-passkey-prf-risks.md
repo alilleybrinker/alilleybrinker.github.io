@@ -1,5 +1,7 @@
 ---
 title: "Passkey PRFs and the Passkey Loss Blast Radius"
+description: "Exploring the way passkey PRFs increase the blast radius of
+  passkey loss, and how that impacts systems like Confer."
 taxonomies:
   type:
     - Mini

@@ -1,5 +1,7 @@
 ---
 title: "Safety Hygiene"
+description: "Explaining how to properly contain and document unsafe code to
+  make it maintainable over time."
 taxonomies:
   type:
     - Mini
