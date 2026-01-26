@@ -15,10 +15,13 @@ author = "Andrew Lilley Brinker"
 taxonomies = [{ name = "topics", feed = true }, { name = "type", feed = false }]
 
 [markdown]
-extra_syntaxes_and_themes = ["highlight"]
-highlight_code = true
-highlight_theme = "catppuccin-latte"
+
 smart_punctuation = true
+
+[markdown.highlighting]
+
+theme = "catppuccin-latte"
+extra_themes = ["highlight/catppuccin-latte.tmTheme.json"]
 
 [extra]
 
