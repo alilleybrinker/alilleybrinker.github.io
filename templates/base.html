@@ -34,6 +34,14 @@
     {% set social_description = description %}
 {% endif %}
 
+{% if page and page.extra and page.extra.homepage_title %}
+    {% set homepage_title = true %}
+{% elif section and section.extra and section.extra.homepage_title %}
+    {% set homepage_title = true %}
+{% else %}
+    {% set homepage_title = false %}
+{% endif %}
+
 <!doctype html>
 <html lang="en-US" class="">
 	<head>
@@ -65,8 +73,8 @@
 	</head>
 	<body class="bg-stone-50 dark:bg-neutral-900">
 	    <div class="subpixel-antialiased">
-			<div class="py-8 mb-8 md:py-20 text-black dark:text-neutral-100 text-base md:text-xl px-5 md:px-0">
-			    <nav class="md:max-w-(--breakpoint-md) md:mx-auto">
+			<div class="bg-white dark:bg-neutral-800 pt-8 pb-6 mb-8 md:pt-8 md:pb-6 text-black dark:text-neutral-100 text-base md:text-lg px-5 md:px-0">
+			    <nav class="md:mx-24 font-normal">
 					<ul class="md:flex gap-6 md:gap-8 max-5-[65ch]">
 	                    <li class="block md:inline mb-4 md:mb-0">
 							<a href="{{ get_url(path='@/_index.md') }}"
@@ -78,7 +86,7 @@
 									md:before:-left-8
 									before:mr-2
 									md:before-mr-0
-									before:top-1
+									before:top-[2px]
 									before:rounded-xs
 									before:rotate-6
 									hover:before:rotate-[0deg]
@@ -91,6 +99,7 @@
 									before:w-4
 									before:inline-block
 									before:bg-blue-500
+									font-semibold
 								">
 								<span class='h-card'><span class='p-given-name'>Andrew</span> <span class='p-family-name'>Lilley Brinker</span></span>
 							</a>
@@ -106,7 +115,7 @@
 
                                     {% if entry.icon %}
                                         <li>
-                                            <a href="{{ url }}" class="font-light group">
+                                            <a href="{{ url }}" class="group">
                                                 {% if entry.name %}
                                                     <span class="group-hover:underline">{{ entry.name | safe }}</span>
                                                 {% endif %}
@@ -116,7 +125,7 @@
                                             </a>
                                         </li>
                                     {% else %}
-                         			    <li><a href="{{ url }}" class="font-light hover:underline">{{ entry.name | safe }}</a></li>
+                         			    <li><a href="{{ url }}" class="hover:underline">{{ entry.name | safe }}</a></li>
                                     {% endif %}
                  			    {% endfor %}
 							</ul>
@@ -128,7 +137,7 @@
 				</nav>
 			</div>
 
-			<div class="px-5 md:px-0 md:max-w-(--breakpoint-md) md:mx-auto">
+			<div class="py-24 px-5 md:px-0 md:max-w-(--breakpoint-md) md:mx-auto">
     			<div class="mb-32">
            	        <div class="
                         mb-10
@@ -172,7 +181,7 @@
              			{% block header %}
                              {% if original_title %}
                                  <h1 class="block mb-5 text-3xl md:text-4xl">
-                                    <span class="leading-snug block mb-4 font-display">
+                                    <span class="leading-snug block mb-4 font-display {% if homepage_title %}font-extrabold{% endif %}">
                                         {{ original_title | regex_replace(pattern=`"(?P<title>.+)"`, rep=`“$title”`) }}
                                     </span>
 
@@ -200,7 +209,6 @@
 
         				{% block content %}{% endblock %}
          			</div>
-
 
                     <div class="mt-14 text-xs text-neutral-400">
                         <p>Copyright Andrew Lilley Brinker. Made with <svg class="icon icon-heart -mt-[2px] !h-3 !w-3">
