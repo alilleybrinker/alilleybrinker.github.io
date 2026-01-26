@@ -15,4 +15,48 @@
     <div class="">
         {{ page.content | markdown | safe }}
     </div>
+
+    {% if page.taxonomies %}
+        {% if page.taxonomies.type is containing('Blog') or page.taxonomies.type is containing('Mini') %}
+            <div class="
+                bg-white dark:bg-neutral-800
+                relative
+                p-8
+                rounded-b-2xl
+                mt-24
+                border-t-4
+                text-lg
+                leading-normal
+                border-blue-500
+                before:content-['']
+                before:w-6
+                before:h-6
+                before:rotate-4
+                before:rounded-md
+                before:bg-blue-500
+                before:-top-3
+                before:-left-2
+                before:absolute
+                ">
+                    <div class="flex flex-nowrap gap-4 justify-between items-center">
+                        <div class="">
+                            <span class="block font-semibold !mb-2 text-xl">Thank you for reading!</span>
+                            <p class="!my-0">Like the post? Consider sharing it on Bluesky!</p>
+                        </div>
+                        <div class="">
+                            {% set bsky_text = page.title ~ " by @alilleybrinker.com " ~ page.permalink | urlencode %}
+                            {% set bsky_url = "https://bsky.app/intent/compose?text=" ~ bsky_text %}
+
+                            <a href="{{ bsky_url }}" class="display py-3 px-6 rounded-lg bg-blue-50 dark:bg-neutral-700 hover:bg-blue-500 hover:text-white no-underline group">
+                                <svg class="icon icon-bluesky !h-5 !w-5 -mt-1 mx-1 text-blue-500 group-hover:text-white">
+                                    <use xlink:href="{{ get_url(path = '/icons/symbol-defs.svg') }}#icon-bluesky"></use>
+                                </svg>
+                                Share on Bluesky
+                            </a>
+                        </div>
+                    </div>
+            </div>
+        {% endif %}
+    {% endif %}
+
 {% endblock %}
