@@ -38,12 +38,12 @@
                 before:-left-2
                 before:absolute
                 ">
-                    <div class="flex flex-nowrap gap-4 justify-between items-center">
+                    <div class="md:flex flex-nowrap gap-4 justify-between items-center">
                         <div class="">
                             <span class="block font-semibold !mb-2 text-xl">Thank you for reading!</span>
                             <p class="!my-0">Like the post? Consider sharing it on Bluesky!</p>
                         </div>
-                        <div class="">
+                        <div class="mt-8 md:my-0">
                             {% set bsky_text = page.title ~ " by @alilleybrinker.com " ~ page.permalink | urlencode %}
                             {% set bsky_url = "https://bsky.app/intent/compose?text=" ~ bsky_text %}
 
