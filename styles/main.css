@@ -21,7 +21,10 @@
 }
 
 @theme {
-    --font-display: "Inter Tight", "Inter", "sans-serif";
+    --font-display:
+        -apple-system, blinkmacsystemfont, "Helvetica Neue", "Helvetica",
+        "Segoe UI", roboto, oxygen-sans, ubuntu, cantarell, "Helvetica Neue",
+        sans-serif;
 }
 
 .icon {
