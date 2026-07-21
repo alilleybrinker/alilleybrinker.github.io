@@ -23,7 +23,7 @@ for (const post of displayed) {
       <ul class="list-none p-0">
         {yearPosts.map((post) => (
           <li>
-            <a class="group flex items-baseline justify-between gap-6 py-1.5 text-black dark:text-white" href={postPath(post)}>
+            <a class="group flex flex-col items-start gap-1 py-1.5 text-black sm:flex-row sm:items-baseline sm:justify-between sm:gap-6 dark:text-white" href={postPath(post)}>
               <span class="group-hover:underline">{post.data.title}</span>
               <time class="shrink-0 text-sm text-neutral-500" datetime={postDate(post).toISOString()}>{postDate(post).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })} / <span class="reading-time" style={`--reading-time-strength: ${readingTimeStrength(postReadingTime(post))}`}>{postReadingTime(post)} min read</span></time>
             </a>

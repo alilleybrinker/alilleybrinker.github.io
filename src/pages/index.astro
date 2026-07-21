@@ -50,7 +50,7 @@ const otherPosts = posts.filter((post) => !startHere.some(({ slug }) => slug ===
       {startHerePosts.map((post) => (
         <li>
           <a class="group block py-2 text-black dark:text-white" href={post.href}>
-            <span class="flex items-baseline justify-between gap-6">
+            <span class="flex flex-col items-start gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
               <span class="inline-flex items-center gap-1"><span class="group-hover:underline">{post.title}</span>{'publication' in post && <span title={post.publicationTitle} class="relative top-px mx-0.5 rounded-sm bg-stone-200/65 px-1.5 py-0.5 font-sans text-xs font-semibold text-stone-700 group-hover:bg-[#0085CA] group-hover:text-white dark:bg-neutral-500/70 dark:text-neutral-200">{post.publication}</span>}{post.external && <><Icon name="arrow-up-right" class="!h-4 !w-4 text-neutral-400 group-hover:text-black dark:text-neutral-500 dark:group-hover:text-white" /><span class="sr-only"> (external article)</span></>}</span>
               <time class="shrink-0 text-sm text-neutral-500" datetime={post.date.toISOString()}>{post.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })} / <span class="reading-time" style={`--reading-time-strength: ${post.readingStrength}`}>{post.readingTime} min read</span></time>
             </span>
