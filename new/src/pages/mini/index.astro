@@ -1,0 +1,14 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostList from '../../components/PostList.astro';
+import { byNewest } from '../../lib/site';
+const posts = (await getCollection('mini')).sort(byNewest);
+---
+
+<BaseLayout title="Miniblog" feed="/mini/atom.xml">
+  <h1>Miniblog</h1>
+  <p>Shorter posts, sized between a <a href="https://bsky.app/profile/alilleybrinker.com">microblog</a> post and a full <a href="/blog/">blog post</a>.</p>
+  <p>Feeds: <a href="/atom.xml">All Posts</a> · <a href="/blog/atom.xml">Blog Posts</a> · <a href="/mini/atom.xml">Mini Posts</a></p>
+  <PostList posts={posts} />
+</BaseLayout>

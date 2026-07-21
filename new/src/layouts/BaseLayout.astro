@@ -1,0 +1,52 @@
+---
+import '../styles/global.css';
+import ThemeSwitcher from '../components/ThemeSwitcher.astro';
+import Icon from '../components/Icon.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonical?: string;
+  feed?: string;
+}
+const {
+  title: pageTitle,
+  description = 'I work on software security at MITRE, including serving as a member of the OmniBOR Working Group and leading development of the Rust implementation.',
+  canonical = new URL(Astro.url.pathname, Astro.site),
+  feed = '/rss.xml',
+} = Astro.props;
+const title = pageTitle ? `${pageTitle} — Andrew Lilley Brinker` : 'Andrew Lilley Brinker';
+---
+
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content="Andrew Lilley Brinker" />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href={feed} />
+  </head>
+  <body class="bg-stone-50 dark:bg-neutral-900">
+    <div class="subpixel-antialiased">
+      <header class="pt-16 pb-6 mb-8 text-black dark:text-neutral-100 text-base md:text-lg px-5 md:px-8 md:max-w-(--breakpoint-md) md:mx-auto">
+        <nav class="font-normal">
+          <ul class="md:flex gap-6 md:gap-8">
+            <li class="block md:inline mb-4 md:mb-0"><a href="/" class="whitespace-nowrap relative hover:underline md:before:absolute md:before:-left-8 before:mr-2 md:before:mr-0 before:top-0.5 before:rounded-sm before:rotate-6 hover:before:rotate-0 before:transition-all before:duration-300 hover:before:ring-2 hover:before:ring-blue-500 before:h-4 before:w-4 before:inline-block before:bg-blue-500 font-semibold">Andrew Lilley Brinker</a></li>
+            <li class="inline"><ul class="inline-flex md:flex gap-4 md:gap-8"><li><a href="/about/" class="hover:underline">About</a></li><li><a href="/blog/" class="hover:underline">Blog</a></li><li><a href="/mini/" class="hover:underline">Mini</a></li><li><a href="/talks/" class="hover:underline">Talks</a></li><li><a href="https://bsky.app/profile/alilleybrinker.com" aria-label="Bluesky" class="text-neutral-400 hover:text-blue-500"><Icon name="bluesky" class="!h-5 !w-5 -mt-1" /></a></li><li><a href="https://github.com/alilleybrinker" aria-label="GitHub" class="text-neutral-400 hover:text-blue-500"><Icon name="github" class="!h-5 !w-5 -mt-1" /></a></li></ul></li>
+            <li class="inline float-right md:grow"><ThemeSwitcher /></li>
+          </ul>
+        </nav>
+      </header>
+      <main class="py-24 px-5 md:px-0 md:max-w-(--breakpoint-md) md:mx-auto"><div class="mb-32 prose lg:prose-lg lg:leading-relaxed prose-stone dark:prose-invert prose-headings:font-normal prose-h1:font-display prose-headings:text-black dark:prose-headings:text-neutral-100 prose-a:text-black dark:prose-a:text-white prose-a:font-normal prose-a:decoration-1 prose-a:underline-offset-2 prose-a:decoration-blue-400 prose-code:after:content-none prose-code:before:content-none prose-blockquote:font-normal prose-blockquote:not-italic prose-figure:bg-white dark:prose-figure:bg-neutral-800 prose-figure:rounded-xl prose-figure:shadow-lg prose-pre:p-5 lg:prose-pre:p-8 prose-pre:-mx-5 lg:prose-pre:-mx-8 md:prose-pre:rounded-3xl text-pretty max-w-full"><slot /></div><footer class="mt-14 text-xs text-neutral-400"><p>Copyright Andrew Lilley Brinker. Made with <Icon name="heart" class="-mt-0.5 !h-3 !w-3" /> in California</p></footer></main>
+    </div>
+  </body>
+</html>

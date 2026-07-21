@@ -1,0 +1,18 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { postDate, postPath, postSlug, topicSlug } from '../../lib/site';
+
+export async function getStaticPaths() {
+  return (await getCollection('mini')).map((post) => ({ params: { slug: postSlug(post) }, props: { post } }));
+}
+const { post } = Astro.props;
+const { Content } = await render(post);
+const date = postDate(post);
+const topics = post.data.taxonomies.topics;
+const readingTime = Math.max(1, Math.ceil((post.body?.match(/\S+/g)?.length ?? 0) / 200));
+---
+
+<BaseLayout title={post.data.title} description={post.data.description} canonical={new URL(postPath(post), Astro.site)}>
+  <article><h1 class="block mb-5 text-3xl md:text-4xl"><span class="leading-snug block mb-4 font-display">{post.data.title}</span><span class="font-sans flex flex-wrap items-center gap-2 text-sm md:text-base text-neutral-500"><span>{date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', timeZone: 'UTC' })}</span><span class="font-black text-neutral-400">·</span><span>Read in {readingTime} minutes</span>{topics.length > 0 && <><span class="font-black text-neutral-400">·</span><span>Topics: {topics.map((topic, index) => <><a class="!text-neutral-500" href={`/topics/${topicSlug(topic)}/`}>{topic}</a>{index < topics.length - 1 && ', '}</>)}</span></>}</span></h1><Content /></article>
+</BaseLayout>

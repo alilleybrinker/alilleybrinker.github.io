@@ -1,0 +1,15 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostList from '../../components/PostList.astro';
+import { byNewest, topicSlug } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const posts = [...await getCollection('blog'), ...await getCollection('mini')];
+  const topics = [...new Set(posts.flatMap((post) => post.data.taxonomies.topics))];
+  return topics.map((topic) => ({ params: { topic: topicSlug(topic) }, props: { topic, posts: posts.filter((post) => post.data.taxonomies.topics.includes(topic)).sort(byNewest) } }));
+}
+const { topic, posts } = Astro.props;
+---
+
+<BaseLayout title={topic} feed={`/topics/${topicSlug(topic)}/atom.xml`}><h1><span class="text-base mb-1 block uppercase font-semibold tracking-widest text-slate-400">Topics</span>{topic}</h1><p>The following is a list of posts covered on my <a href="/blog/">Blog</a>, under the topic “{topic}”, sorted from most to least recent.</p><p>Feeds: <a href="/atom.xml">All Posts</a> · <a href={`/topics/${topicSlug(topic)}/atom.xml`}>{topic} Posts</a></p><PostList posts={posts} /></BaseLayout>
