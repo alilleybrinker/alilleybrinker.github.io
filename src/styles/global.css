@@ -51,3 +51,22 @@ html {
   fill: currentColor;
   stroke: currentColor;
 }
+
+.reading-time {
+  color: oklch(0.5 calc(var(--reading-time-strength) * 0.22) 145);
+}
+
+.dark .reading-time {
+  color: oklch(0.53 calc(var(--reading-time-strength) * 0.15) 150);
+}
+
+#table-of-contents.toc-is-stuck {
+  border-color: white !important;
+  border-style: solid !important;
+  background-color: white !important;
+}
+
+.dark #table-of-contents.toc-is-stuck {
+  border-color: var(--color-neutral-700) !important;
+  background-color: var(--color-neutral-800) !important;
+}

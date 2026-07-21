@@ -1,31 +1,174 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Icon from '../components/Icon.astro';
-import talksData from '../../content/talks/talks.json';
+import BaseLayout from "../layouts/BaseLayout.astro";
+import BlueskyProfileCard from "../components/BlueskyProfileCard.astro";
+import GitHubProfileCard from "../components/GitHubProfileCard.astro";
+import Icon from "../components/Icon.astro";
+import talksData from "../../content/talks/talks.json";
 const talks = [...talksData.talks].sort((a, b) => b.date.localeCompare(a.date));
 ---
 
-<BaseLayout title="About" description="Andrew Lilley Brinker is a Principal Engineer at MITRE working on software security, vulnerability information, and open source tooling.">
-  <h1>About</h1>
-  <div class="inline-block relative group max-w-36 md:max-w-48 transition-all duration-300 rotate-3 hover:rotate-0 float-right ml-4 md:ml-8 mb-4 md:mb-8 -top-10"><img src="/image/andrew.png" alt="Grayscale and dithered picture of Andrew" class="rounded-md block group-hover:ring-4 group-hover:ring-blue-500 transition-all duration-300" /></div>
-  <p>I’m a Principal Engineer at <a href="https://www.mitre.org">MITRE</a> working on software security, vulnerability information, and the open source ecosystem. I lead development of <a href="https://github.com/mitre/hipcheck">Hipcheck</a>, a tool that helps maintainers and users assess the supply-chain risk of their dependencies, and contribute to work on the CVE system.</p>
-  <p>I also serve on the <a href="https://omnibor.io">OmniBOR Core Team</a>, where I lead development of the <a href="https://github.com/omnibor/omnibor-rs">Rust library and <code>omnibor</code> CLI</a> for describing software identity.</p>
-  <h2 id="where-to-find-me">Where to Find Me</h2>
-  <ul class="list-none !pl-0">
-    <li class="flex items-center gap-2"><Icon name="bluesky" class="shrink-0" /><span><a href="https://bsky.app/profile/alilleybrinker.com">Bluesky</a>: the best place to reach me</span></li>
-    <li class="flex items-center gap-2"><Icon name="github" class="shrink-0" /><span><a href="https://github.com/alilleybrinker">GitHub</a>: code and open source work</span></li>
-  </ul>
-  <p>For a private conversation, send me a Bluesky direct message. If you’d prefer to chat securely, ask me for my Signal username.</p>
-  <p>You can also find me on <a href="https://hachyderm.io/@alilleybrinker">Mastodon</a>, <a href="https://www.linkedin.com/in/alilleybrinker">LinkedIn</a>, <a href="https://news.ycombinator.com/user?id=alilleybrinker">Hacker News</a>, <a href="https://lobste.rs/~alilleybrinker">Lobste.rs</a>, and <a href="https://www.reddit.com/user/alilleybrinker/">Reddit</a>.</p>
-  <h2 id="ai-policy">AI Policy</h2><p>The words on this site were written by a human (Andrew) with care. If AI content is ever posted to this site, it will always be made clear what content is AI-generated.</p>
-  <h2 id="my-name">My Name</h2><p>“Lilley Brinker” is my full last name. Two parts, no hyphen. When my wife and I got married we combined our last names without a hyphen. My last name is not “Brinker” and it is not correct to call me “Mr. Brinker”.</p><p>“Lilley” is pronounced like the word “lily”.</p>
-  <h2>Previous Things</h2><p>Served as Technical Editor for a <a href="https://www.manning.com/books/write-powerful-rust-macros">book on Rust procedural macros</a> · Earned a Master of Computer Science degree from <a href="https://csweb.rice.edu/">Rice University</a> · Maintained a <a href="https://github.com/alilleybrinker/langs-in-rust">list of programming languages written in Rust</a> · and more.</p>
-  <h2 id="talks">Talks</h2>
-  {talks.map((talk) => (
-    <article class="mb-10">
-      <h3 class="!m-0 !mb-1 !text-xl !font-medium"><a class="text-black dark:text-white no-underline hover:underline" href={talk.talk_link}>{talk.title}</a></h3>
-      <div class="flex gap-4 flex-wrap text-sm text-gray-500"><span>{talk.type === 'panel' ? 'Participated in panel at' : 'Presented at'} <a href={talk.event_link}>{talk.event}</a> on {new Date(`${talk.date}T12:00:00Z`).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</span>{talk.video_link && <span><a href={talk.video_link}>Watch the Recording</a></span>}{talk.slides_link && <span><a href={talk.slides_link}>View the Slides</a></span>}</div>
-      {talk.description && <p class="!mt-2">{talk.description}</p>}
-    </article>
-  ))}
+<BaseLayout
+    title="About — Software Security"
+    description="Andrew Lilley Brinker is a Principal Engineer at MITRE working on software security, vulnerability information, and open source tooling."
+>
+    <h1>About</h1>
+    <div
+        class="inline-block relative group max-w-36 md:max-w-48 transition-all duration-300 rotate-3 hover:rotate-0 float-right ml-4 md:ml-8 mb-4 md:mb-8 -top-10"
+    >
+        <img
+            src="/image/andrew.png"
+            alt="Grayscale and dithered picture of Andrew"
+            width="500"
+            height="500"
+            loading="eager"
+            class="rounded-md block group-hover:ring-4 group-hover:ring-blue-500 transition-all duration-300"
+        />
+    </div>
+    <p>
+        I’m a Principal Engineer at <a href="https://www.mitre.org">MITRE</a>
+        &nbsp;working on software security, vulnerability management, and open source.
+        I lead <a href="https://github.com/mitre/hipcheck">Hipcheck</a>, which
+        helps maintainers and users assess dependency supply-chain risk via
+        plugin-based analyses.
+    </p>
+    <p>
+        I also work on the <a href="https://www.cve.org/">CVE</a> system, improving
+        authz&ThinSpace;/&ThinSpace;authn, introducing support for <a
+            href="https://packageurl.org/">Package URLs</a
+        > in CVE Records, and enhancing the processes of the Quality Working Group.
+    </p>
+    <p>
+        I previously served on the <a href="https://omnibor.io/">OmniBOR</a> Core
+        Team, including leading creation of the <a
+            href="https://github.com/omnibor/omnibor-rs"
+            >Rust library and omnibor CLI</a
+        >.
+    </p>
+    <aside class="rounded-lg bg-white px-5 py-4 shadow-sm dark:bg-neutral-800">
+        <h2 id="my-name" class="!mt-0 !mb-3 !font-sans !text-sm !font-semibold">
+            My Name
+        </h2>
+        <p class="!m-0 !text-sm">
+            “Lilley Brinker” is my full last name. Two parts, no hyphen. When my
+            wife and I got married we combined our last names without a hyphen.
+            My last name is not “Brinker” and it is not correct to call me “Mr.
+            Brinker”.
+        </p>
+        <p class="!mt-2 !mb-0 !text-sm">
+            “Lilley” is pronounced like the word “lily”.
+        </p>
+    </aside>
+    <h2 class="flex items-center justify-between gap-4">
+        <span>Work</span><a
+            href="/resume.pdf"
+            class="group inline-flex shrink-0 items-center gap-2 rounded-md border border-gray-200 px-3 py-2 font-sans text-sm font-medium leading-none !no-underline hover:bg-blue-100 dark:border-neutral-700 dark:hover:bg-neutral-800"
+            >Résumé <span
+                class="rounded-sm bg-neutral-100 px-1 py-0.5 text-[0.625rem] font-semibold tracking-wide group-hover:bg-neutral-200 dark:bg-neutral-700 dark:group-hover:bg-neutral-600"
+                >PDF</span
+            ></a
+        >
+    </h2>
+    <p>
+        I want the people who build and maintain software to be able to make
+        informed decisions about what they depend on. That is why I founded <a
+            href="https://github.com/mitre/hipcheck">Hipcheck</a
+        > and led its redesign as an extensible supply-chain analysis tool.
+    </p>
+    <p>
+        I am drawn to work at the intersection of technical standards, public
+        policy, and open source communities. I have advised federal software
+        policy on SBOMs and open source security, and through <a
+            href="https://omnibor.io">OmniBOR</a
+        >, I worked on better ways to handle software identity.
+    </p>
+    <p>
+        Memory safety matters to me because it makes software safer by default.
+        In <a href="https://queue.acm.org/detail.cfm?id=3773095"
+            >“Memory Safety for Skeptics”</a
+        >, published in <em>ACM Queue</em> and <em>Communications of the ACM</em>,
+        I make the case for pursuing it amid competing priorities. I have taught
+        Rust at MITRE and programming language theory at <a
+            href="https://cse.csusb.edu">CSUSB</a
+        >, spoken at <a
+            href="https://www.youtube.com/watch?v=0PhfaFkzdBA">RustConf</a
+        > and <a href="https://www.youtube.com/watch?v=Wz2oFEDwiOk"
+            >Rust Belt Rust</a
+        >, contributed to the official Rust documentation and Rustonomicon, and
+        edited <a
+            href="https://www.manning.com/books/write-powerful-rust-macros"
+            >a book on Rust procedural macros</a
+        >.
+    </p>
+    <h3
+        id="talks"
+        class="!font-sans !text-lg !font-normal !tracking-normal text-neutral-500 dark:text-neutral-400"
+    >
+        Talks
+    </h3>
+    {
+        talks.map((talk) => (
+            <article class="mb-10">
+                <h4 class="!m-0 !mb-1 !font-display !text-xl !font-medium">
+                    <a
+                        class="text-black dark:text-white no-underline hover:underline"
+                        href={talk.talk_link}
+                    >
+                        {talk.title}
+                    </a>
+                </h4>
+                <div class="flex gap-4 flex-wrap text-sm text-gray-500">
+                    <span>
+                        {talk.type === "panel"
+                            ? "Participated in panel at"
+                            : "Presented at"}{" "}
+                        <a href={talk.event_link}>{talk.event}</a> on{" "}
+                        {new Date(`${talk.date}T12:00:00Z`).toLocaleDateString(
+                            "en-US",
+                            {
+                                month: "long",
+                                day: "numeric",
+                                year: "numeric",
+                                timeZone: "UTC",
+                            },
+                        )}
+                    </span>
+                    {talk.video_link && (
+                        <span>
+                            <a href={talk.video_link}>Watch the Recording</a>
+                        </span>
+                    )}
+                    {talk.slides_link && (
+                        <span>
+                            <a href={talk.slides_link}>View the Slides</a>
+                        </span>
+                    )}
+                </div>
+                {talk.description && <p class="!mt-2">{talk.description}</p>}
+            </article>
+        ))
+    }
+    <h2 id="where-to-find-me">Social / Contact</h2>
+    <div class="grid gap-4 md:grid-cols-2">
+        <BlueskyProfileCard />
+        <GitHubProfileCard />
+    </div>
+    <p class="!mb-2">Message me on Bluesky for my Signal username to chat.</p>
+    <p
+        class="!mt-2 !text-sm !leading-relaxed text-neutral-500 dark:text-neutral-400 [&_a]:!text-neutral-500 dark:[&_a]:!text-neutral-400"
+    >
+        You can also find me on <a href="https://hachyderm.io/@alilleybrinker"
+            >Mastodon</a
+        >, <a href="https://www.linkedin.com/in/alilleybrinker">LinkedIn</a>, <a
+            href="https://news.ycombinator.com/user?id=alilleybrinker"
+            >Hacker News</a
+        >, <a href="https://lobste.rs/~alilleybrinker">Lobste.rs</a>, and <a
+            href="https://www.reddit.com/user/alilleybrinker/">Reddit</a
+        >.
+    </p>
+    <h2 id="ai-policy">AI Policy</h2>
+    <p>
+        The words on this site were written by Andrew with care. Its design was
+        implemented with the aid of AI. If AI-generated content is ever posted,
+        it will be clearly identified.
+    </p>
 </BaseLayout>

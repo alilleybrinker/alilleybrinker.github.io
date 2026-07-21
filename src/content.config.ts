@@ -8,6 +8,9 @@ const postSchema = z.object({
     type: z.array(z.string()).default([]),
     topics: z.array(z.string()).default([]),
   }).default({ type: [], topics: [] }),
+  extra: z.object({
+    toc: z.boolean().default(false),
+  }).default({ toc: false }),
 });
 
 export const collections = {

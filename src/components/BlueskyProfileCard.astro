@@ -1,0 +1,80 @@
+---
+import Icon from './Icon.astro';
+
+const handle = 'alilleybrinker.com';
+const did = 'did:plc:geozyv62fx63m7jhr4eraubc';
+const profileUrl = `https://bsky.app/profile/${handle}`;
+---
+
+<a
+    href={profileUrl}
+    class="group block h-fit self-start rounded-lg bg-white p-5 !no-underline shadow-sm transition hover:ring-2 hover:ring-blue-500 dark:bg-neutral-800"
+    data-bluesky-profile-card
+>
+    <div class="flex gap-4">
+        <div class="flex size-12 shrink-0 self-center items-center justify-center rounded-full bg-blue-50 text-blue-500 dark:bg-neutral-700">
+            <Icon name="bluesky" class="!h-6 !w-6" />
+        </div>
+        <div class="min-w-0">
+            <p class="!m-0 !font-sans !text-base !font-semibold text-black dark:text-white" data-bluesky-handle
+                >@alilleybrinker.com</p
+            >
+            <p class="!mt-2 !mb-0 !font-sans !text-sm text-neutral-500 dark:text-neutral-400" data-bluesky-stats
+                >Follow Andrew’s writing and conversations on Bluesky.</p
+            >
+        </div>
+    </div>
+</a>
+<p class="sr-only" aria-live="polite" data-bluesky-status>Loading Bluesky profile.</p>
+
+<script define:vars={{ did, handle }}>
+    const card = document.querySelector('[data-bluesky-profile-card]');
+
+    async function loadProfile() {
+        if (!card) return;
+
+        try {
+            const didDocument = await fetch(`https://plc.directory/${did}`).then(
+                (response) => response.json(),
+            );
+            const pds = didDocument.service?.find(
+                (service) => service.id === '#atproto_pds',
+            )?.serviceEndpoint;
+
+            if (!pds) throw new Error('No PDS endpoint found');
+
+            const params = new URLSearchParams({
+                repo: did,
+                collection: 'app.bsky.actor.profile',
+                rkey: 'self',
+            });
+            const record = await fetch(
+                `${pds}/xrpc/com.atproto.repo.getRecord?${params}`,
+            ).then((response) => response.json());
+            if (!record.value) throw new Error('No Bluesky profile record found');
+
+            const handleElement = card.querySelector('[data-bluesky-handle]');
+            const stats = card.querySelector('[data-bluesky-stats]');
+
+            handleElement.textContent = `@${handle}`;
+            const publicProfile = await fetch(
+                `https://public.api.bsky.app/xrpc/app.bsky.actor.getProfile?actor=${encodeURIComponent(did)}`,
+            ).then((response) => response.json());
+            const formatCount = (count) =>
+                count > 1000
+                    ? `${Number((count / 1000).toPrecision(2))}K`
+                    : new Intl.NumberFormat('en-US').format(count);
+            stats.textContent = `${formatCount(publicProfile.followersCount)} followers / ${formatCount(publicProfile.followsCount)} following / ${formatCount(publicProfile.postsCount)} posts`;
+
+            card.parentElement
+                ?.querySelector('[data-bluesky-status]')
+                ?.replaceChildren('Bluesky profile loaded.');
+        } catch {
+            card.parentElement
+                ?.querySelector('[data-bluesky-status]')
+                ?.replaceChildren('Bluesky profile stats are unavailable.');
+        }
+    }
+
+    loadProfile();
+</script>

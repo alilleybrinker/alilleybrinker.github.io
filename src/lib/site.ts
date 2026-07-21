@@ -29,6 +29,14 @@ export function postPath(post: Post) {
   return `/blog/${postSlug(post)}/`;
 }
 
+export function postReadingTime(post: Post) {
+  return Math.max(1, Math.ceil((post.body?.match(/\S+/g)?.length ?? 0) / 200));
+}
+
+export function readingTimeStrength(readingTime: number) {
+  return Math.min((readingTime - 1) / 9, 1);
+}
+
 export function byNewest(a: Post, b: Post) {
   return postDate(b).valueOf() - postDate(a).valueOf();
 }

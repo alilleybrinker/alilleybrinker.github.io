@@ -1,22 +1,119 @@
 ---
 import { getCollection, render } from 'astro:content';
+import Icon from '../../components/Icon.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { byNewest, postDate, postPath, postSlug } from '../../lib/site';
+import { postDate, postPath, postReadingTime, postSlug } from '../../lib/site';
 
 export async function getStaticPaths() {
   return (await getCollection('blog')).map((post) => ({ params: { slug: postSlug(post) }, props: { post } }));
 }
 const { post } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 const date = postDate(post);
 const topics = post.data.taxonomies.topics;
-const readingTime = Math.max(1, Math.ceil((post.body?.match(/\S+/g)?.length ?? 0) / 200));
+const readingTime = postReadingTime(post);
+const canonical = new URL(postPath(post), Astro.site);
+const socialImage = `/social/${postSlug(post)}.png`;
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: date.toISOString(),
+  author: {
+    '@type': 'Person',
+    name: 'Andrew Lilley Brinker',
+    url: new URL('/', Astro.site).href,
+  },
+  mainEntityOfPage: canonical.href,
+  image: new URL(socialImage, Astro.site).href,
+  articleSection: 'Blog',
+  keywords: topics,
+};
 ---
 
-<BaseLayout title={post.data.title} description={post.data.description} canonical={new URL(postPath(post), Astro.site)}>
+<BaseLayout title={post.data.title} description={post.data.description} canonical={canonical} type="article" socialImage={socialImage} socialImageAlt={post.data.title} structuredData={structuredData}>
   <article>
     <h1 class="block mb-5 text-3xl md:text-4xl"><span class="leading-snug block mb-4 font-display">{post.data.title}</span><span class="font-sans flex flex-wrap items-center gap-2 text-sm md:text-base text-neutral-500"><span>{date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</span><span class="font-black text-neutral-400">·</span><span>Read in {readingTime} minutes</span>{topics.length > 0 && <><span class="font-black text-neutral-400">·</span><span>Topics: {topics.map((topic, index) => <><a class="!text-neutral-500" href={`/topics/${topic.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}/`}>{topic}</a>{index < topics.length - 1 && ', '}</>)}</span></>}</span></h1>
+    {post.data.extra.toc && headings.length > 0 && (
+      <details id="table-of-contents" aria-label="Table of contents" class="group not-prose sticky top-0 z-10 mb-10 w-full rounded-lg border-2 border-dashed border-blue-100 bg-blue-50 font-sans text-sm transition-[width,translate,box-shadow] duration-300 ease-out motion-reduce:transition-none open:!border-solid open:!border-white open:!bg-white dark:border-neutral-700 dark:bg-neutral-800 dark:open:!border-neutral-700 dark:open:!bg-neutral-800">
+        <summary class="flex w-full cursor-pointer list-none items-center justify-between gap-2 px-4 py-3 font-semibold text-neutral-900 transition-[padding] duration-200 ease-out [&::-webkit-details-marker]:hidden dark:text-neutral-100 dark:open:!text-neutral-100">
+          Table of contents
+          <span aria-hidden="true" class="text-sm transition-transform duration-200 ease-out group-open:rotate-180">▾</span>
+        </summary>
+        <nav class="max-h-[calc(100vh-1rem)] w-full overflow-y-auto px-4 pb-6 transition-[padding] duration-200 ease-out" aria-label="Article sections">
+          <ol class="list-none space-y-2 text-neutral-700 dark:group-open:!text-neutral-200">
+            {headings.map((heading) => (
+              <li class:list={{ 'flex gap-2': true, 'ml-4': heading.depth === 3, 'ml-8': heading.depth >= 4 }}>
+                {heading.depth > 2 && <span aria-hidden="true" class="text-neutral-400">↳</span>}
+                <a class="no-underline hover:underline" href={`#${heading.slug}`}>{heading.text}</a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      </details>
+    )}
     <Content />
-    <div class="bg-white dark:bg-neutral-800 relative p-8 rounded-b-2xl mt-24 border-t-4 text-lg leading-normal border-blue-500"><div class="md:flex gap-4 justify-between items-center"><div><span class="block font-semibold !mb-2 text-xl">Thank you for reading!</span><p class="md:!my-0">Like the post? Consider sharing it on Bluesky!</p></div><a href={`https://bsky.app/intent/compose?text=${encodeURIComponent(`${post.data.title} by @alilleybrinker.com ${new URL(postPath(post), Astro.site)}`)}`} class="py-3 px-6 rounded-lg bg-blue-50 dark:bg-neutral-700 hover:bg-blue-500 hover:text-white no-underline">Share on Bluesky</a></div></div>
+    <aside aria-labelledby="share-post-heading" class="not-prose mt-20 rounded-2xl border border-blue-100 bg-blue-50 p-6 text-base leading-normal dark:border-neutral-700 dark:bg-neutral-800 sm:p-8">
+      <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 id="share-post-heading" class="font-display text-xl font-semibold text-neutral-900 dark:text-neutral-100">Enjoyed this post?</h2>
+          <p class="mt-2 text-neutral-600 dark:text-neutral-300">Share it with someone who might find it useful.</p>
+        </div>
+        <div class="flex flex-col items-center gap-3 sm:items-end">
+          <a
+            href={`https://bsky.app/intent/compose?text=${encodeURIComponent(`${post.data.title} by @alilleybrinker.com ${new URL(postPath(post), Astro.site)}`)}`}
+            class="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-[#0560FF] px-5 py-3 font-semibold text-white no-underline transition-[filter] hover:brightness-90 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0560FF]"
+          >
+            <Icon name="bluesky" class="!h-5 !w-5" />
+            Share on Bluesky
+          </a>
+          <p class="text-sm text-neutral-600 dark:text-neutral-300">
+            <button id="copy-link" class="cursor-pointer underline decoration-blue-400 underline-offset-2 hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white" type="button">Copy link</button>
+            <span aria-hidden="true"> · </span>
+            <a href={`mailto:?subject=${encodeURIComponent(post.data.title)}&body=${encodeURIComponent(`${post.data.title}\n\n${new URL(postPath(post), Astro.site)}`)}`} class="underline decoration-blue-400 underline-offset-2 hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white">Share by email</a>
+          </p>
+        </div>
+      </div>
+      <p id="copy-link-status" class="sr-only" aria-live="polite"></p>
+    </aside>
   </article>
+  <script>
+    const tableOfContents = document.querySelector<HTMLDetailsElement>('#table-of-contents');
+    const tableOfContentsButton = tableOfContents?.querySelector('summary');
+    const tableOfContentsContent = tableOfContents?.querySelector('nav');
+
+    function updateTableOfContentsPosition() {
+      const isStuck = tableOfContents?.getBoundingClientRect().top <= 0;
+
+      tableOfContents?.classList.toggle('!rounded-t-none', isStuck);
+      tableOfContents?.classList.toggle('toc-is-stuck', isStuck);
+      tableOfContents?.classList.toggle('!shadow-lg', isStuck);
+      tableOfContents?.classList.toggle('!w-[calc(100%+2.5rem)]', isStuck);
+      tableOfContents?.classList.toggle('!-translate-x-5', isStuck);
+      tableOfContentsButton?.classList.toggle('!px-5', isStuck);
+      tableOfContentsContent?.classList.toggle('!px-5', isStuck);
+    }
+
+    addEventListener('scroll', updateTableOfContentsPosition, { passive: true });
+    addEventListener('resize', updateTableOfContentsPosition);
+    updateTableOfContentsPosition();
+
+    const copyLink = document.querySelector<HTMLButtonElement>('#copy-link');
+    const copyLinkStatus = document.querySelector<HTMLElement>('#copy-link-status');
+    const defaultCopyLinkLabel = copyLink?.textContent;
+
+    copyLink?.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        copyLink.textContent = 'Copied!';
+        copyLinkStatus!.textContent = 'Post link copied to the clipboard.';
+        window.setTimeout(() => {
+          copyLink.textContent = defaultCopyLinkLabel;
+        }, 2_000);
+      } catch {
+        copyLinkStatus!.textContent = 'Could not copy the link. Please copy it from your browser’s address bar.';
+      }
+    });
+  </script>
 </BaseLayout>

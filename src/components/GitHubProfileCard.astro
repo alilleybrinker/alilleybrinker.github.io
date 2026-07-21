@@ -1,0 +1,60 @@
+---
+import Icon from './Icon.astro';
+
+const username = 'alilleybrinker';
+const profileUrl = `https://github.com/${username}`;
+---
+
+<a
+    href={profileUrl}
+    class="group block h-fit self-start rounded-lg bg-white p-5 !no-underline shadow-sm transition hover:ring-2 hover:ring-blue-500 dark:bg-neutral-800"
+    data-github-profile-card
+>
+    <div class="flex gap-4">
+        <div class="flex size-12 shrink-0 self-center items-center justify-center rounded-full bg-neutral-100 text-neutral-700 dark:bg-neutral-700 dark:text-neutral-100">
+            <Icon name="github" class="!h-6 !w-6" />
+        </div>
+        <div class="min-w-0">
+            <p class="!m-0 !font-sans !text-base !font-semibold text-black dark:text-white" data-github-handle
+                >@alilleybrinker</p
+            >
+            <p class="!mt-2 !mb-0 !font-sans !text-sm text-neutral-500 dark:text-neutral-400" data-github-stats
+                >Explore Andrew’s open-source software and projects on GitHub.</p
+            >
+        </div>
+    </div>
+</a>
+<p class="sr-only" aria-live="polite" data-github-status>Loading GitHub profile.</p>
+
+<script define:vars={{ username }}>
+    const card = document.querySelector('[data-github-profile-card]');
+
+    async function loadProfile() {
+        if (!card) return;
+
+        try {
+            const profile = await fetch(
+                `https://api.github.com/users/${username}`,
+            ).then((response) => response.json());
+            const handle = card.querySelector('[data-github-handle]');
+            const stats = card.querySelector('[data-github-stats]');
+
+            handle.textContent = `@${profile.login || username}`;
+            const formatCount = (count) =>
+                count > 1000
+                    ? `${Number((count / 1000).toPrecision(2))}K`
+                    : new Intl.NumberFormat('en-US').format(count);
+            stats.textContent = `${formatCount(profile.followers)} followers / ${formatCount(profile.following)} following / ${formatCount(profile.public_repos)} repos`;
+
+            card.parentElement
+                ?.querySelector('[data-github-status]')
+                ?.replaceChildren('GitHub profile loaded.');
+        } catch {
+            card.parentElement
+                ?.querySelector('[data-github-status]')
+                ?.replaceChildren('GitHub profile stats are unavailable.');
+        }
+    }
+
+    loadProfile();
+</script>

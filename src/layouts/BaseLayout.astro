@@ -8,14 +8,44 @@ interface Props {
   description?: string;
   canonical?: string;
   feed?: string;
+  type?: 'website' | 'article';
+  structuredData?: Record<string, unknown>;
+  socialImage?: string;
+  socialImageAlt?: string;
 }
 const {
   title: pageTitle,
   description = 'I work on software security at MITRE, including serving as a member of the OmniBOR Working Group and leading development of the Rust implementation.',
   canonical = new URL(Astro.url.pathname, Astro.site),
   feed = '/rss.xml',
+  type = 'website',
+  structuredData,
+  socialImage: pageSocialImage = '/social.png',
+  socialImageAlt = 'Andrew Lilley Brinker',
 } = Astro.props;
 const title = pageTitle ? `${pageTitle} — Andrew Lilley Brinker` : 'Andrew Lilley Brinker';
+const socialImage = new URL(pageSocialImage, Astro.site);
+const personImage = new URL('/social.png', Astro.site);
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Andrew Lilley Brinker',
+  url: new URL('/', Astro.site).href,
+  image: personImage.href,
+  jobTitle: 'Principal Engineer',
+  worksFor: {
+    '@type': 'Organization',
+    name: 'MITRE',
+    url: 'https://www.mitre.org/',
+  },
+  sameAs: [
+    'https://bsky.app/profile/alilleybrinker.com',
+    'https://github.com/alilleybrinker',
+    'https://hachyderm.io/@alilleybrinker',
+    'https://www.linkedin.com/in/alilleybrinker',
+  ],
+};
+const jsonLd = (data: Record<string, unknown>) => JSON.stringify(data).replace(/</g, '\\u003c');
 ---
 
 <!doctype html>
@@ -23,31 +53,66 @@ const title = pageTitle ? `${pageTitle} — Andrew Lilley Brinker` : 'Andrew Lil
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={type} />
     <meta property="og:url" content={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:site_name" content="Andrew Lilley Brinker" />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:image:secure_url" content={socialImage} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1356" />
+    <meta property="og:image:height" content="628" />
+    <meta property="og:image:alt" content={socialImageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+    <meta name="twitter:image:alt" content={socialImageAlt} />
     <link rel="alternate" type="application/rss+xml" title="RSS" href={feed} />
+    <script type="application/ld+json" set:html={jsonLd(person)} />
+    {structuredData && <script type="application/ld+json" set:html={jsonLd(structuredData)} />}
   </head>
   <body class="bg-stone-50 dark:bg-neutral-900">
     <div class="subpixel-antialiased">
-      <header class="pt-32 pb-0 mb-4 text-black dark:text-neutral-100 text-base md:text-lg px-5 md:px-0 md:max-w-(--breakpoint-md) md:mx-auto">
-        <nav class="font-normal">
-          <ul class="m-0 list-none p-0 md:flex md:items-center gap-6 md:gap-8">
-            <li class="block md:flex md:items-center mb-4 md:mb-0"><a href="/" class="inline-flex items-center gap-2 whitespace-nowrap leading-none hover:underline font-semibold"><img src="/image/andrew_lineart-transparent.png" alt="" class="size-16 rounded-full dark:bg-neutral-300 md:-ml-[4.5rem]" />Andrew Lilley Brinker</a></li>
-            <li class="inline md:flex md:items-center"><ul class="m-0 inline-flex items-center list-none p-0 md:flex gap-4 md:gap-8"><li><a href="/about/" class="inline-flex items-center leading-none hover:underline">About</a></li><li><a href="/blog/" class="inline-flex items-center leading-none hover:underline">Blog</a></li></ul></li>
-            <li class="ml-auto md:-mr-6 md:flex md:items-center"><ul class="m-0 flex items-center list-none p-0 gap-2"><li><a href="https://bsky.app/profile/alilleybrinker.com" aria-label="Bluesky" class="flex size-8 items-center justify-center text-neutral-400 hover:text-blue-500"><Icon name="bluesky" class="!h-5 !w-5" /></a></li><li><a href="https://github.com/alilleybrinker" aria-label="GitHub" class="flex size-8 items-center justify-center text-neutral-400 hover:text-blue-500"><Icon name="github" class="!h-5 !w-5" /></a></li></ul></li>
-            <li class="md:flex md:items-center"><ThemeSwitcher /></li>
-          </ul>
+      <header class="pt-8 pb-0 mb-4 text-black dark:text-neutral-100 text-base md:pt-32 md:text-lg px-5 md:px-0 md:max-w-(--breakpoint-md) md:mx-auto">
+        <nav class="flex items-center gap-2 font-normal" aria-label="Primary navigation">
+          <a href="/" class="inline-flex min-w-0 items-center gap-2 whitespace-nowrap leading-none hover:underline font-semibold">
+            <img src="/image/andrew_lineart-transparent.png" alt="" class="size-12 shrink-0 rounded-full dark:bg-neutral-300 md:size-16 md:-ml-[4.5rem]" />
+            <span class="truncate">Andrew Lilley Brinker</span>
+          </a>
+          <a href="/about/" class="hidden md:ml-4 md:inline-flex md:items-center leading-none hover:underline">About</a>
+          <div class="ml-auto hidden shrink-0 items-center gap-2 md:-mr-6 md:flex">
+            <a href="https://bsky.app/profile/alilleybrinker.com" aria-label="Bluesky" class="flex size-8 items-center justify-center text-neutral-400 hover:text-blue-500"><Icon name="bluesky" class="!h-5 !w-5" /></a>
+            <a href="https://github.com/alilleybrinker" aria-label="GitHub" class="flex size-8 items-center justify-center text-neutral-400 hover:text-blue-500"><Icon name="github" class="!h-5 !w-5" /></a>
+            <ThemeSwitcher />
+          </div>
+          <div class="ml-auto md:hidden">
+            <details class="group relative">
+              <summary class="flex h-9 cursor-pointer items-center rounded-md bg-white px-3 text-neutral-500 shadow-sm ring-1 ring-black/5 hover:bg-blue-100 hover:text-blue-500 dark:bg-neutral-800 dark:ring-white/10 dark:hover:bg-blue-500/25">Menu</summary>
+              <ul class="absolute right-0 z-10 mt-2 min-w-56 list-none rounded-lg bg-white p-2 shadow-lg ring-1 ring-black/5 dark:bg-neutral-800 dark:ring-white/10">
+                <li><a href="/about/" class="block rounded px-3 py-2 hover:bg-blue-100 hover:text-blue-600 dark:hover:bg-blue-500/25">About</a></li>
+                <li class="mt-1 flex items-center gap-2 border-t border-neutral-200 px-3 pt-2 dark:border-neutral-700">
+                  <a href="https://bsky.app/profile/alilleybrinker.com" aria-label="Bluesky" class="flex size-8 items-center justify-center text-neutral-400 hover:text-blue-500"><Icon name="bluesky" class="!h-5 !w-5" /></a>
+                  <a href="https://github.com/alilleybrinker" aria-label="GitHub" class="flex size-8 items-center justify-center text-neutral-400 hover:text-blue-500"><Icon name="github" class="!h-5 !w-5" /></a>
+                  <ThemeSwitcher expanded />
+                </li>
+              </ul>
+            </details>
+          </div>
         </nav>
       </header>
-      <main class="pt-12 pb-24 px-5 md:px-0 md:max-w-(--breakpoint-md) md:mx-auto"><div class="mb-12 prose lg:prose-lg lg:leading-relaxed prose-stone dark:prose-invert prose-headings:font-medium prose-h1:font-display prose-headings:text-black dark:prose-headings:text-neutral-100 prose-a:text-black dark:prose-a:text-white prose-a:font-normal prose-a:decoration-1 prose-a:underline-offset-2 prose-a:decoration-blue-400 prose-a:hover:decoration-black dark:prose-a:hover:decoration-white prose-code:after:content-none prose-code:before:content-none prose-blockquote:font-normal prose-blockquote:not-italic prose-figure:bg-white dark:prose-figure:bg-neutral-800 prose-figure:rounded-xl prose-figure:shadow-lg prose-pre:p-5 lg:prose-pre:p-8 prose-pre:-mx-5 lg:prose-pre:-mx-8 md:prose-pre:rounded-3xl text-pretty max-w-full"><slot /></div><footer class="mt-8 text-xs text-neutral-400"><p>Copyright Andrew Lilley Brinker. Made with <Icon name="heart" class="-mt-0.5 !h-3 !w-3" /> in California</p></footer></main>
+      <main class="pt-12 pb-24 px-5 md:px-0 md:max-w-(--breakpoint-md) md:mx-auto"><div class="mb-12 prose lg:prose-lg lg:leading-relaxed prose-stone dark:prose-invert prose-headings:font-medium prose-h1:font-display prose-headings:text-black dark:prose-headings:text-neutral-100 prose-a:text-black dark:prose-a:text-white prose-a:font-normal prose-a:decoration-1 prose-a:underline-offset-2 prose-a:decoration-blue-400 prose-a:hover:decoration-black dark:prose-a:hover:decoration-white prose-code:after:content-none prose-code:before:content-none prose-blockquote:font-normal prose-blockquote:not-italic prose-figure:bg-white dark:prose-figure:bg-neutral-800 prose-figure:rounded-xl prose-figure:shadow-lg prose-pre:p-5 lg:prose-pre:p-8 prose-pre:-mx-5 lg:prose-pre:-mx-8 md:prose-pre:rounded-3xl text-pretty max-w-full"><slot /></div><footer class="mt-8 text-xs text-neutral-400"><p>Copyright Andrew Lilley Brinker. Made with <Icon name="heart" class="-mt-0.5 !h-3 !w-3" /> in California · <a href="/about/#ai-policy" class="underline decoration-blue-400 underline-offset-2 hover:text-neutral-600 dark:hover:text-neutral-200">AI Policy</a></p></footer></main>
     </div>
   </body>
 </html>

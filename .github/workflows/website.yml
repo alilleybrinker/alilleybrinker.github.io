@@ -1,4 +1,4 @@
-name: Deploy Website
+name: Deploy website
 
 # Runs on pushed to the default branch but can also be
 # run manually from the GitHub Actions page.
@@ -22,35 +22,14 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
 
     steps:
-      # Check out the repository.
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
-          cache: npm
-
-      # Setup GitHub Pages
-      - name: Setup GitHub Pages
-        id: pages
-        uses: actions/configure-pages@v5
-
-      - name: Build Website
-        run: |
-          npm ci
-          npm run build
-
-      # Upload the output of the build as an Actions artifact so the deploy
-      # step can pick it up and use it.
-      - name: Upload Build Output
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./dist
+      - name: Build and upload website
+        uses: withastro/action@v6
 
   #==========================================================================
   # Deploy the site to GitHub Pages
@@ -59,9 +38,9 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     needs: build
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

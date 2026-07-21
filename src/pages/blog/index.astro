@@ -1,14 +1,14 @@
 ---
-import { getCollection } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import PostList from '../../components/PostList.astro';
-import { byNewest } from '../../lib/site';
-const posts = (await getCollection('blog')).sort(byNewest);
+const target = '/';
 ---
 
-<BaseLayout title="Blog" feed="/blog/atom.xml">
-  <h1>Blog</h1>
-  <p>Posts about <a href="/topics/memory-safety/">memory safety</a>, the <a href="/topics/rust/">Rust programming language</a>, and <a href="/topics/supply-chain-security/">software supply chain security</a>, among <a href="/topics/">other things</a>.</p>
-  <p><a href="/blog/atom.xml">Subscribe to the feed</a>.</p>
-  <PostList posts={posts} />
-</BaseLayout>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <link rel="canonical" href={target} />
+    <script>window.location.replace('/');</script>
+  </head>
+  <body><p>Redirecting to <a href={target}>the homepage</a>.</p></body>
+</html>

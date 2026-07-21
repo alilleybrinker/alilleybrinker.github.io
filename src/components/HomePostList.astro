@@ -1,6 +1,6 @@
 ---
 import type { Post } from '../lib/site';
-import { postDate, postPath } from '../lib/site';
+import { postDate, postPath, postReadingTime, readingTimeStrength } from '../lib/site';
 
 interface Props {
   posts: Post[];
@@ -14,14 +14,6 @@ for (const post of displayed) {
   years.set(year, [...(years.get(year) ?? []), post]);
 }
 
-function readingTime(post: Post) {
-  return Math.max(1, Math.ceil((post.body?.match(/\S+/g)?.length ?? 0) / 200));
-}
-
-function readingColor(post: Post) {
-  const strength = Math.min((readingTime(post) - 1) / 9, 1);
-  return `oklch(0.53 ${0.15 * strength} 150)`;
-}
 ---
 
 <div class="mt-10 not-prose">
@@ -33,7 +25,7 @@ function readingColor(post: Post) {
           <li>
             <a class="group flex items-baseline justify-between gap-6 py-1.5 text-black dark:text-white" href={postPath(post)}>
               <span class="group-hover:underline">{post.data.title}</span>
-              <time class="shrink-0 text-sm text-neutral-500" datetime={postDate(post).toISOString()}>{postDate(post).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })} / <span style={`color: ${readingColor(post)}`}>{readingTime(post)} min read</span></time>
+              <time class="shrink-0 text-sm text-neutral-500" datetime={postDate(post).toISOString()}>{postDate(post).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })} / <span class="reading-time" style={`--reading-time-strength: ${readingTimeStrength(postReadingTime(post))}`}>{postReadingTime(post)} min read</span></time>
             </a>
           </li>
         ))}

@@ -1,7 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
+import Icon from '../../components/Icon.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import PostList from '../../components/PostList.astro';
+import HomePostList from '../../components/HomePostList.astro';
 import { byNewest, topicSlug } from '../../lib/site';
 
 export async function getStaticPaths() {
@@ -12,4 +13,4 @@ export async function getStaticPaths() {
 const { topic, posts } = Astro.props;
 ---
 
-<BaseLayout title={topic} feed={`/topics/${topicSlug(topic)}/atom.xml`}><h1><span class="text-base mb-1 block uppercase font-semibold tracking-widest text-slate-400">Topics</span>{topic}</h1><p>The following is a list of posts covered on my <a href="/blog/">Blog</a>, under the topic “{topic}”, sorted from most to least recent.</p><p>Feeds: <a href="/atom.xml">All Posts</a> · <a href={`/topics/${topicSlug(topic)}/atom.xml`}>{topic} Posts</a></p><PostList posts={posts} /></BaseLayout>
+<BaseLayout title={`${topic} Posts`} feed={`/topics/${topicSlug(topic)}/atom.xml`}><h1><span class="mb-1 block font-sans text-base font-semibold uppercase tracking-widest text-slate-400">Topics</span>{topic}</h1><p><Icon name="rss" class="-mt-0.5 !h-4 !w-4" /> <a href="/atom.xml">All Posts</a> · <a href={`/topics/${topicSlug(topic)}/atom.xml`}>{topic} Posts</a></p><HomePostList posts={posts} /></BaseLayout>
