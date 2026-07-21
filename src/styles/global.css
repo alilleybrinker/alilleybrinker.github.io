@@ -3,7 +3,7 @@
 
 @theme {
   --font-sans: "Public Sans", sans-serif;
-  --font-display: "Public Sans", sans-serif;
+  --font-display: "Merriweather", serif;
 
   /* Neutral grayscale palette. */
   --color-blue-50: oklch(0.975 0 0);
@@ -20,6 +20,7 @@
 
   --color-neutral-100: oklch(0.94 0 0);
   --color-neutral-200: oklch(0.88 0 0);
+  --color-neutral-300: oklch(0.80 0 0);
   --color-neutral-400: oklch(0.64 0 0);
   --color-neutral-500: oklch(0.53 0 0);
   --color-neutral-600: oklch(0.43 0 0);

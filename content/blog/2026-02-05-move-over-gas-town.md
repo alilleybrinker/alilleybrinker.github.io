@@ -1,5 +1,5 @@
 ---
-title: "Move Over Gas Town, Claude Has First-Party Agent Orchestration"
+title: "Claude Has First-Party Agent Orchestration"
 description: "Anthropic has announced an experimental system for first-party
   multi-agent orchestration, called 'Agent Teams'."
 taxonomies:

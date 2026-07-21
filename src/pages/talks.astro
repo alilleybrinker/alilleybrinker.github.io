@@ -1,0 +1,14 @@
+---
+const target = '/about/#talks';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <link rel="canonical" href={target} />
+    <script>window.location.replace('/about/#talks');</script>
+  </head>
+  <body><p>Redirecting to <a href={target}>the talks section</a>.</p></body>
+</html>

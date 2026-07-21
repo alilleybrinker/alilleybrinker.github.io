@@ -3,11 +3,11 @@ import Icon from './Icon.astro';
 const options = [['light', 'sun'], ['system', 'zap'], ['dark', 'moon']];
 ---
 
-<div class="inline-flex md:flex justify-end">
-  <div id="theme-selector" class="flex items-center bg-neutral-100 dark:bg-neutral-900 -mt-1 p-0.5 rounded-full w-9 hover:w-25 transition-[width] ease-linear duration-75 delay-300 hover:delay-0 overflow-x-clip overflow-y-visible">
+<div class="inline-flex items-center md:flex justify-end">
+  <div id="theme-selector" class="flex h-9 items-center bg-neutral-100 dark:bg-neutral-800 p-0.5 rounded-full w-9 hover:w-25 transition-[width] ease-linear duration-75 delay-300 hover:delay-0 overflow-x-clip overflow-y-visible">
     {options.map(([theme, icon]) => (
-      <button type="button" data-theme={theme} class="theme-option shrink-0 py-0.5 px-2 rounded-full text-neutral-400 hover:bg-blue-100 dark:hover:bg-blue-500/25 hover:text-blue-500 data-[active]:text-blue-600">
-        <Icon name={icon} class="-mt-0.5" />
+      <button type="button" data-theme={theme} class="theme-option inline-flex size-8 cursor-pointer items-center justify-center shrink-0 rounded-full text-neutral-400 hover:bg-blue-100 dark:hover:bg-blue-500/25 hover:text-blue-500 data-[active]:text-blue-600">
+        <Icon name={icon} />
         <span class="sr-only">Use {theme} theme</span>
       </button>
     ))}
