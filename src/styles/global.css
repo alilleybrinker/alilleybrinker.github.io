@@ -135,6 +135,34 @@ a:hover .topic-badge {
   color: oklch(0.53 calc(var(--reading-time-strength) * 0.15) 150);
 }
 
+.info-callout {
+  margin-block: 2rem;
+  padding: 1.25rem;
+  border: 1px solid var(--color-blue-100);
+  border-radius: 0.75rem;
+  background: var(--color-blue-50);
+}
+
+.info-callout-title {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  color: var(--color-neutral-900);
+}
+
+.info-callout p + p {
+  margin: 0.5rem 0 0;
+}
+
+.dark .info-callout {
+  border-color: var(--color-neutral-700);
+  background: var(--color-neutral-800);
+}
+
+.dark .info-callout-title {
+  color: var(--color-neutral-100);
+}
+
 #table-of-contents.toc-is-stuck {
   border-color: white !important;
   border-style: solid !important;

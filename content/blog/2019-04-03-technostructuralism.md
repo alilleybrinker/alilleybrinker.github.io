@@ -22,17 +22,10 @@ So Steve Klabnik posted a really thoughtful piece on open source and free softwa
 and the responses on places like Hacker News made an error that seems common in these
 circles: believing working harder will solve a problem.
 
-{% info(title = "This is a reproduction of a Twitter thread") %}
-The following is a reproduction of a thread I'd posted
-on Twitter back in 2019. I am sharing it here because Twitter has
-increasingly locked content behind a login prompt and I'd like to be able
-to refer people to this material without them having to have a Twitter/X
-account. The original thread can be found at [Twitter][twitter].
-The version reproduced here is done without the thread-markers, @-references,
-and hashtags which were used in the original.
-
-[twitter]: https://twitter.com/alilleybrinker/status/1113538427855757313
-{% end %}
+<aside class="info-callout" aria-labelledby="twitter-thread-reproduction">
+  <p id="twitter-thread-reproduction" class="info-callout-title">This is a reproduction of a Twitter thread</p>
+  <p>The following is a reproduction of a thread I'd posted on Twitter back in 2019. I am sharing it here because Twitter has increasingly locked content behind a login prompt and I'd like to be able to refer people to this material without them having to have a Twitter/X account. The original thread can be found at <a href="https://twitter.com/alilleybrinker/status/1113538427855757313">Twitter</a>. The version reproduced here is done without the thread-markers, @-references, and hashtags which were used in the original.</p>
+</aside>
 
 This comes up with people defending C, who argue "people should write better C." Of
 course, this is nonsense. If a person can write better C consistently, we should

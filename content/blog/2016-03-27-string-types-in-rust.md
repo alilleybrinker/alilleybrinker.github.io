@@ -25,14 +25,10 @@ examples, then get into the lesser-used string types---[`CString`][cstring],
 and [`Path`][path]---and how the [`Cow`][cow] container can make working with
 Rust strings easier.
 
-{% info(title = "This was originally published on a different site.") %}
-This is a reproduction of a post of mine which was originally published on a
-now-defunct programming blog called "Suspect Semantics". I am reproducing it
-here to give me something to refer to, as there have been times where I wanted
-to point people to this article. I don't have any intent of bringing the
-original site back in full, but at least some of the content was good and is
-still reasonably correct and relevant to be worth preserving.
-{% end %}
+<aside class="info-callout" aria-labelledby="originally-published-elsewhere">
+  <p id="originally-published-elsewhere" class="info-callout-title">This was originally published on a different site.</p>
+  <p>This is a reproduction of a post of mine which was originally published on a now-defunct programming blog called "Suspect Semantics". I am reproducing it here to give me something to refer to, as there have been times where I wanted to point people to this article. I don't have any intent of bringing the original site back in full, but at least some of the content was good and is still reasonably correct and relevant to be worth preserving.</p>
+</aside>
 
 The most important thing to understand is that string types in Rust come in
 pairs, which I'll call the "owned" variety and "slice" variety (_the term

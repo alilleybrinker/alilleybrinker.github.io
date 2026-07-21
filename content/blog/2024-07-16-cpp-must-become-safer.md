@@ -253,15 +253,10 @@ lives, and that vulnerabilities in them may result in real harm. Throwing
 up our collective hands for these languages when there exists the possibility
 of reducing harm is unacceptable.
 
-{% info(title="Why Just C++?") %}
-For the remainder of this post, I'll be focusing only on C++. I believe we
-should want both C and C++ to become safer languages, but I think there is
-more appetite to pursue this in the C++ community and standards group that
-there is for C, and that C++ already has a number of language affordances
-which prime it to be able to introduce safety-providing abstractions which
-would likely be more difficult in C. My general recommendation in favor of
-advancing safety applies to both, but I am going to focus on C++ here.
-{% end %}
+<aside class="info-callout" aria-labelledby="why-just-cpp">
+  <p id="why-just-cpp" class="info-callout-title">Why Just C++?</p>
+  <p>For the remainder of this post, I'll be focusing only on C++. I believe we should want both C and C++ to become safer languages, but I think there is more appetite to pursue this in the C++ community and standards group than there is for C, and that C++ already has a number of language affordances which prime it to be able to introduce safety-providing abstractions which would likely be more difficult in C. My general recommendation in favor of advancing safety applies to both, but I am going to focus on C++ here.</p>
+</aside>
 
 So, what should we do? To quote [Steve Klabnik on this issue][steve]:
 
