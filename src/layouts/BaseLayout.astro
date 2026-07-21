@@ -20,12 +20,12 @@ const {
   feed = '/rss.xml',
   type = 'website',
   structuredData,
-  socialImage: pageSocialImage = '/social.png',
+  socialImage: pageSocialImage = '/social/home.png',
   socialImageAlt = 'Andrew Lilley Brinker',
 } = Astro.props;
 const title = pageTitle ? `${pageTitle} — Andrew Lilley Brinker` : 'Andrew Lilley Brinker';
 const socialImage = new URL(pageSocialImage, Astro.site);
-const personImage = new URL('/social.png', Astro.site);
+const personImage = new URL('/image/andrew.png', Astro.site);
 const person = {
   '@context': 'https://schema.org',
   '@type': 'Person',

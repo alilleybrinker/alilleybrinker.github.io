@@ -3,7 +3,7 @@ import type { APIRoute } from 'astro';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { Resvg } from '@resvg/resvg-js';
-import { postDate, postSlug, type Post } from '../../lib/site';
+import { postDate, postSlug, topicSlug } from '../../lib/site';
 
 const width = 1356;
 const height = 628;
@@ -43,14 +43,19 @@ function wrapTitle(title: string, maxCharacters = 20) {
   return [...lines.slice(0, 2), `${lines.slice(2).join(' ').slice(0, maxCharacters - 1)}…`];
 }
 
-function socialCard(post: Post) {
-  const date = postDate(post).toLocaleDateString('en-US', {
+interface SocialCard {
+  title: string;
+  date?: Date;
+}
+
+function socialCard(card: SocialCard) {
+  const date = card.date?.toLocaleDateString('en-US', {
     month: 'long',
     day: 'numeric',
     year: 'numeric',
     timeZone: 'UTC',
   });
-  const titleLines = wrapTitle(post.data.title);
+  const titleLines = wrapTitle(card.title);
   const titleY = titleLines.length === 1 ? 375 : titleLines.length === 2 ? 310 : 250;
   const title = titleLines
     .map((line, index) => `<text x="130" y="${titleY + index * 108}" class="title">${escapeXml(line)}</text>`)
@@ -64,24 +69,36 @@ function socialCard(post: Post) {
         .date { fill: #737373; font-family: 'Public Sans'; font-size: 30px; font-weight: 400; }
       </style>
       <rect width="100%" height="100%" fill="#fafaf9" />
-      <defs><clipPath id="avatar"><circle cx="130" cy="96" r="44" /></clipPath></defs>
-      <image x="86" y="52" width="88" height="88" href="data:image/png;base64,${avatar.toString('base64')}" xlink:href="data:image/png;base64,${avatar.toString('base64')}" clip-path="url(#avatar)" />
-      <text x="198" y="106" class="brand">Andrew Lilley Brinker</text>
+      <defs><clipPath id="avatar"><circle cx="174" cy="96" r="44" /></clipPath></defs>
+      <image x="130" y="52" width="88" height="88" href="data:image/png;base64,${avatar.toString('base64')}" xlink:href="data:image/png;base64,${avatar.toString('base64')}" clip-path="url(#avatar)" />
+      <text x="242" y="106" class="brand">Andrew Lilley Brinker</text>
       ${title}
-      <text x="130" y="550" class="date">${date}</text>
+      ${date ? `<text x="130" y="550" class="date">${date}</text>` : ''}
     </svg>`;
 }
 
 export async function getStaticPaths() {
-  return (await getCollection('blog')).map((post) => ({
-    params: { slug: postSlug(post) },
-    props: { post },
-  }));
+  const posts = await getCollection('blog');
+  const topics = [...new Set(posts.flatMap((post) => post.data.taxonomies.topics))];
+  const pages = [
+    { slug: 'home', title: 'Software Security Engineer' },
+    { slug: 'about', title: 'About — Software Security' },
+    { slug: 'topics', title: 'Blog Topics' },
+    ...topics.map((topic) => ({ slug: `topic-${topicSlug(topic)}`, title: `${topic} Posts` })),
+  ];
+
+  return [
+    ...posts.map((post) => ({
+      params: { slug: postSlug(post) },
+      props: { title: post.data.title, date: postDate(post) },
+    })),
+    ...pages.map((page) => ({ params: { slug: page.slug }, props: page })),
+  ];
 }
 
 export const GET: APIRoute = async ({ props }) => {
-  const { post } = props as { post: Post };
-  const image = new Resvg(socialCard(post), {
+  const card = props as SocialCard;
+  const image = new Resvg(socialCard(card), {
     font: {
       fontFiles,
       loadSystemFonts: false,
