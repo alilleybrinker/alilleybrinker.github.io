@@ -6,6 +6,9 @@ import remarkLegacyLinks from './src/lib/remark-legacy-links.ts';
 export default defineConfig({
   site: 'https://www.alilleybrinker.com',
   output: 'static',
+  redirects: {
+    '/topics/': '/',
+  },
   markdown: {
     processor: unified({ remarkPlugins: [remarkLegacyLinks] }),
   },

@@ -92,8 +92,11 @@ const jsonLd = (data: Record<string, unknown>) => JSON.stringify(data).replace(/
     <div class="subpixel-antialiased">
       <header class="pt-8 pb-0 mb-4 text-black dark:text-neutral-100 text-base md:pt-32 md:text-lg px-5 md:px-0 md:max-w-(--breakpoint-md) md:mx-auto">
         <nav class="flex items-center gap-2 font-normal" aria-label="Primary navigation">
-          <a href="/" class="inline-flex min-w-0 items-center gap-2 whitespace-nowrap leading-none hover:underline font-semibold">
-            <img src="/image/andrew_lineart-transparent.png" alt="" class="size-12 shrink-0 rounded-full dark:bg-neutral-300 md:size-16 md:-ml-[4.5rem]" />
+          <a href="/" class="site-logo inline-flex min-w-0 items-center gap-2 whitespace-nowrap leading-none hover:underline font-semibold">
+            <span class="relative size-12 shrink-0 md:size-16 md:-ml-[4.5rem]">
+              <span aria-hidden="true" class="site-logo-backdrop absolute inset-0 rounded-full dark:bg-neutral-300"></span>
+              <img src="/image/andrew_lineart-transparent.png" alt="" class="site-logo-face relative block size-full" />
+            </span>
             <span class="truncate">Andrew Lilley Brinker</span>
           </a>
           <a href="/about/" class="hidden md:ml-4 md:inline-flex md:items-center leading-none hover:underline">About</a>
