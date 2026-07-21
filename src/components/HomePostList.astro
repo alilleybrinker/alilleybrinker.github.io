@@ -13,6 +13,15 @@ for (const post of displayed) {
   const year = postDate(post).getUTCFullYear();
   years.set(year, [...(years.get(year) ?? []), post]);
 }
+
+function readingTime(post: Post) {
+  return Math.max(1, Math.ceil((post.body?.match(/\S+/g)?.length ?? 0) / 200));
+}
+
+function readingColor(post: Post) {
+  const strength = Math.min((readingTime(post) - 1) / 9, 1);
+  return `oklch(0.53 ${0.15 * strength} 150)`;
+}
 ---
 
 <div class="mt-10 not-prose">
@@ -21,9 +30,11 @@ for (const post of displayed) {
       <h3 class="mb-1 text-sm font-normal text-neutral-400">{year}</h3>
       <ul class="list-none p-0">
         {yearPosts.map((post) => (
-          <li class="flex items-baseline justify-between gap-6 py-1.5">
-            <a class="text-black dark:text-white hover:underline" href={postPath(post)}>{post.data.title}</a>
-            <time class="shrink-0 text-sm text-neutral-500" datetime={postDate(post).toISOString()}>{postDate(post).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</time>
+          <li>
+            <a class="group flex items-baseline justify-between gap-6 py-1.5 text-black dark:text-white" href={postPath(post)}>
+              <span class="group-hover:underline">{post.data.title}</span>
+              <time class="shrink-0 text-sm text-neutral-500" datetime={postDate(post).toISOString()}>{postDate(post).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })} / <span style={`color: ${readingColor(post)}`}>{readingTime(post)} min read</span></time>
+            </a>
           </li>
         ))}
       </ul>
