@@ -1,17 +1,22 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
 import talksData from '../../content/talks/talks.json';
 const talks = [...talksData.talks].sort((a, b) => b.date.localeCompare(a.date));
 ---
 
-<BaseLayout title="About">
+<BaseLayout title="About" description="Andrew Lilley Brinker is a Principal Engineer at MITRE working on software security, vulnerability information, and open source tooling.">
   <h1>About</h1>
   <div class="inline-block relative group max-w-36 md:max-w-48 transition-all duration-300 rotate-3 hover:rotate-0 float-right ml-4 md:ml-8 mb-4 md:mb-8 -top-10"><img src="/image/andrew.png" alt="Grayscale and dithered picture of Andrew" class="rounded-md block group-hover:ring-4 group-hover:ring-blue-500 transition-all duration-300" /></div>
-  <p>I’m a Principal Engineer at <a href="https://www.mitre.org">MITRE</a>, where I lead the development of <a href="https://github.com/mitre/hipcheck">Hipcheck</a>, a tool to empower open-source maintainers and users to assess the supply-chain risk of their dependencies.</p>
-  <p>I also serve as a member of the <a href="https://omnibor.io">OmniBOR Core Team</a>, including leading creation of the <a href="https://github.com/omnibor/omnibor-rs">Rust library and <code>omnibor</code> CLI</a>.</p>
+  <p>I’m a Principal Engineer at <a href="https://www.mitre.org">MITRE</a> working on software security, vulnerability information, and the open source ecosystem. I lead development of <a href="https://github.com/mitre/hipcheck">Hipcheck</a>, a tool that helps maintainers and users assess the supply-chain risk of their dependencies, and contribute to work on the CVE system.</p>
+  <p>I also serve on the <a href="https://omnibor.io">OmniBOR Core Team</a>, where I lead development of the <a href="https://github.com/omnibor/omnibor-rs">Rust library and <code>omnibor</code> CLI</a> for describing software identity.</p>
   <h2 id="where-to-find-me">Where to Find Me</h2>
-  <p><a href="https://github.com/alilleybrinker">GitHub</a> · <a href="https://bsky.app/profile/alilleybrinker.com">Bluesky</a> · <a href="https://hachyderm.io/@alilleybrinker">Mastodon</a> · <a href="https://www.linkedin.com/in/alilleybrinker">LinkedIn</a> · <a href="https://news.ycombinator.com/user?id=alilleybrinker">Hacker News</a> · <a href="https://lobste.rs/~alilleybrinker">Lobste.rs</a> · <a href="https://www.reddit.com/user/alilleybrinker/">Reddit</a></p>
-  <h3>Getting in Touch</h3><p>I don't check every platform equally often. If you want to get in touch, the best way is to direct message me on <a href="https://bsky.app/profile/alilleybrinker.com">Bluesky</a>. If you want to chat securely, ask me for my Signal username.</p>
+  <ul class="list-none !pl-0">
+    <li class="flex items-center gap-2"><Icon name="bluesky" class="shrink-0" /><span><a href="https://bsky.app/profile/alilleybrinker.com">Bluesky</a>: the best place to reach me</span></li>
+    <li class="flex items-center gap-2"><Icon name="github" class="shrink-0" /><span><a href="https://github.com/alilleybrinker">GitHub</a>: code and open source work</span></li>
+  </ul>
+  <p>For a private conversation, send me a Bluesky direct message. If you’d prefer to chat securely, ask me for my Signal username.</p>
+  <p>You can also find me on <a href="https://hachyderm.io/@alilleybrinker">Mastodon</a>, <a href="https://www.linkedin.com/in/alilleybrinker">LinkedIn</a>, <a href="https://news.ycombinator.com/user?id=alilleybrinker">Hacker News</a>, <a href="https://lobste.rs/~alilleybrinker">Lobste.rs</a>, and <a href="https://www.reddit.com/user/alilleybrinker/">Reddit</a>.</p>
   <h2 id="ai-policy">AI Policy</h2><p>The words on this site were written by a human (Andrew) with care. If AI content is ever posted to this site, it will always be made clear what content is AI-generated.</p>
   <h2 id="my-name">My Name</h2><p>“Lilley Brinker” is my full last name. Two parts, no hyphen. When my wife and I got married we combined our last names without a hyphen. My last name is not “Brinker” and it is not correct to call me “Mr. Brinker”.</p><p>“Lilley” is pronounced like the word “lily”.</p>
   <h2>Previous Things</h2><p>Served as Technical Editor for a <a href="https://www.manning.com/books/write-powerful-rust-macros">book on Rust procedural macros</a> · Earned a Master of Computer Science degree from <a href="https://csweb.rice.edu/">Rice University</a> · Maintained a <a href="https://github.com/alilleybrinker/langs-in-rust">list of programming languages written in Rust</a> · and more.</p>
@@ -20,7 +25,7 @@ const talks = [...talksData.talks].sort((a, b) => b.date.localeCompare(a.date));
     <article class="mb-10">
       <h3 class="!m-0 !mb-1 !text-xl !font-medium"><a class="text-black dark:text-white no-underline hover:underline" href={talk.talk_link}>{talk.title}</a></h3>
       <div class="flex gap-4 flex-wrap text-sm text-gray-500"><span>{talk.type === 'panel' ? 'Participated in panel at' : 'Presented at'} <a href={talk.event_link}>{talk.event}</a> on {new Date(`${talk.date}T12:00:00Z`).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</span>{talk.video_link && <span><a href={talk.video_link}>Watch the Recording</a></span>}{talk.slides_link && <span><a href={talk.slides_link}>View the Slides</a></span>}</div>
-      {talk.description && <p class="mt-4">{talk.description}</p>}
+      {talk.description && <p class="!mt-2">{talk.description}</p>}
     </article>
   ))}
 </BaseLayout>
