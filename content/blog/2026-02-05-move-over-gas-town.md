@@ -4,7 +4,7 @@ description: "Anthropic has announced an experimental system for first-party
   multi-agent orchestration, called 'Agent Teams'."
 taxonomies:
   type:
-    - Mini
+    - Blog
   topics:
     - AI
 ---

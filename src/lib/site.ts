@@ -1,6 +1,19 @@
 import type { CollectionEntry } from 'astro:content';
 
-export type Post = CollectionEntry<'blog'> | CollectionEntry<'mini'>;
+export type Post = CollectionEntry<'blog'>;
+
+export const legacyMiniSlugs = new Set([
+  'safety-hygiene',
+  'jujutsu-is-the-future',
+  'the-best-monad-tutorial',
+  'tracking-software-id-schemes',
+  'memory-safety-for-skeptics-in-the-acm-queue',
+  'gas-town-decoded',
+  'passkey-prf-risks',
+  'gas-town-and-urbit',
+  'rusts-culture-of-semantic-precision',
+  'move-over-gas-town',
+]);
 
 export function postDate(post: Post) {
   const match = post.id.match(/^(\d{4}-\d{2}-\d{2})-/);
@@ -13,7 +26,7 @@ export function postSlug(post: Post) {
 }
 
 export function postPath(post: Post) {
-  return `/${post.collection}/${postSlug(post)}/`;
+  return `/blog/${postSlug(post)}/`;
 }
 
 export function byNewest(a: Post, b: Post) {

@@ -15,8 +15,4 @@ export const collections = {
     loader: glob({ base: './content/blog', pattern: '[0-9]*.md' }),
     schema: postSchema,
   }),
-  mini: defineCollection({
-    loader: glob({ base: './content/mini', pattern: '[0-9]*.md' }),
-    schema: postSchema,
-  }),
 };

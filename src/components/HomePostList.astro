@@ -1,0 +1,32 @@
+---
+import type { Post } from '../lib/site';
+import { postDate, postPath } from '../lib/site';
+
+interface Props {
+  posts: Post[];
+  limit?: number;
+}
+const { posts, limit } = Astro.props;
+const displayed = limit === undefined ? posts : posts.slice(0, limit);
+const years = new Map<number, Post[]>();
+for (const post of displayed) {
+  const year = postDate(post).getUTCFullYear();
+  years.set(year, [...(years.get(year) ?? []), post]);
+}
+---
+
+<div class="mt-10 not-prose">
+  {[...years.entries()].map(([year, yearPosts]) => (
+    <section class="mb-6">
+      <h3 class="mb-1 text-sm font-normal text-neutral-400">{year}</h3>
+      <ul class="list-none p-0">
+        {yearPosts.map((post) => (
+          <li class="flex items-baseline justify-between gap-6 py-1.5">
+            <a class="text-black dark:text-white hover:underline" href={postPath(post)}>{post.data.title}</a>
+            <time class="shrink-0 text-sm text-neutral-500" datetime={postDate(post).toISOString()}>{postDate(post).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</time>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</div>

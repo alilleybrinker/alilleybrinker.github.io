@@ -5,30 +5,30 @@
   --font-sans: "Public Sans", sans-serif;
   --font-display: "Public Sans", sans-serif;
 
-  /* A sun-baked palette: parchment surfaces, espresso neutrals, terracotta accents. */
-  --color-blue-50: oklch(0.975 0.012 63);
-  --color-blue-100: oklch(0.946 0.031 56);
-  --color-blue-400: oklch(0.71 0.135 42);
-  --color-blue-500: oklch(0.63 0.155 40);
-  --color-blue-600: oklch(0.54 0.145 38);
+  /* Neutral grayscale palette. */
+  --color-blue-50: oklch(0.975 0 0);
+  --color-blue-100: oklch(0.94 0 0);
+  --color-blue-400: oklch(0.66 0 0);
+  --color-blue-500: oklch(0.53 0 0);
+  --color-blue-600: oklch(0.42 0 0);
 
-  --color-gray-200: oklch(0.89 0.014 66);
-  --color-gray-500: oklch(0.55 0.024 61);
+  --color-gray-200: oklch(0.89 0 0);
+  --color-gray-500: oklch(0.55 0 0);
 
-  --color-slate-400: oklch(0.68 0.025 60);
-  --color-slate-700: oklch(0.39 0.035 55);
+  --color-slate-400: oklch(0.68 0 0);
+  --color-slate-700: oklch(0.39 0 0);
 
-  --color-neutral-100: oklch(0.94 0.011 67);
-  --color-neutral-200: oklch(0.88 0.014 65);
-  --color-neutral-400: oklch(0.64 0.024 59);
-  --color-neutral-500: oklch(0.53 0.027 56);
-  --color-neutral-600: oklch(0.43 0.028 53);
-  --color-neutral-700: oklch(0.33 0.029 50);
-  --color-neutral-800: oklch(0.25 0.027 47);
-  --color-neutral-900: oklch(0.18 0.022 44);
+  --color-neutral-100: oklch(0.94 0 0);
+  --color-neutral-200: oklch(0.88 0 0);
+  --color-neutral-400: oklch(0.64 0 0);
+  --color-neutral-500: oklch(0.53 0 0);
+  --color-neutral-600: oklch(0.43 0 0);
+  --color-neutral-700: oklch(0.33 0 0);
+  --color-neutral-800: oklch(0.25 0 0);
+  --color-neutral-900: oklch(0.18 0 0);
 
-  --color-stone-50: oklch(0.978 0.009 72);
-  --color-stone-200: oklch(0.89 0.016 67);
+  --color-stone-50: oklch(0.978 0 0);
+  --color-stone-200: oklch(0.89 0 0);
 }
 
 html {

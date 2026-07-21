@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import { byNewest, postDate, postPath, topicSlug } from '../../../lib/site';
 
 export async function getStaticPaths() {
-  const posts = [...await getCollection('blog'), ...await getCollection('mini')];
+  const posts = await getCollection('blog');
   const topics = [...new Set(posts.flatMap((post) => post.data.taxonomies.topics))];
   return topics.map((topic) => ({ params: { topic: topicSlug(topic) }, props: { topic, posts: posts.filter((post) => post.data.taxonomies.topics.includes(topic)).sort(byNewest) } }));
 }

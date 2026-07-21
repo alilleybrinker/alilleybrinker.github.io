@@ -4,7 +4,7 @@ description: "Explaining how Gas Town and Urbit use insular language for
   extremely different goals, one experimental, the other fascist."
 taxonomies:
   type:
-    - Mini
+    - Blog
   topics:
     - AI
 ---
@@ -40,6 +40,6 @@ could then spread his politics alongside his software.
 So, while it's true both Gas Town and Urbit use insular language, we shouldn't
 consider them similar beyond that.
 
-[decoded]: https://www.alilleybrinker.com/mini/gas-town-decoded/
+[decoded]: https://www.alilleybrinker.com/blog/gas-town-decoded/
 [welcome]: https://steve-yegge.medium.com/welcome-to-gas-town-4f25ee16dd04
 [think]: https://steveklabnik.com/writing/how-to-think-about-gas-town/

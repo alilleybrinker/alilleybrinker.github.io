@@ -18,9 +18,8 @@ const displayed = limit === undefined ? posts : posts.slice(0, limit);
       </h2>
       <div class="text-sm lg:text-base text-gray-500">
         {postDate(post).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}
-        {post.collection === 'mini' && <>&nbsp;&middot;&nbsp;<a href={postPath(post)}>Permalink</a></>}
       </div>
-      {post.collection === 'blog' && <div class="mt-4"><a class="inline-block !no-underline !text-blue-500 hover:underline" href={postPath(post)}>Keep reading <span aria-hidden="true">↗</span></a></div>}
+      <div class="mt-4"><a class="inline-block !no-underline !text-blue-500 hover:underline" href={postPath(post)}>Keep reading <span aria-hidden="true">↗</span></a></div>
     </article>
   ))}
 </div>

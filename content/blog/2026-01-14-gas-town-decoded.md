@@ -4,7 +4,7 @@ description: "Explaining Gas Town's insular language to help demystify Steve
   Yegge's experimental AI agent orchestration system."
 taxonomies:
   type:
-    - Mini
+    - Blog
   topics:
     - AI
 ---

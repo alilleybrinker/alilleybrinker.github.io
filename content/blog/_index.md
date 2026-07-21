@@ -11,7 +11,7 @@ Posts about [memory safety][memory-safety], the
 <p>
     <svg class="icon icon-rss mt-[-2px]"><use xlink:href="/icons/symbol-defs.svg#icon-rss"></use></svg>
     Feeds:
-    <a href="/atom.xml">All Posts</a></li> &middot; <a href="/blog/atom.xml">Blog Posts</a> &middot; <a href="/mini/atom.xml">Mini Posts</a>
+    <a href="/blog/atom.xml">Subscribe to the blog feed</a>
 </p>
 
 [memory-safety]: /topics/memory-safety/

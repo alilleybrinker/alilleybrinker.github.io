@@ -1,14 +1,14 @@
 const routes: Record<string, string> = {
   '@/about.md': '/about/',
   '@/blog/_index.md': '/blog/',
-  '@/mini/_index.md': '/mini/',
+  '@/mini/_index.md': '/blog/',
   '@/talks/index.md': '/talks/',
 };
 
 function legacyRoute(path: string) {
   if (routes[path]) return routes[path];
   const match = path.match(/^@\/(blog|mini)\/(?:\d{4}-\d{2}-\d{2}-)?(.+)\.md$/);
-  return match ? `/${match[1]}/${match[2]}/` : undefined;
+  return match ? `/blog/${match[2]}/` : undefined;
 }
 
 export default function remarkLegacyLinks() {

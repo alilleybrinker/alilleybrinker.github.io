@@ -4,7 +4,7 @@ description: "Exploring the way passkey PRFs increase the blast radius of
   passkey loss, and how that impacts systems like Confer."
 taxonomies:
   type:
-    - Mini
+    - Blog
   topics:
     - Authentication
 ---
