@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import talksData from '../../../../old/content/talks/talks.json';
+import talksData from '../../../content/talks/talks.json';
 const talks = [...talksData.talks].sort((a, b) => b.date.localeCompare(a.date));
 ---
 

@@ -21,9 +21,6 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  #==========================================================================
-  # Build the site with Zola and the Tailwindcss CLI
-  #--------------------------------------------------------------------------
   build:
     runs-on: ubuntu-24.04
 
@@ -32,34 +29,28 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # Install Zola.
-      - name: Install Zola
-        uses: taiki-e/install-action@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          tool: zola@0.22.1
-
-      # Install Deno.
-      - name: Install Deno
-        uses: denoland/setup-deno@v2
-        with:
-          deno-version: v2.x
+          node-version: 24
+          cache: npm
 
       # Setup GitHub Pages
       - name: Setup GitHub Pages
         id: pages
         uses: actions/configure-pages@v5
 
-      # Build the site.
       - name: Build Website
         run: |
-          deno task build
+          npm ci
+          npm run build
 
       # Upload the output of the build as an Actions artifact so the deploy
       # step can pick it up and use it.
       - name: Upload Build Output
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./public
+          path: ./dist
 
   #==========================================================================
   # Deploy the site to GitHub Pages

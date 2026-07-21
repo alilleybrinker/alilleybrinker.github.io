@@ -12,11 +12,11 @@ const postSchema = z.object({
 
 export const collections = {
   blog: defineCollection({
-    loader: glob({ base: '../old/content/blog', pattern: '[0-9]*.md' }),
+    loader: glob({ base: './content/blog', pattern: '[0-9]*.md' }),
     schema: postSchema,
   }),
   mini: defineCollection({
-    loader: glob({ base: '../old/content/mini', pattern: '[0-9]*.md' }),
+    loader: glob({ base: './content/mini', pattern: '[0-9]*.md' }),
     schema: postSchema,
   }),
 };
