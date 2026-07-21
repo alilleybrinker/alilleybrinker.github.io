@@ -1,0 +1,26 @@
+{
+  "publicationUri": "at://did:plc:geozyv62fx63m7jhr4eraubc/site.standard.publication/alilleybrinker-site",
+  "documents": {
+    "string-types-in-rust": "at://did:plc:geozyv62fx63m7jhr4eraubc/site.standard.document/blog-string-types-in-rust",
+    "monomorphization-bloat": "at://did:plc:geozyv62fx63m7jhr4eraubc/site.standard.document/blog-monomorphization-bloat",
+    "technostructuralism": "at://did:plc:geozyv62fx63m7jhr4eraubc/site.standard.document/blog-technostructuralism",
+    "implementation-selection": "at://did:plc:geozyv62fx63m7jhr4eraubc/site.standard.document/blog-implementation-selection",
+    "renegotiating-c": "at://did:plc:geozyv62fx63m7jhr4eraubc/site.standard.document/blog-renegotiating-c",
+    "the-xz-backdoor": "at://did:plc:geozyv62fx63m7jhr4eraubc/site.standard.document/blog-the-xz-backdoor",
+    "softlocking-apis": "at://did:plc:geozyv62fx63m7jhr4eraubc/site.standard.document/blog-softlocking-apis",
+    "cpp-must-become-safer": "at://did:plc:geozyv62fx63m7jhr4eraubc/site.standard.document/blog-cpp-must-become-safer",
+    "the-problem-is-new-code": "at://did:plc:geozyv62fx63m7jhr4eraubc/site.standard.document/blog-the-problem-is-new-code",
+    "safety-hygiene": "at://did:plc:geozyv62fx63m7jhr4eraubc/site.standard.document/blog-safety-hygiene",
+    "open-source-software-and-corporate-influence": "at://did:plc:geozyv62fx63m7jhr4eraubc/site.standard.document/blog-open-source-software-and-corporate-influence",
+    "postscript-on-open-source-software-and-corporate-influence": "at://did:plc:geozyv62fx63m7jhr4eraubc/site.standard.document/blog-postscript-on-open-source-software-and-corporate-influence",
+    "jujutsu-is-the-future": "at://did:plc:geozyv62fx63m7jhr4eraubc/site.standard.document/blog-jujutsu-is-the-future",
+    "the-best-monad-tutorial": "at://did:plc:geozyv62fx63m7jhr4eraubc/site.standard.document/blog-the-best-monad-tutorial",
+    "tracking-software-id-schemes": "at://did:plc:geozyv62fx63m7jhr4eraubc/site.standard.document/blog-tracking-software-id-schemes",
+    "memory-safety-for-skeptics-in-the-acm-queue": "at://did:plc:geozyv62fx63m7jhr4eraubc/site.standard.document/blog-memory-safety-for-skeptics-in-the-acm-queue",
+    "gas-town-decoded": "at://did:plc:geozyv62fx63m7jhr4eraubc/site.standard.document/blog-gas-town-decoded",
+    "passkey-prf-risks": "at://did:plc:geozyv62fx63m7jhr4eraubc/site.standard.document/blog-passkey-prf-risks",
+    "gas-town-and-urbit": "at://did:plc:geozyv62fx63m7jhr4eraubc/site.standard.document/blog-gas-town-and-urbit",
+    "rusts-culture-of-semantic-precision": "at://did:plc:geozyv62fx63m7jhr4eraubc/site.standard.document/blog-rusts-culture-of-semantic-precision",
+    "move-over-gas-town": "at://did:plc:geozyv62fx63m7jhr4eraubc/site.standard.document/blog-move-over-gas-town"
+  }
+}
