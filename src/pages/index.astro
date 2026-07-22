@@ -70,7 +70,10 @@ const lede = 'I’m a Principal Engineer at MITRE helping people make informed d
   <section aria-labelledby="blog-heading" class="not-prose">
     <div class="flex items-center justify-between">
       <h2 id="blog-heading" class="font-sans text-sm font-semibold uppercase tracking-widest text-slate-400 dark:text-neutral-400">Blog</h2>
-      <a href="/rss.xml" aria-label="RSS feed" class="text-neutral-400 hover:text-black dark:hover:text-white"><Icon name="rss" class="!h-5 !w-5" /></a>
+      <div class="flex items-center gap-3">
+        <a href="/rss.xml" aria-label="RSS feed" class="text-neutral-400 hover:text-black dark:hover:text-white"><Icon name="rss" class="!h-5 !w-5" /></a>
+        <a href="https://standard-reader.app/p/did:plc:geozyv62fx63m7jhr4eraubc/alilleybrinker-site" aria-label="Read this publication on Standard Reader" class="text-neutral-400 hover:text-black dark:hover:text-white"><span aria-hidden="true" class="block h-5 w-5 bg-current [mask-image:url('/icons/standard-site-logo.svg')] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]"></span></a>
+      </div>
     </div>
     <HomePostList posts={otherPosts} />
   </section>
