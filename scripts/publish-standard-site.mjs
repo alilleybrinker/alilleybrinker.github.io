@@ -8,6 +8,7 @@ const publicationCollection = 'site.standard.publication';
 const postsDirectory = new URL('../content/blog/', import.meta.url);
 const metadataFile = new URL('../src/data/standard-site.json', import.meta.url);
 const verificationFile = new URL('../public/.well-known/site.standard.publication', import.meta.url);
+const publicationIconFile = new URL('../public/favicon-face.png', import.meta.url);
 
 async function loadDotenv() {
   try {
@@ -68,6 +69,20 @@ async function xrpc(service, method, body, token) {
   return response.json();
 }
 
+async function uploadBlob(service, file, mimeType, token) {
+  const response = await fetch(`${service}/xrpc/com.atproto.repo.uploadBlob`, {
+    method: 'POST',
+    headers: {
+      'content-type': mimeType,
+      authorization: `Bearer ${token}`,
+    },
+    body: file,
+  });
+  if (!response.ok) throw new Error(`com.atproto.repo.uploadBlob: ${response.status} ${await response.text()}`);
+  const { blob } = await response.json();
+  return blob;
+}
+
 async function main() {
   await loadDotenv();
   const handle = required('STANDARD_HANDLE');
@@ -75,6 +90,12 @@ async function main() {
   const service = process.env.STANDARD_PDS ?? 'https://bsky.social';
   const session = await xrpc(service, 'com.atproto.server.createSession', { identifier: handle, password });
   const publicationUri = `at://${session.did}/${publicationCollection}/${publicationRkey}`;
+  const publicationIcon = await uploadBlob(
+    service,
+    await readFile(publicationIconFile),
+    'image/png',
+    session.accessJwt,
+  );
 
   await xrpc(service, 'com.atproto.repo.putRecord', {
     repo: session.did,
@@ -83,6 +104,7 @@ async function main() {
     record: {
       $type: publicationCollection,
       url: siteUrl,
+      icon: publicationIcon,
       name: 'Andrew Lilley Brinker',
       description: 'Writing by Andrew Lilley Brinker about software engineering and security.',
       preferences: { showInDiscover: true },
