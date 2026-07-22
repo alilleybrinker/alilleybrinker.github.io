@@ -14,7 +14,6 @@ extra:
 Not everything will be rewritten in Rust, so C++ _must_ become safer, and we
 should all care about C++ becoming safer.
 
-<!-- more -->
 
 ---
 

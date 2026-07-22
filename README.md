@@ -11,10 +11,15 @@ Markdown files as the source of truth.
 3. Run `npm run standard:publish` before `npm run build`.
 
 The publisher upserts one publication record and each blog post using stable
-record keys. It also writes the generated AT-URIs to
+record keys. Each post uses the `at.markpub.markdown` content type, with the
+source Markdown as its body. It also writes the generated AT-URIs to
 `src/data/standard-site.json` and the publication verification response to
 `public/.well-known/site.standard.publication`. Commit those generated files
 when publishing locally; in CI, run publishing before the static build.
+
+To migrate existing PDS records from `textContent` to typed Markdown, run
+`npm run standard:migrate`. It re-upserts every blog post at its existing stable
+record key, replacing the old record body with `at.markpub.markdown` content.
 
 The Astro layout reads this metadata to emit Standard.site publication and
 document verification links. Do not commit `.env` or app passwords.

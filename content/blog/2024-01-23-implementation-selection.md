@@ -13,7 +13,6 @@ Rust types offer four ways to decide what happens next, along two axes:
 deciding at runtime vs. compile time, and permitting a closed or open set of
 types.
 
-<!-- more -->
 
 ---
 

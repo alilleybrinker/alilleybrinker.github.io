@@ -13,7 +13,6 @@ summary: A discussion of the trade-offs and uses of Rust's different string type
 Rust has many pairs of string types, each with a distinct purpose. Understanding
 those purposes helps with understanding Rust itself.
 
-<!-- more -->
 
 ---
 

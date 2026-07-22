@@ -13,7 +13,6 @@ We can learn from case studies of APIs forever trapped by past decisions. Just
 like a video game can softlock and become impossible to progress, so too can
 APIs become softlocked by technical and social commitments.
 
-<!-- more -->
 
 ---
 

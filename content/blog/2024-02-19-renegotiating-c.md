@@ -14,7 +14,6 @@ Amid the move to memory safe languages, the people who build and build on C and
 C++ ought to be recognized. Any of us could be hit by an upheaval of technology
 in which we've invested.
 
-<!-- more -->
 
 ---
 

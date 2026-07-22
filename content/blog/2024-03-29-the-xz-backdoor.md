@@ -13,7 +13,6 @@ Reduction is seductive in the information-sparse environment immediately after
 a security event. Resisting reduction, gathering facts, and breaking down
 multivariate causes and responses is more productive.
 
-<!-- more -->
 
 ---
 

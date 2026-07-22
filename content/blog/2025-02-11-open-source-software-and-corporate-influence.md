@@ -16,7 +16,6 @@ corporations. We should update mental models of _who_ works on open source
 accordingly, and build or modify power structures to be more resilient to
 corporate capture.
 
-<!-- more -->
 
 ---
 

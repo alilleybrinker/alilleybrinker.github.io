@@ -13,7 +13,6 @@ Rust generics can trade off binary size for expressiveness. Learning to
 identify when the trade isn&rsquo;t worth it is a valuable skill that can help you
 write better code.
 
-<!-- more -->
 
 ---
 

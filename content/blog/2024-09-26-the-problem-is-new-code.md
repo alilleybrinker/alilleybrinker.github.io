@@ -12,7 +12,6 @@ taxonomies:
 Folks at Google explain how to think about the move to memory safe languages:
 "the problem is new code."
 
-<!-- more -->
 
 ---
 

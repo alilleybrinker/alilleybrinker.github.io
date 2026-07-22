@@ -44,18 +44,6 @@ function frontmatter(source, filename) {
   return { title, description, topics, body: match[2] };
 }
 
-function textContent(markdown) {
-  return markdown
-    .replace(/^\[[^\]]+\]:\s*\S+.*$/gm, '')
-    .replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1')
-    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
-    .replace(/\[([^\]]+)\]\[[^\]]*\]/g, '$1')
-    .replace(/[`*_>#~]/g, '')
-    .replace(/\0/g, '')
-    .replace(/\n{3,}/g, '\n\n')
-    .trim();
-}
-
 function postFromFile(filename, source) {
   const date = filename.match(/^(\d{4}-\d{2}-\d{2})-(.+)\.md$/);
   if (!date) throw new Error(`Unexpected post filename: ${filename}`);
@@ -119,7 +107,13 @@ async function main() {
         ...(post.description ? { description: post.description } : {}),
         publishedAt: post.publishedAt,
         ...(post.topics.length ? { tags: post.topics } : {}),
-        textContent: textContent(post.body),
+        content: {
+          $type: 'at.markpub.markdown',
+          text: {
+            $type: 'at.markpub.text',
+            markdown: post.body,
+          },
+        },
       },
     }, session.accessJwt);
     documents[post.slug] = uri;

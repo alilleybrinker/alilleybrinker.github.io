@@ -13,7 +13,6 @@ taxonomies:
 The systems we build are manifestations of our politics. So what is the
 philosophy of Rust and what does it offer for the state of software?
 
-<!-- more -->
 
 ---
 

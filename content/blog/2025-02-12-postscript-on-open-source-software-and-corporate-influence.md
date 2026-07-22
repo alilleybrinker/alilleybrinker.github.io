@@ -11,7 +11,6 @@ taxonomies:
 
 Sharing additional thoughts arising from discussions around ["Open Source Software and Corporate Influence."](@/blog/2025-02-11-open-source-software-and-corporate-influence.md)
 
-<!-- more -->
 
 ---
 
