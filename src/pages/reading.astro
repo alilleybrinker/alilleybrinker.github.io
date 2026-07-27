@@ -1,0 +1,250 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getReadingItems } from "../lib/bluesky";
+
+const items = await getReadingItems();
+const formatDate = (date: string) =>
+    new Intl.DateTimeFormat("en-US", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        timeZone: "UTC",
+    }).format(new Date(date));
+const updatedAt = new Date();
+const formatUpdatedAt = new Intl.DateTimeFormat("en-US", {
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    month: "short",
+    timeZone: "UTC",
+    timeZoneName: "short",
+    year: "numeric",
+});
+const highestMentionCount = Math.max(...items.map((item) => item.mentions.length), 1);
+const mentionStrength = (mentionCount: number) => highestMentionCount > 1
+    ? (mentionCount - 1) / (highestMentionCount - 1)
+    : 0;
+const years = new Map<number, typeof items>();
+for (const item of items) {
+    const year = new Date(item.mentions[0].publishedAt).getUTCFullYear();
+    years.set(year, [...(years.get(year) ?? []), item]);
+}
+---
+
+<BaseLayout
+    title="Reading"
+    description="Articles Andrew Lilley Brinker has shared on Bluesky."
+    canonical={new URL("/reading/", Astro.site)}
+>
+    <header>
+        <h1>Reading</h1>
+        <p>
+            An experimental feed of articles I&rsquo;ve shared on <a
+                href="https://bsky.app/profile/alilleybrinker.com">Bluesky</a
+            >.
+        </p>
+    </header>
+    <p class="!-mt-4 text-sm text-neutral-500">
+        Last updated{" "}
+        <time datetime={updatedAt.toISOString()}>{formatUpdatedAt.format(updatedAt)}</time>
+    </p>
+
+    {
+        items.length > 0 ? (
+            <div class="not-prose mt-14">
+                {[...years.entries()].map(([year, yearItems]) => (
+                    <section class="mb-6">
+                        <h2 class="mb-1 text-sm font-normal text-neutral-400">
+                            {year}
+                        </h2>
+                        <ol class="list-none p-0">
+                            {yearItems.map((item) => (
+                                <li class="reading-link-item py-2.5">
+                                    <article>
+                                        <div class="reading-link-preview">
+                                            <h3
+                                                class="reading-link-preview-title"
+                                                style={`--reading-link-strength: ${mentionStrength(item.mentions.length) * 100}%; --reading-link-weight: ${400 + Math.round(mentionStrength(item.mentions.length) * 2) * 100}`}
+                                            >
+                                                <a
+                                                    href={item.url}
+                                                    set:html={
+                                                        item.articleTitleHtml
+                                                    }
+                                                />
+                                            </h3>
+                                            {item.articlePublishedAt && (
+                                                <time
+                                                    class="reading-link-preview-date"
+                                                    datetime={
+                                                        item.articlePublishedAt
+                                                    }
+                                                >
+                                                    {formatDate(
+                                                        item.articlePublishedAt,
+                                                    )}
+                                                </time>
+                                            )}
+                                        </div>
+                                        <div class="mt-1 flex items-baseline gap-x-2 text-xs text-neutral-500">
+                                            <span>{item.rootDomain}</span>
+                                            <span aria-hidden="true">·</span>
+                                            <span
+                                                class="inline-flex items-center"
+                                                title="Bluesky posts"
+                                            >
+                                                <svg
+                                                    class="reading-bluesky-icon"
+                                                    viewBox="-24 -24 560 560"
+                                                    aria-hidden="true"
+                                                >
+                                                    <path d="M111.8 62.2C170.2 105.9 233 194.7 256 242.4c23-47.6 85.8-136.4 144.2-180.2c42.1-31.6 110.3-56 110.3 21.8c0 15.5-8.9 130.5-14.1 149.2C478.2 298 412 314.6 353.1 304.5c102.9 17.5 129.1 75.5 72.5 133.5c-107.4 110.2-154.3-27.6-166.3-62.9l0 0c-1.7-4.9-2.6-7.8-3.3-7.8s-1.6 3-3.3 7.8l0 0c-12 35.3-59 173.1-166.3 62.9c-56.5-58-30.4-116 72.5-133.5C100 314.6 33.8 298 15.7 233.1C10.4 214.4 1.5 99.4 1.5 83.9c0-77.8 68.2-53.4 110.3-21.8z" />
+                                                </svg>
+                                                <span class="sr-only">
+                                                    Bluesky posts
+                                                </span>
+                                            </span>
+                                            <ul class="flex list-none flex-wrap gap-x-3 gap-y-1 p-0">
+                                                {item.mentions.map(
+                                                    (mention) => (
+                                                        <li>
+                                                            <a
+                                                                href={
+                                                                    mention.blueskyUrl
+                                                                }
+                                                                class="hover:underline"
+                                                            >
+                                                                <time
+                                                                    datetime={
+                                                                        mention.publishedAt
+                                                                    }
+                                                                >
+                                                                    {formatDate(
+                                                                        mention.publishedAt,
+                                                                    )}
+                                                                </time>
+                                                            </a>
+                                                        </li>
+                                                    ),
+                                                )}
+                                            </ul>
+                                        </div>
+                                    </article>
+                                </li>
+                            ))}
+                        </ol>
+                    </section>
+                ))}
+            </div>
+        ) : (
+            <p>No links are available right now.</p>
+        )
+    }
+</BaseLayout>
+
+<style is:global>
+    .reading-bluesky-icon {
+        width: 0.875rem;
+        height: 0.875rem;
+        color: rgb(191 191 191);
+        fill: none;
+        overflow: visible;
+        stroke: currentColor;
+        stroke-linejoin: round;
+        stroke-width: 28;
+        transform: translateY(2px);
+    }
+
+    .dark .reading-bluesky-icon {
+        color: rgb(143 143 143);
+    }
+
+    .reading-link-preview-date {
+        margin: 0;
+        color: rgb(115 115 115);
+        font-size: 0.75rem;
+        line-height: 1.5;
+    }
+
+    .reading-link-preview-title {
+        margin: 0;
+        color: color-mix(
+            in oklch,
+            rgb(23 23 23) calc(100% - var(--reading-link-strength)),
+            oklch(0.5 0.22 145) var(--reading-link-strength)
+        );
+        font-family:
+            Public Sans,
+            sans-serif;
+        font-size: 1.125rem;
+        font-weight: var(--reading-link-weight);
+        line-height: 1.35;
+    }
+
+    .reading-link-preview-title a:hover {
+        text-decoration: underline;
+    }
+
+    .reading-link-preview-title a {
+        color: inherit;
+        font-weight: inherit;
+    }
+
+    .reading-link-item {
+        position: relative;
+    }
+
+    .reading-link-preview-title a::after {
+        position: absolute;
+        z-index: 0;
+        inset: 0;
+        content: "";
+    }
+
+    .reading-link-item > article > div + div {
+        position: relative;
+        z-index: 1;
+    }
+
+    .reading-link-preview-title code {
+        border-radius: 0.25rem;
+        background: rgb(231 229 228);
+        padding: 0.1rem 0.25rem;
+        font-family:
+            ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 0.875em;
+    }
+
+    @media (min-width: 40rem) {
+        .reading-link-preview {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 1.5rem;
+        }
+
+        .reading-link-preview-title {
+            min-width: 0;
+        }
+
+        .reading-link-preview-date {
+            flex-shrink: 0;
+        }
+    }
+
+    .dark .reading-link-preview-title {
+        color: color-mix(
+            in oklch,
+            white calc(100% - var(--reading-link-strength)),
+            oklch(0.53 0.15 150) var(--reading-link-strength)
+        );
+    }
+
+    .dark .reading-link-preview-title code {
+        background: rgb(64 64 64);
+    }
+
+    .dark .reading-link-preview-date {
+        color: rgb(212 212 212);
+    }
+</style>
