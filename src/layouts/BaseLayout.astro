@@ -85,10 +85,13 @@ const jsonLd = (data: Record<string, unknown>) => JSON.stringify(data).replace(/
     <link rel="alternate" type="application/rss+xml" title="RSS" href={feed} />
     {standardSite.publicationUri && <link rel="site.standard.publication" href={standardSite.publicationUri} />}
     {standardDocumentUri && <link rel="site.standard.document" href={standardDocumentUri} />}
+    <!-- 100% privacy-first analytics -->
+    <script data-collect-dnt="true" async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
     <script type="application/ld+json" set:html={jsonLd(person)} />
     {structuredData && <script type="application/ld+json" set:html={jsonLd(structuredData)} />}
   </head>
   <body class="bg-stone-50 dark:bg-neutral-900">
+    <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif?collect-dnt=true" alt="" referrerpolicy="no-referrer-when-downgrade" /></noscript>
     <div class="subpixel-antialiased">
       <header class="pt-8 pb-0 mb-4 text-black dark:text-neutral-100 text-base md:pt-32 md:text-lg px-5 md:px-0 md:max-w-(--breakpoint-md) md:mx-auto">
         <nav class="flex items-center gap-2 font-normal" aria-label="Primary navigation">

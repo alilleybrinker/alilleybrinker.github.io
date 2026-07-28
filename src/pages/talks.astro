@@ -8,7 +8,9 @@ const target = '/about/#talks';
     <meta charset="utf-8" />
     <meta http-equiv="refresh" content={`0; url=${target}`} />
     <link rel="canonical" href={target} />
+    <!-- 100% privacy-first analytics -->
+    <script data-collect-dnt="true" async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
     <script>window.location.replace('/about/#talks');</script>
   </head>
-  <body><p>Redirecting to <a href={target}>the talks section</a>.</p></body>
+  <body><noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif?collect-dnt=true" alt="" referrerpolicy="no-referrer-when-downgrade" /></noscript><p>Redirecting to <a href={target}>the talks section</a>.</p></body>
 </html>
