@@ -2,10 +2,11 @@
 interface Props {
   name: string;
   class?: string;
+  hidden?: boolean;
 }
-const { name, class: className = '' } = Astro.props;
+const { name, class: className = '', hidden = false } = Astro.props;
 ---
 
-<svg class={`icon icon-${name} ${className}`} aria-hidden="true">
+<svg class={`icon icon-${name} ${className}`} aria-hidden="true" hidden={hidden}>
   <use href={`/icons/symbol-defs.svg#icon-${name}`}></use>
 </svg>

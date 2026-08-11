@@ -52,6 +52,18 @@ html {
   stroke: currentColor;
 }
 
+.theme-icon-dark {
+  display: none;
+}
+
+.dark .theme-icon-light {
+  display: none;
+}
+
+.dark .theme-icon-dark {
+  display: inline-block;
+}
+
 .site-logo-face {
   transition: filter 180ms ease-out;
 }

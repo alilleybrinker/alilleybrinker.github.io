@@ -1,33 +1,45 @@
 ---
 import Icon from './Icon.astro';
-interface Props {
-  expanded?: boolean;
-}
-const { expanded = false } = Astro.props;
-const options = [['light', 'sun'], ['system', 'zap'], ['dark', 'moon']];
 ---
 
 <div class="inline-flex items-center md:flex justify-end">
-  <div id="theme-selector" class:list={["flex h-9 items-center bg-neutral-100 dark:bg-neutral-800 p-0.5 rounded-full transition-[width] ease-linear duration-75 overflow-x-clip overflow-y-visible", expanded ? "w-25" : "w-9 hover:w-25 delay-300 hover:delay-0"]}>
-    {options.map(([theme, icon]) => (
-      <button type="button" data-theme={theme} class="theme-option inline-flex size-8 cursor-pointer items-center justify-center shrink-0 rounded-full text-neutral-400 hover:bg-blue-100 dark:hover:bg-blue-500/25 hover:text-blue-500 data-[active]:text-blue-600">
-        <Icon name={icon} />
-        <span class="sr-only">Use {theme} theme</span>
-      </button>
-    ))}
-  </div>
+  <button type="button" class="theme-switcher inline-flex size-8 cursor-pointer items-center justify-center rounded-full text-neutral-400 hover:bg-blue-100 hover:text-blue-500 dark:hover:bg-blue-500/25" aria-label="Toggle color theme" title="Toggle color theme">
+    <Icon name="sun" class="theme-icon-light" />
+    <Icon name="moon" class="theme-icon-dark" />
+  </button>
 </div>
 
 <script>
-  type Theme = 'light' | 'dark' | 'system';
+  type Theme = 'light' | 'dark';
   const key = 'theme';
-  const getTheme = (): Theme => (localStorage.getItem(key) as Theme) || 'system';
-  const applyTheme = (theme: Theme) => {
-    if (theme === 'system') localStorage.removeItem(key);
-    else localStorage.setItem(key, theme);
-    document.documentElement.classList.toggle('dark', theme === 'dark' || (theme === 'system' && matchMedia('(prefers-color-scheme: dark)').matches));
-    document.querySelectorAll<HTMLButtonElement>('.theme-option').forEach((button) => button.toggleAttribute('data-active', button.dataset.theme === theme));
+  const colorScheme = matchMedia('(prefers-color-scheme: dark)');
+  const systemTheme = (): Theme => colorScheme.matches ? 'dark' : 'light';
+  const storedTheme = (): Theme | undefined => {
+    const theme = localStorage.getItem(key);
+    return theme === 'light' || theme === 'dark' ? theme : undefined;
   };
-  applyTheme(getTheme());
-  document.querySelectorAll<HTMLButtonElement>('.theme-option').forEach((button) => button.addEventListener('click', () => applyTheme(button.dataset.theme as Theme)));
+  const resolvedTheme = (): Theme => storedTheme() ?? systemTheme();
+  const applyTheme = (theme: Theme) => {
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+    document.querySelectorAll<HTMLButtonElement>('.theme-switcher').forEach((button) => {
+      const isDark = theme === 'dark';
+      const target = isDark ? 'light' : 'dark';
+      const returnsToSystem = target === systemTheme();
+      const action = returnsToSystem ? `Use system theme (${target})` : `Switch to ${target} theme`;
+      button.setAttribute('aria-label', action);
+      button.title = action;
+    });
+  };
+  const toggleTheme = () => {
+    const target = resolvedTheme() === 'dark' ? 'light' : 'dark';
+    if (target === systemTheme()) localStorage.removeItem(key);
+    else localStorage.setItem(key, target);
+    applyTheme(target);
+  };
+
+  applyTheme(resolvedTheme());
+  document.querySelectorAll<HTMLButtonElement>('.theme-switcher').forEach((button) => button.addEventListener('click', toggleTheme));
+  colorScheme.addEventListener('change', () => {
+    if (!storedTheme()) applyTheme(systemTheme());
+  });
 </script>

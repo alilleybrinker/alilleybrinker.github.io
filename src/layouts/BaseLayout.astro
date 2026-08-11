@@ -56,6 +56,13 @@ const jsonLd = (data: Record<string, unknown>) => JSON.stringify(data).replace(/
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      const storedTheme = localStorage.getItem('theme');
+      const theme = storedTheme === 'light' || storedTheme === 'dark'
+        ? storedTheme
+        : matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.classList.toggle('dark', theme === 'dark');
+    </script>
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -118,7 +125,7 @@ const jsonLd = (data: Record<string, unknown>) => JSON.stringify(data).replace(/
                 <li class="mt-1 flex items-center gap-2 border-t border-neutral-200 px-3 pt-2 dark:border-neutral-700">
                   <a href="https://bsky.app/profile/alilleybrinker.com" aria-label="Bluesky" class="flex size-8 items-center justify-center text-neutral-400 hover:text-blue-500"><Icon name="bluesky" class="!h-5 !w-5" /></a>
                   <a href="https://github.com/alilleybrinker" aria-label="GitHub" class="flex size-8 items-center justify-center text-neutral-400 hover:text-blue-500"><Icon name="github" class="!h-5 !w-5" /></a>
-                  <ThemeSwitcher expanded />
+                  <ThemeSwitcher />
                 </li>
               </ul>
             </details>
