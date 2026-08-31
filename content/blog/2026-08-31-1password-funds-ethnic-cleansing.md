@@ -9,7 +9,7 @@ taxonomies:
 ---
 
 Omarchy is a Linux distribution created and controlled by David Heinemeier Hansson, usually known
-as DHH. DHH is the founder and CEO of 37signals (formerly Basecamp) and creator of Ruby on Rails.
+as DHH. DHH is the founder and CTO of 37signals (formerly Basecamp) and creator of Ruby on Rails.
 
 In the last year DHH has also called for the ethnic cleansing of Europe.
 
@@ -72,6 +72,9 @@ As a longtime 1Password Family account customer, I am disgusted that 1Password i
 this project, and I demand the company rescind the deal with Omarchy, refuse to pay the remaining
 $200,000, and attempt to claw back the $100,000 already paid.
 ```
+
+Editor's Note: a prior version of the post incorrectly identified DHH as the CEO of 37signals.
+He is the CTO, not the CEO. Jason Fried is the CEO.
 
 [london]: https://world.hey.com/dhh/as-i-remember-london-e7d38e64
 [wolves]: https://world.hey.com/dhh/wolves-sheep-and-gypsies-ba44af6a
