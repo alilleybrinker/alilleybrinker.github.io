@@ -1,9 +1,9 @@
 import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
-import { byNewest, postDate, postPath, topicSlug } from '../../../lib/site';
+import { byNewest, isListedPost, postDate, postPath, topicSlug } from '../../../lib/site';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog');
+  const posts = (await getCollection('blog')).filter(isListedPost);
   const topics = [...new Set(posts.flatMap((post) => post.data.taxonomies.topics))];
   return topics.map((topic) => ({ params: { topic: topicSlug(topic) }, props: { topic, posts: posts.filter((post) => post.data.taxonomies.topics.includes(topic)).sort(byNewest) } }));
 }

@@ -2,7 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import Icon from '../../components/Icon.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { postDate, postPath, postReadingTime, postSlug } from '../../lib/site';
+import { isListedPost, postDate, postPath, postReadingTime, postSlug } from '../../lib/site';
 import standardSite from '../../data/standard-site.json';
 
 export async function getStaticPaths() {
@@ -11,7 +11,12 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content, headings } = await render(post);
 const date = postDate(post);
-const topics = post.data.taxonomies.topics;
+const listedTopics = new Set(
+  (await getCollection('blog'))
+    .filter(isListedPost)
+    .flatMap((candidate) => candidate.data.taxonomies.topics),
+);
+const topics = post.data.taxonomies.topics.filter((topic) => listedTopics.has(topic));
 const readingTime = postReadingTime(post);
 const canonical = new URL(postPath(post), Astro.site);
 const socialImage = `/social/${postSlug(post)}.png`;

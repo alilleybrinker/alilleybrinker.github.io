@@ -3,7 +3,7 @@ import type { APIRoute } from 'astro';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { Resvg } from '@resvg/resvg-js';
-import { postDate, postSlug, topicSlug } from '../../lib/site';
+import { isListedPost, postDate, postSlug, topicSlug } from '../../lib/site';
 
 const width = 1356;
 const height = 628;
@@ -79,7 +79,9 @@ function socialCard(card: SocialCard) {
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
-  const topics = [...new Set(posts.flatMap((post) => post.data.taxonomies.topics))];
+  const topics = [...new Set(
+    posts.filter(isListedPost).flatMap((post) => post.data.taxonomies.topics),
+  )];
   const pages = [
     { slug: 'home', title: 'Software Security Engineer' },
     { slug: 'about', title: 'About — Software Security' },

@@ -3,8 +3,8 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import HomePostList from '../components/HomePostList.astro';
 import Icon from '../components/Icon.astro';
-import { byNewest, postDate, postPath, postReadingTime, postSlug, readingTimeStrength, topicSlug } from '../lib/site';
-const posts = (await getCollection('blog')).sort(byNewest);
+import { byNewest, isListedPost, postDate, postPath, postReadingTime, postSlug, readingTimeStrength, topicSlug } from '../lib/site';
+const posts = (await getCollection('blog')).filter(isListedPost).sort(byNewest);
 const topics = Object.entries(
   posts.flatMap((post) => post.data.taxonomies.topics).reduce<Record<string, number>>(
     (counts, topic) => ({ ...counts, [topic]: (counts[topic] ?? 0) + 1 }),

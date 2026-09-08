@@ -1,6 +1,7 @@
 ---
 title: "1Password Supports the Ethnic Cleansing of Europe"
 description: "1Password has committed $300,000 to Omarchy. This is unacceptable and must be rescinded."
+unlisted: true
 taxonomies:
   type:
     - Blog

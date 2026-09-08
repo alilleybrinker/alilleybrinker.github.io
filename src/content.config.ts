@@ -4,6 +4,7 @@ import { glob } from 'astro/loaders';
 const postSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
+  unlisted: z.boolean().default(false),
   taxonomies: z.object({
     type: z.array(z.string()).default([]),
     topics: z.array(z.string()).default([]),

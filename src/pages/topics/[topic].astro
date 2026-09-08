@@ -3,10 +3,10 @@ import { getCollection } from 'astro:content';
 import Icon from '../../components/Icon.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import HomePostList from '../../components/HomePostList.astro';
-import { byNewest, topicSlug } from '../../lib/site';
+import { byNewest, isListedPost, topicSlug } from '../../lib/site';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog');
+  const posts = (await getCollection('blog')).filter(isListedPost);
   const topics = [...new Set(posts.flatMap((post) => post.data.taxonomies.topics))];
   return topics.map((topic) => ({ params: { topic: topicSlug(topic) }, props: { topic, posts: posts.filter((post) => post.data.taxonomies.topics.includes(topic)).sort(byNewest) } }));
 }

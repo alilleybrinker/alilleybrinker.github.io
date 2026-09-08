@@ -1,5 +1,11 @@
 # alilleybrinker.com
 
+## Unlisted posts
+
+Set `unlisted: true` in an article's front matter to keep its direct URL
+available while excluding it from the home page, topic pages and feeds, and
+topic post counts.
+
 ## Standard.site publishing
 
 This site publishes the `blog` collection to Standard.site while keeping the

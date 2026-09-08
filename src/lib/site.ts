@@ -2,6 +2,10 @@ import type { CollectionEntry } from 'astro:content';
 
 export type Post = CollectionEntry<'blog'>;
 
+export function isListedPost(post: Post) {
+  return !post.data.unlisted;
+}
+
 export const legacyMiniSlugs = new Set([
   'safety-hygiene',
   'jujutsu-is-the-future',
