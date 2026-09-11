@@ -90,7 +90,7 @@ export async function getStaticPaths() {
   ];
 
   return [
-    ...posts.map((post) => ({
+    ...posts.filter((post) => !post.data.externalUrl).map((post) => ({
       params: { slug: postSlug(post) },
       props: { title: post.data.title, date: postDate(post) },
     })),

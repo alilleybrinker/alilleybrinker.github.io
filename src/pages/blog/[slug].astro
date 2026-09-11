@@ -6,7 +6,9 @@ import { isListedPost, postDate, postPath, postReadingTime, postSlug } from '../
 import standardSite from '../../data/standard-site.json';
 
 export async function getStaticPaths() {
-  return (await getCollection('blog')).map((post) => ({ params: { slug: postSlug(post) }, props: { post } }));
+  return (await getCollection('blog'))
+    .filter((post) => !post.data.externalUrl)
+    .map((post) => ({ params: { slug: postSlug(post) }, props: { post } }));
 }
 const { post } = Astro.props;
 const { Content, headings } = await render(post);

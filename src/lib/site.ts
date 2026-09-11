@@ -30,10 +30,11 @@ export function postSlug(post: Post) {
 }
 
 export function postPath(post: Post) {
-  return `/blog/${postSlug(post)}/`;
+  return post.data.externalUrl ?? `/blog/${postSlug(post)}/`;
 }
 
 export function postReadingTime(post: Post) {
+  if (post.data.readingTime) return post.data.readingTime;
   return Math.max(1, Math.ceil((post.body?.match(/\S+/g)?.length ?? 0) / 200));
 }
 
