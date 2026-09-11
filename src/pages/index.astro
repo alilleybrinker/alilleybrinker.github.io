@@ -4,7 +4,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import HomePostList from '../components/HomePostList.astro';
 import Icon from '../components/Icon.astro';
 import { byNewest, isListedPost, postDate, postPath, postReadingTime, postSlug, readingTimeStrength, topicSlug } from '../lib/site';
-const posts = (await getCollection('blog')).filter(isListedPost).sort(byNewest);
+const allPosts = await getCollection('blog');
+const posts = allPosts.filter(isListedPost).sort(byNewest);
 const topics = Object.entries(
   posts.flatMap((post) => post.data.taxonomies.topics).reduce<Record<string, number>>(
     (counts, topic) => ({ ...counts, [topic]: (counts[topic] ?? 0) + 1 }),
@@ -32,7 +33,7 @@ const startHere = [
   },
 ];
 const startHerePosts = startHere.map((entry) => {
-  const post = posts.find((candidate) => postSlug(candidate) === entry.slug);
+  const post = allPosts.find((candidate) => postSlug(candidate) === entry.slug);
   if (!post) throw new Error(`Missing Start Here post: ${entry.slug}`);
   const date = 'date' in entry ? entry.date : postDate(post);
   const readingTime = 'readingTime' in entry ? entry.readingTime : postReadingTime(post);
@@ -45,7 +46,7 @@ const startHerePosts = startHere.map((entry) => {
     readingStrength: readingTimeStrength(readingTime),
   };
 });
-const otherPosts = posts.filter((post) => !startHere.some(({ slug }) => slug === postSlug(post)));
+const otherPosts = posts;
 const lede = 'I’m a Principal Engineer at MITRE helping people make informed decisions about the software they depend on. I lead Hipcheck and contribute to the CVE system.';
 ---
 

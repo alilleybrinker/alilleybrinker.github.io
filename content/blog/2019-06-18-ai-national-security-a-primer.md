@@ -9,7 +9,6 @@ taxonomies:
   type:
     - Blog
   topics:
-    - Artificial Intelligence
+    - AI
     - National Security
 ---
-
