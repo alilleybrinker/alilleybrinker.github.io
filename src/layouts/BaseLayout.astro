@@ -17,7 +17,7 @@ interface Props {
 }
 const {
   title: pageTitle,
-  description = 'I work on software security at MITRE, including serving as a member of the OmniBOR Working Group and leading development of the Rust implementation.',
+  description = 'I’m a Member of Technical Staff at Anthropic. I write about software security, memory safety, Rust, and open source.',
   canonical = new URL(Astro.url.pathname, Astro.site),
   feed = '/rss.xml',
   type = 'website',
@@ -35,11 +35,11 @@ const person = {
   name: 'Andrew Lilley Brinker',
   url: new URL('/', Astro.site).href,
   image: personImage.href,
-  jobTitle: 'Principal Engineer',
+  jobTitle: 'Member of Technical Staff',
   worksFor: {
     '@type': 'Organization',
-    name: 'MITRE',
-    url: 'https://www.mitre.org/',
+    name: 'Anthropic',
+    url: 'https://www.anthropic.com/',
   },
   sameAs: [
     'https://bsky.app/profile/alilleybrinker.com',

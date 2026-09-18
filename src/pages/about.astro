@@ -9,7 +9,7 @@ const talks = [...talksData.talks].sort((a, b) => b.date.localeCompare(a.date));
 
 <BaseLayout
     title="About — Software Security"
-    description="Andrew Lilley Brinker is a Principal Engineer at MITRE working on software security, vulnerability information, and open source tooling."
+    description="Andrew Lilley Brinker is a Member of Technical Staff at Anthropic, writing about software security, memory safety, Rust, and open source."
     socialImage="/social/about.png"
     socialImageAlt="About — Software Security"
 >
@@ -27,14 +27,19 @@ const talks = [...talksData.talks].sort((a, b) => b.date.localeCompare(a.date));
         />
     </div>
     <p>
-        I’m a Principal Engineer at <a href="https://www.mitre.org">MITRE</a>
-        &nbsp;working on software security, vulnerability management, and open source.
-        I lead <a href="https://github.com/mitre/hipcheck">Hipcheck</a>, which
-        helps maintainers and users assess dependency supply-chain risk via
-        plugin-based analyses.
+        I’m a Member of Technical Staff at <a href="https://www.anthropic.com"
+            >Anthropic</a
+        >.
     </p>
     <p>
-        I also work on the <a href="https://www.cve.org/">CVE</a> system, improving
+        Before that I worked on software security, vulnerability management, and
+        open source at <a href="https://www.mitre.org">MITRE</a>, where I led <a
+            href="https://github.com/mitre/hipcheck">Hipcheck</a
+        >, which helps maintainers and users assess dependency supply-chain risk
+        via plugin-based analyses.
+    </p>
+    <p>
+        I also worked on the <a href="https://www.cve.org/">CVE</a> system, improving
         authz&ThinSpace;/&ThinSpace;authn, introducing support for <a
             href="https://packageurl.org/">Package URLs</a
         > in CVE Records, and enhancing the processes of the Quality Working Group.
@@ -172,5 +177,9 @@ const talks = [...talksData.talks].sort((a, b) => b.date.localeCompare(a.date));
         The words on this site were written by Andrew with care. Its design was
         implemented with the aid of AI. If AI-generated content is ever posted,
         it will be clearly identified.
+    </p>
+    <p>
+        Disclosure: I work at Anthropic, which builds AI systems. Everything
+        here is my own view, not my employer’s.
     </p>
 </BaseLayout>
