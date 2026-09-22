@@ -21,6 +21,7 @@
           Autosave
         </label>
         <button id="save" class="button" type="button" disabled>Save</button>
+        <button id="delete-post" class="button button-danger" type="button" disabled>Delete</button>
         <button id="new-post" class="button button-primary" type="button">New post</button>
         <button id="toggle-preview" class="icon-button" type="button" aria-pressed="true" title="Show or hide the preview">◫</button>
       </div>
@@ -196,6 +197,19 @@
         <menu class="dialog-actions">
           <button type="button" value="cancel" class="button" data-close>Cancel</button>
           <button type="submit" value="create" class="button button-primary">Create</button>
+        </menu>
+      </form>
+    </dialog>
+
+    <dialog id="delete-dialog" class="dialog">
+      <form id="delete-form" method="dialog">
+        <h2>Delete this post?</h2>
+        <p id="delete-target"></p>
+        <p class="muted">The file is removed from disk. Anything already committed can be brought back with Git; a post you have never committed cannot.</p>
+        <p id="delete-error" class="error" hidden></p>
+        <menu class="dialog-actions">
+          <button type="button" value="cancel" class="button" data-close autofocus>Cancel</button>
+          <button type="submit" value="delete" class="button button-danger">Delete</button>
         </menu>
       </form>
     </dialog>

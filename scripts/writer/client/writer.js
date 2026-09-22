@@ -142,6 +142,7 @@ async function openPost(id, { keepBanners = false, raw } = {}) {
   body.value = state.raw ? post.raw : post.body;
   el('empty-state').hidden = true;
   el('workspace').hidden = false;
+  el('delete-post').disabled = false;
   setDirty(false);
   setSaveState('Opened');
   renderPostList();
@@ -739,6 +740,56 @@ async function createPost(event) {
   }
 }
 
+/* Deleting -------------------------------------------------------------- */
+
+function openDeleteDialog() {
+  if (!state.post) return;
+  const target = el('delete-target');
+  target.replaceChildren(document.createTextNode(`${state.post.data?.title ?? state.post.id} `));
+  const file = document.createElement('code');
+  file.textContent = `${state.config.contentDir}/${state.post.id}`;
+  target.append(file);
+  el('delete-error').hidden = true;
+  el('delete-dialog').showModal();
+}
+
+async function deletePost() {
+  const post = state.post;
+  if (!post) return;
+  try {
+    await api(`/posts/${encodeURIComponent(post.id)}`, { method: 'DELETE' });
+  } catch (error) {
+    const message = el('delete-error');
+    message.textContent = error.message;
+    message.hidden = false;
+    el('delete-dialog').showModal();
+    return;
+  }
+  clearTimeout(autosaveTimer);
+  state.post = null;
+  state.problems = [];
+  setDirty(false);
+  closeEditor();
+  setSaveState(`Deleted ${post.id}`);
+  await loadPosts();
+}
+
+function closeEditor() {
+  el('workspace').hidden = true;
+  el('empty-state').hidden = false;
+  el('delete-post').disabled = true;
+  el('current-title').textContent = 'No post open';
+  el('current-meta').textContent = '';
+  el('preview-iframe').dataset.url = '';
+  el('preview-iframe').src = 'about:blank';
+  state.previewToken = null;
+  el('preview-url').textContent = '';
+  el('preview-empty').hidden = false;
+  el('preview-empty').textContent = 'Open a post to preview it.';
+  document.title = 'Writer · alilleybrinker.com';
+  history.replaceState(null, '', location.pathname);
+}
+
 /* Live reload of external edits ----------------------------------------- */
 
 function watchServer() {
@@ -746,7 +797,7 @@ function watchServer() {
   events.addEventListener('message', (event) => {
     const data = JSON.parse(event.data);
     if (data.type === 'file-changed') handleFileChange(data);
-    else if (data.type === 'post-created') loadPosts();
+    else if (data.type === 'post-created' || data.type === 'post-deleted') loadPosts();
   });
   events.addEventListener('error', () => setSaveState('Writer offline', 'error'));
 }
@@ -758,7 +809,13 @@ function handleFileChange({ id, exists }) {
   listRefreshTimer = setTimeout(() => loadPosts(), 250);
   if (!state.post || id !== state.post.id) return;
   if (!exists) {
-    showBanner('external-change', `${id} was removed or renamed outside the writer.`, [], 'error');
+    const keptText = state.dirty ? body.value : null;
+    showBanner('external-change', `${id} was removed or renamed outside the writer.`, keptText
+      ? [{ label: 'Copy my text', run: () => navigator.clipboard.writeText(keptText) }]
+      : [], 'error');
+    state.post = null;
+    setDirty(false);
+    closeEditor();
     return;
   }
   if (state.saving) return;
@@ -846,6 +903,12 @@ function wireEvents() {
   el('new-post').addEventListener('click', openNewPostDialog);
   el('empty-state').querySelector('[data-action="new-post"]').addEventListener('click', openNewPostDialog);
   el('save').addEventListener('click', () => save().catch(() => {}));
+  el('delete-post').addEventListener('click', openDeleteDialog);
+  el('delete-form').addEventListener('submit', (event) => {
+    event.preventDefault();
+    el('delete-dialog').close();
+    deletePost();
+  });
   el('autosave').addEventListener('change', (event) => {
     localStorage.setItem('writer.autosave', event.target.checked ? 'on' : 'off');
     if (event.target.checked && state.dirty) markDirty();

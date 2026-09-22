@@ -45,7 +45,9 @@ What it does beyond editing text:
   description, a slug that would collide with another post, a topic spelled
   differently than everywhere else, a level-1 heading in the body, a table of
   contents with no headings to list.
-- **Renaming**: changing the date or slug renames the file on save.
+- **Renaming**: changing the date or slug renames the file on save, and
+  **Delete** removes it after a confirmation naming the file. Deletes are real
+  `rm`s — Git is the undo.
 - **Rewrap** (⌘⇧F) reflows the paragraph or selection to 80 columns, the width
   the posts are written to.
 - Edits made outside the UI are picked up automatically, and if the same post

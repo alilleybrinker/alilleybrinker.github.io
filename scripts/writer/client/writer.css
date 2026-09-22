@@ -40,6 +40,9 @@
 
 * { box-sizing: border-box; }
 
+/* Several panes set `display`, which would otherwise beat the hidden attribute. */
+[hidden] { display: none !important; }
+
 body {
   margin: 0;
   height: 100vh;
@@ -97,6 +100,12 @@ body {
 @media (prefers-color-scheme: dark) {
   .button-primary { color: #10131a; }
 }
+
+.button-danger { color: var(--error); border-color: var(--line); }
+.button-danger:hover:not(:disabled) { background: var(--error-soft); border-color: var(--error); }
+.dialog .button-danger { background: var(--error-soft); border-color: var(--error); }
+#delete-target { font-weight: 600; margin: 0.4rem 0 0; }
+#delete-target code { font-weight: 400; color: var(--ink-soft); }
 
 .icon-button { padding: 0.35rem 0.55rem; }
 .icon-button[aria-pressed="false"] { opacity: 0.55; }

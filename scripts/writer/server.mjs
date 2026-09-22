@@ -15,8 +15,8 @@ import { spawn, spawnSync } from 'node:child_process';
 import { readFile, watch as watchDir } from 'node:fs/promises';
 import { createReadStream, existsSync } from 'node:fs';
 import {
-  BLOG_DIR, ROOT, WriterError, collectTopics, createPost, isPostId, listPosts,
-  makeId, readPost, savePost, splitId, validatePost,
+  BLOG_DIR, ROOT, WriterError, collectTopics, createPost, deletePost, isPostId,
+  listPosts, makeId, readPost, savePost, splitId, validatePost,
 } from './lib/posts.mjs';
 
 const CLIENT_DIR = path.join(import.meta.dirname, 'client');
@@ -277,6 +277,13 @@ async function handleApi(request, response, url, options) {
       const post = await savePost(id, { ...payload, targetId });
       broadcast({ type: 'post-saved', id: post.id, previousId: id, mtimeMs: post.mtimeMs });
       sendJson(response, 200, await withValidation(post));
+      return;
+    }
+    if (request.method === 'DELETE') {
+      assertSameOrigin(request, options.port);
+      await deletePost(id);
+      broadcast({ type: 'post-deleted', id });
+      sendJson(response, 200, { deleted: id });
       return;
     }
   }

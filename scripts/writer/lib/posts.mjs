@@ -190,6 +190,13 @@ export async function createPost({ title, date, slug, description = '', topics =
   return readPost(id);
 }
 
+export async function deletePost(id) {
+  const file = postPath(id);
+  if (!existsSync(file)) throw new WriterError(`No post named "${id}".`, 404);
+  await unlink(file);
+  return { id };
+}
+
 export async function collectTopics() {
   const posts = await listPosts();
   const topics = new Map();
