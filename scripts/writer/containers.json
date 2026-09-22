@@ -1,0 +1,98 @@
+{
+  "//": "Blocks the writing UI can insert. Add entries here to teach the editor a new container; nothing else needs changing. Templates support {{field}} with optional filters: |html, |slug, |paragraphs, |quoted, |indent. {{cursor}} marks where the caret lands after insertion.",
+  "containers": [
+    {
+      "id": "info-callout",
+      "label": "Info callout",
+      "hint": "The blue aside used for repost notices and asides, styled by .info-callout in global.css.",
+      "shortcut": "K",
+      "fields": [
+        {
+          "name": "title",
+          "label": "Title",
+          "placeholder": "This was originally published on a different site.",
+          "required": true
+        },
+        {
+          "name": "body",
+          "label": "Body",
+          "type": "textarea",
+          "placeholder": "One or more paragraphs. Blank lines start a new paragraph.",
+          "useSelection": true
+        }
+      ],
+      "template": "<aside class=\"info-callout\" aria-labelledby=\"{{title|slug}}\">\n  <p id=\"{{title|slug}}\" class=\"info-callout-title\">{{title|html}}</p>\n{{body|paragraphs}}{{cursor}}\n</aside>"
+    },
+    {
+      "id": "quote-figure",
+      "label": "Quotation with citation",
+      "hint": "figure + blockquote + figcaption, with curly quotes, as used for quoted sources.",
+      "fields": [
+        {
+          "name": "quote",
+          "label": "Quotation",
+          "type": "textarea",
+          "required": true,
+          "useSelection": true,
+          "placeholder": "The quoted text, without quotation marks."
+        },
+        { "name": "url", "label": "Source URL", "placeholder": "https://example.com/page" },
+        { "name": "source", "label": "Link text", "placeholder": "Google’s response", "required": true },
+        { "name": "note", "label": "Trailing note", "placeholder": "response to the 2023 Request for Input (RFI)" }
+      ],
+      "template": "<figure>\n<blockquote>\n{{quote|quoted}}\n</blockquote>\n<figcaption>\n<a href=\"{{url}}\">{{source|html}}</a>\n{{note|html}}\n</figcaption>\n</figure>{{cursor}}"
+    },
+    {
+      "id": "image-figure",
+      "label": "Image with caption",
+      "hint": "figure + img + figcaption. Put the file in public/image/ and reference it as /image/name.png.",
+      "fields": [
+        { "name": "src", "label": "Image path", "placeholder": "/image/diagram.png", "required": true },
+        { "name": "alt", "label": "Alt text", "placeholder": "What the image shows, for screen readers.", "required": true },
+        { "name": "caption", "label": "Caption", "placeholder": "Optional caption shown under the image." }
+      ],
+      "template": "<figure>\n<img src=\"{{src}}\" alt=\"{{alt|html}}\" />\n<figcaption>\n{{caption|html}}\n</figcaption>\n</figure>{{cursor}}"
+    }
+  ],
+  "snippets": [
+    {
+      "id": "code-block",
+      "label": "Code block",
+      "hint": "Fenced code, highlighted by Astro’s built-in Shiki.",
+      "fields": [
+        { "name": "language", "label": "Language", "placeholder": "rust", "default": "rust" },
+        { "name": "code", "label": "Code", "type": "textarea", "useSelection": true }
+      ],
+      "template": "```{{language}}\n{{code}}{{cursor}}\n```"
+    },
+    {
+      "id": "section-break",
+      "label": "Section break",
+      "hint": "The horizontal rule used between major sections.",
+      "fields": [],
+      "template": "---\n\n{{cursor}}"
+    },
+    {
+      "id": "reference-link",
+      "label": "Reference link",
+      "hint": "Inserts [text][label] here and the [label]: url definition at the end of the post.",
+      "fields": [
+        { "name": "text", "label": "Link text", "required": true, "useSelection": true },
+        { "name": "label", "label": "Reference label", "placeholder": "Defaults to a slug of the link text.", "fallback": { "from": "text", "filter": "slug" } },
+        { "name": "url", "label": "URL", "placeholder": "https://example.com", "required": true }
+      ],
+      "inline": true,
+      "template": "[{{text}}][{{label}}]{{cursor}}",
+      "appendTemplate": "[{{label}}]: {{url}}"
+    },
+    {
+      "id": "blockquote",
+      "label": "Blockquote",
+      "hint": "A Markdown blockquote; every line is prefixed with \"> \".",
+      "fields": [
+        { "name": "quote", "label": "Quotation", "type": "textarea", "required": true, "useSelection": true }
+      ],
+      "template": "{{quote|blockquote}}{{cursor}}"
+    }
+  ]
+}

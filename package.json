@@ -7,6 +7,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "write": "node scripts/writer/server.mjs",
     "standard:publish": "node scripts/publish-standard-site.mjs",
     "standard:migrate": "node scripts/publish-standard-site.mjs"
   },
