@@ -41,6 +41,11 @@ What it does beyond editing text:
   new one. Templates take `{{field}}` placeholders with `|html`, `|slug`,
   `|paragraphs`, `|quoted`, `|blockquote` and `|indent` filters, and `{{cursor}}`
   marks where the caret lands.
+- **Preview targets**: the pane follows the post by default, and the selector
+  in its bar also shows the blog index, the home page, each of the post's topic
+  pages, the generated social card, and the Atom feed — so a draft can be
+  checked where it actually appears. A target the dev server will not serve
+  (an unlisted post has no topic page) says so instead of hanging.
 - **Checks** against the collection schema and house conventions: missing
   description, a slug that would collide with another post, a topic spelled
   differently than everywhere else, a level-1 heading in the body, a table of

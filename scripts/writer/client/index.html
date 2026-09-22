@@ -153,6 +153,7 @@
 
       <section id="preview" class="preview" aria-label="Preview">
         <div class="preview-bar">
+          <select id="preview-target" aria-label="What to preview"></select>
           <span id="preview-url" class="muted"></span>
           <span class="preview-bar-actions">
             <button id="preview-width" class="tool" type="button" data-width="full" title="Preview width">Full</button>
@@ -162,6 +163,7 @@
         </div>
         <div id="preview-frame" class="preview-frame" data-width="full">
           <iframe id="preview-iframe" title="Live preview" src="about:blank"></iframe>
+          <img id="preview-image" alt="Generated social card" hidden />
           <div id="preview-empty" class="preview-empty muted"></div>
         </div>
       </section>

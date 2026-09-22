@@ -15,6 +15,8 @@ const state = {
   saving: false,
   raw: false,
   problems: [],
+  previewTarget: localStorage.getItem('writer.previewTarget') ?? 'post',
+  previewToken: null,
 };
 
 const el = (id) => document.getElementById(id);
@@ -186,6 +188,7 @@ function renderChips() {
     markDirty();
   });
   updateFrontmatterSummary();
+  if (state.post) renderPreviewTargets();
 }
 
 function renderChipGroup(container, values, remove) {
@@ -384,86 +387,187 @@ function updateCursorPosition() {
 
 /* Preview --------------------------------------------------------------- */
 
+// Mirrors topicSlug() in src/lib/site.ts, which is what builds /topics/<slug>/.
+function topicSlug(topic) {
+  return topic.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
+
+// Everywhere a post shows up on the site, so a draft can be checked in place
+// and not just on its own page.
+function previewTargets() {
+  const post = state.post;
+  if (!post) return [];
+  const targets = post.data?.externalUrl
+    ? [{ id: 'post', label: 'This post (links out)', path: null }]
+    : [{ id: 'post', label: 'This post', path: post.url }];
+  targets.push({ id: 'blog', label: 'Blog index', path: '/blog/' });
+  targets.push({ id: 'home', label: 'Home page', path: '/' });
+  for (const topic of state.topics) {
+    targets.push({ id: `topic:${topic}`, label: `Topic: ${topic}`, path: `/topics/${topicSlug(topic)}/` });
+  }
+  targets.push({ id: 'social', label: 'Social card', path: `/social/${post.slug}.png`, image: true });
+  targets.push({ id: 'feed', label: 'Atom feed', path: '/blog/atom.xml' });
+  return targets;
+}
+
+function currentTarget() {
+  const targets = previewTargets();
+  return targets.find((target) => target.id === state.previewTarget) ?? targets[0] ?? null;
+}
+
+function renderPreviewTargets() {
+  const select = el('preview-target');
+  const targets = previewTargets();
+  if (!targets.some((target) => target.id === state.previewTarget)) state.previewTarget = targets[0]?.id ?? 'post';
+  select.replaceChildren();
+  for (const target of targets) {
+    const option = document.createElement('option');
+    option.value = target.id;
+    option.textContent = target.label;
+    option.selected = target.id === state.previewTarget;
+    select.append(option);
+  }
+  select.disabled = targets.length === 0;
+}
+
 function updatePreview() {
   const frame = el('preview-iframe');
   const empty = el('preview-empty');
-  const devUrl = state.config.devUrl;
   state.previewToken = null;
-  if (!devUrl) {
-    frame.hidden = true;
-    empty.hidden = false;
-    empty.textContent = 'No dev server. Restart with "npm run write" (or pass --dev-url) to see the live preview.';
-    el('preview-url').textContent = '';
+  renderPreviewTargets();
+
+  if (!state.config.devUrl) {
+    showPreviewMessage('No dev server. Restart with "npm run write" (or pass --dev-url) to see the live preview.');
     return;
   }
-  if (!state.post) return;
-  if (state.post.data?.externalUrl) {
-    frame.hidden = true;
-    empty.hidden = false;
-    empty.textContent = 'This post links out to another site, so it has no page of its own. The blog index shows it as a cross-post.';
-    el('preview-url').textContent = state.post.data.externalUrl;
-    el('preview-open').href = state.post.data.externalUrl;
+  if (!state.post) {
+    showPreviewMessage('Open a post to preview it.');
     return;
   }
-  const url = `${devUrl}${state.post.url}`;
-  el('preview-url').textContent = state.post.url;
+  const target = currentTarget();
+  if (!target || !target.path) {
+    showPreviewMessage('This post links out to another site, so it has no page of its own. Pick another target to see where it appears.');
+    el('preview-url').textContent = state.post.data?.externalUrl ?? '';
+    el('preview-open').href = state.post.data?.externalUrl ?? '#';
+    return;
+  }
+  const url = previewUrl(target);
+  el('preview-url').textContent = target.path;
   el('preview-open').href = url;
-  if (frame.dataset.url === url) return;
-  showPreviewWhenReady(state.post.url, url);
+  const surface = target.image ? el('preview-image') : frame;
+  if (surface.dataset.url === url) {
+    surface.hidden = false;
+    empty.hidden = true;
+    return;
+  }
+  showPreviewWhenReady(target);
+}
+
+function showPreviewMessage(message) {
+  const frame = el('preview-iframe');
+  frame.hidden = true;
+  frame.dataset.url = '';
+  el('preview-image').hidden = true;
+  el('preview-empty').hidden = false;
+  el('preview-empty').textContent = message;
+  el('preview-url').textContent = '';
 }
 
 // Waits for the dev server to actually serve the page before pointing the iframe
 // at it: a just-created post 404s for a moment, and a 404 in the frame would sit
 // there until someone reloaded it by hand.
-async function showPreviewWhenReady(path, url) {
+// A generated card is an image, not a page: Astro's hot reload cannot refresh it,
+// so its URL carries the post's save time and changes exactly when the file does.
+function previewUrl(target) {
+  const base = `${state.config.devUrl}${target.path}`;
+  return target.image ? `${base}?saved=${state.post?.mtimeMs ?? 0}` : base;
+}
+
+async function showPreviewWhenReady(target) {
   const frame = el('preview-iframe');
+  const image = el('preview-image');
   const empty = el('preview-empty');
+  const surface = target.image ? image : frame;
+  const url = previewUrl(target);
   const token = Symbol('preview');
   state.previewToken = token;
   frame.hidden = true;
+  image.hidden = true;
   empty.hidden = false;
   empty.textContent = 'Waiting for the dev server to build this page…';
-  for (let attempt = 0; attempt < 20; attempt += 1) {
-    const { ready } = await api(`/preview-status?path=${encodeURIComponent(path)}`).catch(() => ({ ready: false }));
+  // A page that is merely slow to build deserves patience; one the dev server
+  // answers with a 404 usually will not appear at all, so give up sooner.
+  const patience = target.id === 'post' ? 20 : 8;
+  let lastStatus = 0;
+  for (let attempt = 0; attempt < patience; attempt += 1) {
+    const { ready, status } = await api(`/preview-status?path=${encodeURIComponent(target.path)}`).catch(() => ({ ready: false, status: 0 }));
     if (state.previewToken !== token) return;
     if (ready) {
-      frame.dataset.url = url;
-      frame.src = url;
-      frame.hidden = false;
+      surface.dataset.url = url;
+      surface.src = url;
+      surface.hidden = false;
       empty.hidden = true;
       return;
     }
+    lastStatus = status;
+    if (status === 404 && attempt >= 3 && target.id !== 'post') break;
     await new Promise((resolve) => setTimeout(resolve, 400));
   }
-  empty.textContent = 'The dev server is not serving this page yet. Use ⟳ to try again.';
+  surface.dataset.url = '';
+  const hint = lastStatus === 404 && target.id.startsWith('topic:') && state.post?.data?.unlisted
+    ? ' An unlisted post does not create its topic page — clear Unlisted to see it.'
+    : lastStatus === 404
+      ? ' Use ⟳ to try again.'
+      : ' Is the dev server running?';
+  empty.textContent = `The dev server answered ${lastStatus === 0 ? 'nothing' : lastStatus} for ${target.path}.${hint}`;
+  empty.hidden = false;
 }
 
 function reloadPreview() {
+  const target = currentTarget();
+  if (!state.config.devUrl || !target?.path) return;
   const frame = el('preview-iframe');
-  if (!state.post || !state.config.devUrl || state.post.data?.externalUrl) return;
   frame.dataset.url = '';
   frame.src = 'about:blank';
-  showPreviewWhenReady(state.post.url, `${state.config.devUrl}${state.post.url}`);
+  el('preview-image').dataset.url = '';
+  showPreviewWhenReady(target);
 }
 
 /* Text insertion -------------------------------------------------------- */
 
+// Every edit the toolbar makes goes through execCommand, because assigning to
+// textarea.value would throw away the browser's own undo history and leave ⌘Z
+// unable to take back an inserted container.
+function replaceRange(start, end, text) {
+  body.focus();
+  body.setSelectionRange(start, end);
+  let inserted = false;
+  try {
+    inserted = document.execCommand('insertText', false, text);
+  } catch {
+    inserted = false;
+  }
+  if (!inserted) {
+    body.setRangeText(text, start, end, 'end');
+    body.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+}
+
 function insertText(text, { block = false } = {}) {
   const start = body.selectionStart;
   const end = body.selectionEnd;
-  let prefix = body.value.slice(0, start);
-  let suffix = body.value.slice(end);
+  const before = body.value.slice(0, start);
+  const after = body.value.slice(end);
   let payload = text;
   if (block) {
-    if (prefix !== '' && !prefix.endsWith('\n\n')) prefix += prefix.endsWith('\n') ? '\n' : '\n\n';
-    if (suffix !== '' && !suffix.startsWith('\n\n')) suffix = suffix.startsWith('\n') ? `\n${suffix}` : `\n\n${suffix}`;
+    if (before !== '' && !before.endsWith('\n\n')) payload = `${before.endsWith('\n') ? '\n' : '\n\n'}${payload}`;
+    if (after !== '' && !after.startsWith('\n\n')) payload = `${payload}${after.startsWith('\n') ? '\n' : '\n\n'}`;
   }
   const cursorAt = payload.indexOf(CURSOR);
   payload = payload.replace(CURSOR, '');
-  body.value = prefix + payload + suffix;
-  const caret = prefix.length + (cursorAt === -1 ? payload.length : cursorAt);
+  replaceRange(start, end, payload);
+  const caret = start + (cursorAt === -1 ? payload.length : cursorAt);
   body.setSelectionRange(caret, caret);
-  body.focus();
   markDirty();
 }
 
@@ -471,17 +575,15 @@ function appendAtEnd(text) {
   const trimmed = body.value.replace(/\s+$/, '');
   const lastLine = trimmed.split('\n').at(-1) ?? '';
   const separator = /^\[[^\]]+\]:\s/.test(lastLine) ? '\n' : '\n\n';
-  body.value = `${trimmed}${separator}${text}\n`;
+  replaceRange(trimmed.length, body.value.length, `${separator}${text}\n`);
 }
 
 function wrapSelection(before, after, placeholder) {
   const start = body.selectionStart;
   const end = body.selectionEnd;
   const selected = body.value.slice(start, end) || placeholder;
-  body.value = body.value.slice(0, start) + before + selected + after + body.value.slice(end);
-  const caretStart = start + before.length;
-  body.setSelectionRange(caretStart, caretStart + selected.length);
-  body.focus();
+  replaceRange(start, end, `${before}${selected}${after}`);
+  body.setSelectionRange(start + before.length, start + before.length + selected.length);
   markDirty();
 }
 
@@ -490,18 +592,17 @@ function prefixLines(prefix) {
   const end = body.selectionEnd;
   const lineStart = body.value.lastIndexOf('\n', start - 1) + 1;
   const lineEnd = body.value.indexOf('\n', end) === -1 ? body.value.length : body.value.indexOf('\n', end);
-  const block = body.value.slice(lineStart, lineEnd);
   const isOrdered = /^\d+\. /.test(prefix);
-  const updated = block
+  const updated = body.value
+    .slice(lineStart, lineEnd)
     .split('\n')
     .map((line, index) => {
       const bare = line.replace(/^(#{1,6} |[-*] |\d+\. |> )/, '');
       return `${isOrdered ? `${index + 1}. ` : prefix}${bare}`;
     })
     .join('\n');
-  body.value = body.value.slice(0, lineStart) + updated + body.value.slice(lineEnd);
+  replaceRange(lineStart, lineEnd, updated);
   body.setSelectionRange(lineStart + updated.length, lineStart + updated.length);
-  body.focus();
   markDirty();
 }
 
@@ -543,9 +644,9 @@ function rewrap() {
       return lines.join('\n');
     })
     .join('\n\n');
-  body.value = value.slice(0, start) + rewrapped + value.slice(end);
+  if (rewrapped === block) return;
+  replaceRange(start, end, rewrapped);
   body.setSelectionRange(start, start + rewrapped.length);
-  body.focus();
   markDirty();
 }
 
@@ -782,6 +883,9 @@ function closeEditor() {
   el('current-meta').textContent = '';
   el('preview-iframe').dataset.url = '';
   el('preview-iframe').src = 'about:blank';
+  el('preview-image').dataset.url = '';
+  el('preview-image').removeAttribute('src');
+  el('preview-image').hidden = true;
   state.previewToken = null;
   el('preview-url').textContent = '';
   el('preview-empty').hidden = false;
@@ -966,6 +1070,11 @@ function wireEvents() {
   el('rewrap').addEventListener('click', rewrap);
 
   el('preview-reload').addEventListener('click', reloadPreview);
+  el('preview-target').addEventListener('change', (event) => {
+    state.previewTarget = event.target.value;
+    localStorage.setItem('writer.previewTarget', state.previewTarget);
+    updatePreview();
+  });
   el('preview-width').addEventListener('click', (event) => {
     const frame = el('preview-frame');
     const next = frame.dataset.width === 'phone' ? 'full' : 'phone';
