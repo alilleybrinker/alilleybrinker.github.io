@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Writer · alilleybrinker.com</title>
+    <link rel="stylesheet" href="/writer.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <button id="toggle-library" class="icon-button" type="button" aria-pressed="true" title="Show or hide the post list">☰</button>
+      <div class="topbar-title">
+        <strong id="current-title">No post open</strong>
+        <span id="current-meta" class="muted"></span>
+      </div>
+      <div class="topbar-actions">
+        <span id="save-state" class="save-state" role="status" aria-live="polite">Ready</span>
+        <label class="switch" title="Save automatically a moment after you stop typing">
+          <input id="autosave" type="checkbox" checked />
+          Autosave
+        </label>
+        <button id="save" class="button" type="button" disabled>Save</button>
+        <button id="new-post" class="button button-primary" type="button">New post</button>
+        <button id="toggle-preview" class="icon-button" type="button" aria-pressed="true" title="Show or hide the preview">◫</button>
+      </div>
+    </header>
+
+    <div id="banners" class="banners" hidden></div>
+
+    <main id="layout" class="layout">
+      <aside id="library" class="library" aria-label="Posts">
+        <div class="library-search">
+          <input id="search" type="search" placeholder="Filter posts…" autocomplete="off" />
+        </div>
+        <ul id="post-list" class="post-list"></ul>
+        <p class="library-footer muted"><span id="post-count"></span> in <code id="content-dir">content/blog</code></p>
+      </aside>
+
+      <div class="gutter" data-resize="library" role="separator" aria-orientation="vertical" tabindex="0" aria-label="Resize post list"></div>
+
+      <section id="editor" class="editor" aria-label="Editor">
+        <div id="empty-state" class="empty-state">
+          <h1>Nothing open</h1>
+          <p>Pick a post from the list, or start a new one.</p>
+          <button class="button button-primary" type="button" data-action="new-post">New post</button>
+        </div>
+
+        <div id="workspace" class="workspace" hidden>
+          <details id="frontmatter" class="panel">
+            <summary>Front matter <span id="frontmatter-summary" class="muted"></span></summary>
+            <form id="frontmatter-form" class="form" autocomplete="off">
+              <label class="field field-wide">
+                <span>Title</span>
+                <input name="title" type="text" required />
+              </label>
+              <label class="field field-wide">
+                <span>Description</span>
+                <textarea name="description" rows="2"></textarea>
+              </label>
+              <label class="field">
+                <span>Date</span>
+                <input name="date" type="date" required />
+              </label>
+              <label class="field">
+                <span>Slug <small id="slug-note" class="muted"></small></span>
+                <input name="slug" type="text" pattern="[a-z0-9]+(-[a-z0-9]+)*" />
+              </label>
+              <div class="field field-wide">
+                <span>Topics</span>
+                <div id="topics" class="chips"></div>
+                <input id="topic-input" list="topic-options" type="text" placeholder="Add a topic and press Enter" />
+                <datalist id="topic-options"></datalist>
+              </div>
+              <div class="field field-wide">
+                <span>Type</span>
+                <div id="types" class="chips"></div>
+                <input id="type-input" list="type-options" type="text" placeholder="Add a type and press Enter" />
+                <datalist id="type-options"></datalist>
+              </div>
+              <label class="check">
+                <input name="unlisted" type="checkbox" />
+                <span>Unlisted <small class="muted">— reachable by URL, hidden from the home page, topic pages, and feeds</small></span>
+              </label>
+              <label class="check">
+                <input name="toc" type="checkbox" />
+                <span>Table of contents <small class="muted">— sets extra.toc</small></span>
+              </label>
+              <details class="subpanel">
+                <summary>Cross-post fields</summary>
+                <div class="form">
+                  <label class="field field-wide">
+                    <span>External URL <small class="muted">— set this and the post becomes a link out</small></span>
+                    <input name="externalUrl" type="url" placeholder="https://example.com/article" />
+                  </label>
+                  <label class="field">
+                    <span>Publication</span>
+                    <input name="publication" type="text" placeholder="CACM" />
+                  </label>
+                  <label class="field">
+                    <span>Publication title</span>
+                    <input name="publicationTitle" type="text" placeholder="Communications of the ACM" />
+                  </label>
+                  <label class="field">
+                    <span>Reading time <small class="muted">— minutes, for external posts</small></span>
+                    <input name="readingTime" type="number" min="1" step="1" />
+                  </label>
+                </div>
+              </details>
+            </form>
+          </details>
+
+          <div class="toolbar" role="toolbar" aria-label="Formatting">
+            <div class="toolbar-group">
+              <button class="tool" type="button" data-inline="bold" title="Bold (⌘B)"><b>B</b></button>
+              <button class="tool" type="button" data-inline="italic" title="Italic (⌘I)"><i>I</i></button>
+              <button class="tool" type="button" data-inline="code" title="Inline code">&lt;/&gt;</button>
+              <button class="tool" type="button" data-inline="link" title="Link (⌘K)">🔗</button>
+            </div>
+            <div class="toolbar-group">
+              <button class="tool" type="button" data-prefix="## " title="Heading 2">H2</button>
+              <button class="tool" type="button" data-prefix="### " title="Heading 3">H3</button>
+              <button class="tool" type="button" data-prefix="- " title="Bulleted list">•</button>
+              <button class="tool" type="button" data-prefix="1. " title="Numbered list">1.</button>
+            </div>
+            <div class="toolbar-group" id="container-buttons"></div>
+            <div class="toolbar-group">
+              <button class="tool" type="button" id="more-inserts" aria-haspopup="menu" aria-expanded="false">Insert ▾</button>
+              <div id="insert-menu" class="menu" role="menu" hidden></div>
+            </div>
+            <div class="toolbar-group toolbar-right">
+              <button class="tool" type="button" id="rewrap" title="Rewrap the paragraph or selection to 80 columns (⌘⇧F)">Rewrap</button>
+              <label class="switch" title="Edit the file as raw text, front matter included">
+                <input id="raw-mode" type="checkbox" />
+                Raw
+              </label>
+            </div>
+          </div>
+
+          <textarea id="body" class="body" spellcheck="true" placeholder="Write here. Markdown, with raw HTML where you need a container."></textarea>
+
+          <div class="statusbar">
+            <span id="counts" class="muted"></span>
+            <span id="cursor-position" class="muted"></span>
+            <button id="toggle-problems" class="link-button" type="button" aria-expanded="false">Checks</button>
+          </div>
+          <ul id="problems" class="problems" hidden></ul>
+        </div>
+      </section>
+
+      <div class="gutter" data-resize="preview" role="separator" aria-orientation="vertical" tabindex="0" aria-label="Resize preview"></div>
+
+      <section id="preview" class="preview" aria-label="Preview">
+        <div class="preview-bar">
+          <span id="preview-url" class="muted"></span>
+          <span class="preview-bar-actions">
+            <button id="preview-width" class="tool" type="button" data-width="full" title="Preview width">Full</button>
+            <button id="preview-reload" class="tool" type="button" title="Reload the preview">⟳</button>
+            <a id="preview-open" class="tool" href="#" target="_blank" rel="noreferrer" title="Open in a new tab">↗</a>
+          </span>
+        </div>
+        <div id="preview-frame" class="preview-frame" data-width="full">
+          <iframe id="preview-iframe" title="Live preview" src="about:blank"></iframe>
+          <div id="preview-empty" class="preview-empty muted"></div>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="new-post-dialog" class="dialog">
+      <form id="new-post-form" method="dialog">
+        <h2>New post</h2>
+        <label class="field field-wide">
+          <span>Title</span>
+          <input name="title" type="text" required autofocus />
+        </label>
+        <div class="form">
+          <label class="field">
+            <span>Date</span>
+            <input name="date" type="date" required />
+          </label>
+          <label class="field">
+            <span>Slug</span>
+            <input name="slug" type="text" pattern="[a-z0-9]+(-[a-z0-9]+)*" />
+          </label>
+        </div>
+        <label class="field field-wide">
+          <span>Description</span>
+          <textarea name="description" rows="2"></textarea>
+        </label>
+        <label class="check">
+          <input name="unlisted" type="checkbox" checked />
+          <span>Start unlisted <small class="muted">— hidden from the home page and feeds until you clear this</small></span>
+        </label>
+        <p id="new-post-path" class="muted"></p>
+        <p id="new-post-error" class="error" hidden></p>
+        <menu class="dialog-actions">
+          <button type="button" value="cancel" class="button" data-close>Cancel</button>
+          <button type="submit" value="create" class="button button-primary">Create</button>
+        </menu>
+      </form>
+    </dialog>
+
+    <dialog id="insert-dialog" class="dialog">
+      <form id="insert-form" method="dialog">
+        <h2 id="insert-title">Insert</h2>
+        <p id="insert-hint" class="muted"></p>
+        <div id="insert-fields" class="form"></div>
+        <menu class="dialog-actions">
+          <button type="button" value="cancel" class="button" data-close>Cancel</button>
+          <button type="submit" value="insert" class="button button-primary">Insert</button>
+        </menu>
+      </form>
+    </dialog>
+
+    <script type="module" src="/writer.js"></script>
+  </body>
+</html>
