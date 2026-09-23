@@ -85,6 +85,7 @@ export async function getStaticPaths() {
   const pages = [
     { slug: 'home', title: 'Software Security Engineer' },
     { slug: 'about', title: 'About — Software Security' },
+    { slug: 'projects', title: 'Projects' },
     { slug: 'topics', title: 'Blog Topics' },
     ...topics.map((topic) => ({ slug: `topic-${topicSlug(topic)}`, title: `${topic} Posts` })),
   ];
