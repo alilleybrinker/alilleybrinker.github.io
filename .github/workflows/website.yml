@@ -30,6 +30,10 @@ jobs:
 
       - name: Build and upload website
         uses: withastro/action@v6
+        env:
+          # Lets the projects page read repos from the GitHub API without
+          # hitting the unauthenticated rate limit.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   #==========================================================================
   # Deploy the site to GitHub Pages

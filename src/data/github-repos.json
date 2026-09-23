@@ -1,0 +1,589 @@
+{
+  "fetchedAt": "2026-09-23T00:00:00Z",
+  "repos": [
+    {
+      "name": "algs",
+      "html_url": "https://github.com/alilleybrinker/algs",
+      "homepage": "",
+      "description": "Algorithms implemented in C, Rust, and Python",
+      "language": "Rust",
+      "stargazers_count": 1,
+      "pushed_at": "2022-05-03T23:50:25Z",
+      "fork": false,
+      "archived": false,
+      "topics": null
+    },
+    {
+      "name": "alilleybrinker",
+      "html_url": "https://github.com/alilleybrinker/alilleybrinker",
+      "homepage": null,
+      "description": "Personal README",
+      "language": null,
+      "stargazers_count": 0,
+      "pushed_at": "2026-09-18T02:51:04Z",
+      "fork": false,
+      "archived": false,
+      "topics": null
+    },
+    {
+      "name": "alilleybrinker.github.io",
+      "html_url": "https://github.com/alilleybrinker/alilleybrinker.github.io",
+      "homepage": "https://www.alilleybrinker.com/",
+      "description": null,
+      "language": "JavaScript",
+      "stargazers_count": 0,
+      "pushed_at": "2026-09-22T06:31:18Z",
+      "fork": false,
+      "archived": false,
+      "topics": null
+    },
+    {
+      "name": "andrew",
+      "html_url": "https://github.com/alilleybrinker/andrew",
+      "homepage": "",
+      "description": "Personal CLI to do things I want to do.",
+      "language": "Rust",
+      "stargazers_count": 1,
+      "pushed_at": "2025-02-21T23:44:28Z",
+      "fork": false,
+      "archived": false,
+      "topics": null
+    },
+    {
+      "name": "apricot",
+      "html_url": "https://github.com/alilleybrinker/apricot",
+      "homepage": null,
+      "description": "An app to learn iOS development.",
+      "language": "Swift",
+      "stargazers_count": 0,
+      "pushed_at": "2021-06-28T23:04:09Z",
+      "fork": false,
+      "archived": false,
+      "topics": null
+    },
+    {
+      "name": "bug-stories",
+      "html_url": "https://github.com/alilleybrinker/bug-stories",
+      "homepage": null,
+      "description": "Links to interesting reports on fixing bugs.",
+      "language": null,
+      "stargazers_count": 0,
+      "pushed_at": "2025-07-11T17:08:09Z",
+      "fork": false,
+      "archived": false,
+      "topics": null
+    },
+    {
+      "name": "cargo-spdx",
+      "html_url": "https://github.com/alilleybrinker/cargo-spdx",
+      "homepage": "https://crates.io/crates/cargo-spdx",
+      "description": "Generate an SPDX Software Bill of Materials for Rust crates.",
+      "language": "Rust",
+      "stargazers_count": 20,
+      "pushed_at": "2022-08-10T00:48:34Z",
+      "fork": false,
+      "archived": false,
+      "topics": [
+        "rust",
+        "sbom",
+        "spdx"
+      ]
+    },
+    {
+      "name": "coach",
+      "html_url": "https://github.com/alilleybrinker/coach",
+      "homepage": null,
+      "description": null,
+      "language": "Rust",
+      "stargazers_count": 0,
+      "pushed_at": "2026-09-19T18:35:43Z",
+      "fork": false,
+      "archived": false,
+      "topics": null
+    },
+    {
+      "name": "cwe-api",
+      "html_url": "https://github.com/alilleybrinker/cwe-api",
+      "homepage": "https://docs.rs/cwe-api",
+      "description": "Rust implementation of a CWE API consumer.",
+      "language": "Rust",
+      "stargazers_count": 1,
+      "pushed_at": "2024-08-23T18:59:23Z",
+      "fork": false,
+      "archived": false,
+      "topics": [
+        "cwe",
+        "rust"
+      ]
+    },
+    {
+      "name": "daydream",
+      "html_url": "https://github.com/alilleybrinker/daydream",
+      "homepage": "https://crates.io/crates/daydream",
+      "description": "Transparent, automatic syncing of in-memory data to/from SQLite",
+      "language": "Rust",
+      "stargazers_count": 0,
+      "pushed_at": "2024-03-04T02:38:07Z",
+      "fork": false,
+      "archived": false,
+      "topics": [
+        "rust",
+        "sqlite"
+      ]
+    },
+    {
+      "name": "dcalc",
+      "html_url": "https://github.com/alilleybrinker/dcalc",
+      "homepage": "",
+      "description": "Add and subtract durations to find out how long something takes.",
+      "language": "Rust",
+      "stargazers_count": 10,
+      "pushed_at": "2021-11-06T15:03:33Z",
+      "fork": false,
+      "archived": false,
+      "topics": [
+        "cli"
+      ]
+    },
+    {
+      "name": "deke",
+      "html_url": "https://github.com/alilleybrinker/deke",
+      "homepage": null,
+      "description": null,
+      "language": "Rust",
+      "stargazers_count": 0,
+      "pushed_at": "2024-07-26T22:55:52Z",
+      "fork": false,
+      "archived": false,
+      "topics": null
+    },
+    {
+      "name": "dieter",
+      "html_url": "https://github.com/alilleybrinker/dieter",
+      "homepage": null,
+      "description": null,
+      "language": "MDX",
+      "stargazers_count": 0,
+      "pushed_at": "2026-03-20T21:02:44Z",
+      "fork": false,
+      "archived": false,
+      "topics": null
+    },
+    {
+      "name": "domande",
+      "html_url": "https://github.com/alilleybrinker/domande",
+      "homepage": null,
+      "description": "A FAQ plugin for Wordpress.",
+      "language": "JavaScript",
+      "stargazers_count": 0,
+      "pushed_at": "2021-02-18T02:02:24Z",
+      "fork": false,
+      "archived": false,
+      "topics": null
+    },
+    {
+      "name": "dotfiles",
+      "html_url": "https://github.com/alilleybrinker/dotfiles",
+      "homepage": null,
+      "description": "Dotfiles",
+      "language": "Shell",
+      "stargazers_count": 0,
+      "pushed_at": "2024-03-03T19:42:22Z",
+      "fork": false,
+      "archived": false,
+      "topics": null
+    },
+    {
+      "name": "epss",
+      "html_url": "https://github.com/alilleybrinker/epss",
+      "homepage": null,
+      "description": "CLI and library for accessing the EPSS (Exploit Prediction Scoring System) API.",
+      "language": "Rust",
+      "stargazers_count": 0,
+      "pushed_at": "2022-05-11T02:23:32Z",
+      "fork": false,
+      "archived": false,
+      "topics": null
+    },
+    {
+      "name": "FindCargo.cmake",
+      "html_url": "https://github.com/alilleybrinker/FindCargo.cmake",
+      "homepage": "",
+      "description": "A CMake find module for Cargo.",
+      "language": "CMake",
+      "stargazers_count": 0,
+      "pushed_at": "2022-08-07T17:00:16Z",
+      "fork": false,
+      "archived": false,
+      "topics": [
+        "cargo",
+        "cmake"
+      ]
+    },
+    {
+      "name": "focaccia",
+      "html_url": "https://github.com/alilleybrinker/focaccia",
+      "homepage": null,
+      "description": "Internal Wordpress dev site for Alyssa.",
+      "language": "PHP",
+      "stargazers_count": 0,
+      "pushed_at": "2022-04-16T17:16:23Z",
+      "fork": false,
+      "archived": false,
+      "topics": null
+    },
+    {
+      "name": "gccarch",
+      "html_url": "https://github.com/alilleybrinker/gccarch",
+      "homepage": "https://crates.io/crates/gccarch",
+      "description": "Query info about architectures supported by GCC.",
+      "language": "Rust",
+      "stargazers_count": 0,
+      "pushed_at": "2022-04-27T18:44:30Z",
+      "fork": false,
+      "archived": false,
+      "topics": [
+        "gcc",
+        "rust"
+      ]
+    },
+    {
+      "name": "good-cat",
+      "html_url": "https://github.com/alilleybrinker/good-cat",
+      "homepage": "",
+      "description": "A cat that can't be piped. 🐱",
+      "language": "Shell",
+      "stargazers_count": 17,
+      "pushed_at": "2022-01-08T16:01:44Z",
+      "fork": false,
+      "archived": false,
+      "topics": [
+        "command-line-tool"
+      ]
+    },
+    {
+      "name": "guild",
+      "html_url": "https://github.com/alilleybrinker/guild",
+      "homepage": "",
+      "description": "Experiment: A Rust crate for sectioned output to a terminal.",
+      "language": "Rust",
+      "stargazers_count": 0,
+      "pushed_at": "2020-08-02T15:24:07Z",
+      "fork": false,
+      "archived": false,
+      "topics": null
+    },
+    {
+      "name": "intro-to-rust",
+      "html_url": "https://github.com/alilleybrinker/intro-to-rust",
+      "homepage": null,
+      "description": null,
+      "language": "Rust",
+      "stargazers_count": 0,
+      "pushed_at": "2026-09-02T15:49:54Z",
+      "fork": false,
+      "archived": false,
+      "topics": null
+    },
+    {
+      "name": "langs-in-rust",
+      "html_url": "https://github.com/alilleybrinker/langs-in-rust",
+      "homepage": "",
+      "description": "A list of programming languages implemented in Rust, for inspiration.",
+      "language": "Rust",
+      "stargazers_count": 1030,
+      "pushed_at": "2026-09-18T04:54:10Z",
+      "fork": false,
+      "archived": false,
+      "topics": [
+        "programming-language",
+        "rust"
+      ]
+    },
+    {
+      "name": "ml",
+      "html_url": "https://github.com/alilleybrinker/ml",
+      "homepage": null,
+      "description": "Repository for Machine Learning class.",
+      "language": "Jupyter Notebook",
+      "stargazers_count": 0,
+      "pushed_at": "2022-07-08T00:18:26Z",
+      "fork": false,
+      "archived": false,
+      "topics": null
+    },
+    {
+      "name": "new_york",
+      "html_url": "https://github.com/alilleybrinker/new_york",
+      "homepage": "https://crates.io/crates/new_york",
+      "description": "Home of the one dollar slice.",
+      "language": "Rust",
+      "stargazers_count": 0,
+      "pushed_at": "2022-05-24T14:46:17Z",
+      "fork": false,
+      "archived": false,
+      "topics": null
+    },
+    {
+      "name": "notes",
+      "html_url": "https://github.com/alilleybrinker/notes",
+      "homepage": "",
+      "description": "A repo for public notes which I haven't found a home for elsewhere.",
+      "language": null,
+      "stargazers_count": 0,
+      "pushed_at": "2024-04-12T23:38:54Z",
+      "fork": false,
+      "archived": false,
+      "topics": null
+    },
+    {
+      "name": "olio",
+      "html_url": "https://github.com/alilleybrinker/olio",
+      "homepage": null,
+      "description": "Theme for Alyssa's blog",
+      "language": "CSS",
+      "stargazers_count": 0,
+      "pushed_at": "2021-03-15T00:52:54Z",
+      "fork": false,
+      "archived": false,
+      "topics": null
+    },
+    {
+      "name": "pathbuf",
+      "html_url": "https://github.com/alilleybrinker/pathbuf",
+      "homepage": "",
+      "description": "A convenient macro for building PathBufs in Rust.",
+      "language": "Rust",
+      "stargazers_count": 7,
+      "pushed_at": "2026-09-21T14:03:27Z",
+      "fork": false,
+      "archived": false,
+      "topics": [
+        "rust",
+        "rust-macro"
+      ]
+    },
+    {
+      "name": "possiblerust",
+      "html_url": "https://github.com/alilleybrinker/possiblerust",
+      "homepage": "https://www.possiblerust.com",
+      "description": "Teaching Rust, sharing patterns, and exploring real-world code.",
+      "language": "HTML",
+      "stargazers_count": 14,
+      "pushed_at": "2026-03-13T21:24:41Z",
+      "fork": false,
+      "archived": false,
+      "topics": [
+        "blog",
+        "learning",
+        "rust"
+      ]
+    },
+    {
+      "name": "pr",
+      "html_url": "https://github.com/alilleybrinker/pr",
+      "homepage": "https://www.possiblerust.com",
+      "description": "The underlying code for Possible Rust.",
+      "language": "SCSS",
+      "stargazers_count": 0,
+      "pushed_at": "2026-03-13T21:21:36Z",
+      "fork": false,
+      "archived": false,
+      "topics": null
+    },
+    {
+      "name": "prodotto",
+      "html_url": "https://github.com/alilleybrinker/prodotto",
+      "homepage": "",
+      "description": "A Wordpress plugin for managing products.",
+      "language": "JavaScript",
+      "stargazers_count": 0,
+      "pushed_at": "2021-03-14T00:15:53Z",
+      "fork": false,
+      "archived": false,
+      "topics": null
+    },
+    {
+      "name": "programming-languages-course",
+      "html_url": "https://github.com/alilleybrinker/programming-languages-course",
+      "homepage": "",
+      "description": "The website and materials for CSE 320 at CSU, San Bernardino in spring 2017.",
+      "language": "HTML",
+      "stargazers_count": 1,
+      "pushed_at": "2017-12-02T01:21:21Z",
+      "fork": false,
+      "archived": false,
+      "topics": null
+    },
+    {
+      "name": "refurb",
+      "html_url": "https://github.com/alilleybrinker/refurb",
+      "homepage": "",
+      "description": "Utility trait for configuration types.",
+      "language": "Rust",
+      "stargazers_count": 0,
+      "pushed_at": "2024-06-17T09:18:13Z",
+      "fork": false,
+      "archived": false,
+      "topics": null
+    },
+    {
+      "name": "replace_err",
+      "html_url": "https://github.com/alilleybrinker/replace_err",
+      "homepage": "",
+      "description": "Adds Result::replace_err in Rust.",
+      "language": "Rust",
+      "stargazers_count": 1,
+      "pushed_at": "2024-01-02T20:34:53Z",
+      "fork": false,
+      "archived": false,
+      "topics": [
+        "error-handling",
+        "rust"
+      ]
+    },
+    {
+      "name": "rustconf-2024-talk",
+      "html_url": "https://github.com/alilleybrinker/rustconf-2024-talk",
+      "homepage": "https://sessionize.com/rustconf-2024",
+      "description": "Collaboration on RustConf 2024 talk proposal for OmniBOR.",
+      "language": null,
+      "stargazers_count": 0,
+      "pushed_at": "2024-04-24T21:15:27Z",
+      "fork": false,
+      "archived": false,
+      "topics": null
+    },
+    {
+      "name": "semver-explain",
+      "html_url": "https://github.com/alilleybrinker/semver-explain",
+      "homepage": "https://crates.io/crates/semver-explain",
+      "description": "Explain semver requirements by converting them into less than, greater than, and/or equal to form.",
+      "language": "Rust",
+      "stargazers_count": 33,
+      "pushed_at": "2024-01-26T21:36:43Z",
+      "fork": false,
+      "archived": false,
+      "topics": [
+        "cli",
+        "semver"
+      ]
+    },
+    {
+      "name": "shy",
+      "html_url": "https://github.com/alilleybrinker/shy",
+      "homepage": "",
+      "description": "An extremely simple Bash static site generator.",
+      "language": "Shell",
+      "stargazers_count": 0,
+      "pushed_at": "2022-12-28T19:00:52Z",
+      "fork": false,
+      "archived": false,
+      "topics": [
+        "bash",
+        "static-site-generator"
+      ]
+    },
+    {
+      "name": "skej",
+      "html_url": "https://github.com/alilleybrinker/skej",
+      "homepage": null,
+      "description": "A little analyzer for concurrent schedules.",
+      "language": "Rust",
+      "stargazers_count": 0,
+      "pushed_at": "2021-10-26T13:03:09Z",
+      "fork": false,
+      "archived": false,
+      "topics": null
+    },
+    {
+      "name": "softwareids",
+      "html_url": "https://github.com/alilleybrinker/softwareids",
+      "homepage": "https://www.alilleybrinker.com/softwareids/",
+      "description": "List of software identifier formats.",
+      "language": "JavaScript",
+      "stargazers_count": 1,
+      "pushed_at": "2026-09-21T13:44:07Z",
+      "fork": false,
+      "archived": false,
+      "topics": null
+    },
+    {
+      "name": "sprout",
+      "html_url": "https://github.com/alilleybrinker/sprout",
+      "homepage": "",
+      "description": "Experimental web publishing software.",
+      "language": "Rust",
+      "stargazers_count": 0,
+      "pushed_at": "2023-12-23T18:30:43Z",
+      "fork": false,
+      "archived": false,
+      "topics": null
+    },
+    {
+      "name": "tactics",
+      "html_url": "https://github.com/alilleybrinker/tactics",
+      "homepage": "",
+      "description": null,
+      "language": "Rust",
+      "stargazers_count": 0,
+      "pushed_at": "2022-07-20T04:36:30Z",
+      "fork": false,
+      "archived": false,
+      "topics": null
+    },
+    {
+      "name": "tagbuddy",
+      "html_url": "https://github.com/alilleybrinker/tagbuddy",
+      "homepage": "",
+      "description": "Lightweight tagged data library.",
+      "language": "Rust",
+      "stargazers_count": 0,
+      "pushed_at": "2026-09-21T06:45:59Z",
+      "fork": false,
+      "archived": false,
+      "topics": null
+    },
+    {
+      "name": "tilde",
+      "html_url": "https://github.com/alilleybrinker/tilde",
+      "homepage": "https://alilleybrinker.tilde.institute",
+      "description": "Personal website.",
+      "language": "HTML",
+      "stargazers_count": 0,
+      "pushed_at": "2022-05-26T15:57:09Z",
+      "fork": false,
+      "archived": false,
+      "topics": null
+    },
+    {
+      "name": "tin",
+      "html_url": "https://github.com/alilleybrinker/tin",
+      "homepage": "",
+      "description": "🥫 ",
+      "language": "Rust",
+      "stargazers_count": 2,
+      "pushed_at": "2025-05-22T22:01:22Z",
+      "fork": false,
+      "archived": false,
+      "topics": [
+        "programming-language"
+      ]
+    },
+    {
+      "name": "woah",
+      "html_url": "https://github.com/alilleybrinker/woah",
+      "homepage": "https://docs.rs/woah/",
+      "description": "A Result type that differentiates between local errors (which can be handled) and fatal errors (which can't)",
+      "language": "Rust",
+      "stargazers_count": 22,
+      "pushed_at": "2026-09-21T01:41:44Z",
+      "fork": false,
+      "archived": false,
+      "topics": [
+        "error-handling",
+        "rust"
+      ]
+    }
+  ]
+}

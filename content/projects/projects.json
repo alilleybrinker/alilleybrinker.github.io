@@ -1,0 +1,47 @@
+{
+  "activeMonths": 6,
+  "pinned": [
+    "possiblerust"
+  ],
+  "hidden": [
+    "alilleybrinker",
+    "alilleybrinker.github.io",
+    "cargo-spdx",
+    "daydream"
+  ],
+  "links": {
+    "possiblerust": "https://www.possiblerust.com",
+    "softwareids": "https://www.alilleybrinker.com/softwareids/",
+    "woah": "https://docs.rs/woah/"
+  },
+  "earlier": [
+    {
+      "name": "hipcheck",
+      "url": "https://github.com/mitre/hipcheck",
+      "description": "Supply-chain risk analysis for dependencies. Founded and led at MITRE.",
+      "note": "handed off"
+    },
+    {
+      "name": "omnibor-rs",
+      "url": "https://github.com/omnibor/omnibor-rs",
+      "description": "Rust library and CLI for OmniBOR.",
+      "note": "handed off"
+    },
+    {
+      "name": "semver-explain",
+      "description": "Explain semver requirements in plain comparison form."
+    },
+    {
+      "name": "cwe-api",
+      "description": "A Rust client for the CWE API."
+    },
+    {
+      "name": "good-cat",
+      "description": "A cat that can’t be piped."
+    },
+    {
+      "name": "dcalc",
+      "description": "Add and subtract durations."
+    }
+  ]
+}

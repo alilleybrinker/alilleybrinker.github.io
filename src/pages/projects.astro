@@ -1,0 +1,441 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getProjects } from "../lib/github";
+
+const { active, earlier } = await getProjects();
+// Rubber date stamp format, e.g. "21 SEP 2026".
+const formatStamp = (date: Date) =>
+    `${String(date.getUTCDate()).padStart(2, "0")} ${date
+        .toLocaleString("en-US", { month: "short", timeZone: "UTC" })
+        .toUpperCase()} ${date.getUTCFullYear()}`;
+const formatStars = new Intl.NumberFormat("en-US");
+---
+
+<BaseLayout
+    title="Projects"
+    description="Open source software Andrew Lilley Brinker is working on."
+    canonical={new URL("/projects/", Astro.site)}
+    socialImage="/social/projects.png"
+    socialImageAlt="Projects"
+>
+    <h1>Projects</h1>
+    <p>
+        Open source I’m working on right now, mostly small Rust libraries and a
+        few long-running lists. Everything else is on <a
+            href="https://github.com/alilleybrinker">GitHub</a
+        >.
+    </p>
+
+    <section aria-labelledby="workbench-heading" class="not-prose mt-12">
+        <div class="mb-7 flex flex-wrap items-center justify-between gap-4">
+            <h2
+                id="workbench-heading"
+                class="font-sans text-sm font-semibold uppercase tracking-widest text-slate-400 dark:text-neutral-400"
+            >
+                On the Workbench
+            </h2>
+            <button
+                type="button"
+                class="project-deal inline-flex cursor-pointer items-center gap-2 rounded-md border border-gray-200 px-3 py-2 font-sans text-sm leading-none text-neutral-500 hover:border-transparent hover:bg-blue-100 hover:text-black dark:border-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-white"
+                data-project-deal
+                hidden
+            >
+                <svg viewBox="0 0 16 16" class="size-3.5" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 5h9l-2-2M14 11H5l2 2"></path></svg>
+                Deal again
+            </button>
+        </div>
+        <ul class="project-table list-none p-0" data-project-table>
+            {
+                active.map((project) => (
+                    <li class="project-card-slot">
+                        <a
+                            class="project-card group flex h-full flex-col rounded-md bg-white shadow-sm dark:bg-neutral-800"
+                            href={project.url}
+                        >
+                            <span class="project-plate relative block border-b border-gray-200 dark:border-neutral-700">
+                                <canvas
+                                    width="96"
+                                    height="72"
+                                    aria-hidden="true"
+                                    data-project-plate={project.name}
+                                />
+                                <time
+                                    class:list={[
+                                        "project-stamp",
+                                        { "project-stamp-fresh": project.fresh },
+                                    ]}
+                                    datetime={project.pushedAt.toISOString()}
+                                    title="Last pushed"
+                                >
+                                    <span class="sr-only">Last pushed </span>
+                                    {formatStamp(project.pushedAt)}
+                                </time>
+                            </span>
+                            <span class="flex flex-1 flex-col gap-2 p-4">
+                                <span class="flex items-center gap-2">
+                                    <span class="project-name font-mono text-base font-semibold text-black dark:text-white">
+                                        {project.name}
+                                    </span>
+                                    <span
+                                        aria-hidden="true"
+                                        class="project-arrow ml-auto text-neutral-400"
+                                    >
+                                        ↗
+                                    </span>
+                                </span>
+                                <span class="-mt-1.5 text-xs text-neutral-400">
+                                    <span aria-label={`${project.stars} stars`}>
+                                        ★ {formatStars.format(project.stars)}
+                                    </span>
+                                    {project.language && <> · {project.language}</>}
+                                    {project.site && (
+                                        <>
+                                            {" · "}
+                                            <span class="topic-link text-neutral-500 dark:text-neutral-300">
+                                                {project.site}
+                                            </span>
+                                        </>
+                                    )}
+                                </span>
+                                <span class="text-sm leading-relaxed text-pretty text-neutral-500 dark:text-neutral-400">
+                                    {project.description}
+                                </span>
+                                {project.topics.length > 0 && (
+                                    <span class="mt-auto flex flex-wrap gap-1.5 pt-2">
+                                        {project.topics.map((topic) => (
+                                            <span class="rounded-sm bg-stone-200 px-1.5 py-0.5 text-[11px] font-semibold text-stone-700 dark:bg-neutral-700 dark:text-neutral-200">
+                                                {topic}
+                                            </span>
+                                        ))}
+                                    </span>
+                                )}
+                            </span>
+                        </a>
+                    </li>
+                ))
+            }
+        </ul>
+    </section>
+
+    <section aria-labelledby="earlier-heading" class="not-prose mt-16">
+        <h2
+            id="earlier-heading"
+            class="mb-4 font-sans text-sm font-semibold uppercase tracking-widest text-slate-400 dark:text-neutral-400"
+        >
+            Earlier &amp; Elsewhere
+        </h2>
+        <ul class="list-none divide-y divide-gray-200 p-0 dark:divide-neutral-700">
+            {
+                earlier.map((project) => (
+                    <li class="flex items-baseline gap-3 py-2.5">
+                        <canvas
+                            width="16"
+                            height="16"
+                            aria-hidden="true"
+                            class="project-mini-plate relative top-0.5 shrink-0"
+                            data-project-plate={project.name}
+                        />
+                        <span class="min-w-0 flex-1 text-sm">
+                            <a
+                                href={project.url}
+                                class="mr-2 font-mono font-semibold text-black hover:underline dark:text-white"
+                            >
+                                {project.name}
+                            </a>
+                            <span class="text-neutral-500 dark:text-neutral-400">
+                                {project.description}
+                            </span>
+                        </span>
+                        <span class="shrink-0 text-sm tabular-nums text-neutral-400">
+                            {project.note}
+                        </span>
+                    </li>
+                ))
+            }
+        </ul>
+    </section>
+</BaseLayout>
+
+<style is:global>
+    .project-table {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1.75rem 1.375rem;
+        margin: 0;
+    }
+
+    @media (max-width: 720px) {
+        .project-table {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 460px) {
+        .project-table {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+
+    .project-card {
+        --tilt: 0deg;
+        --shift-x: 0px;
+        --shift-y: 0px;
+        position: relative;
+        transform: translate(var(--shift-x), var(--shift-y)) rotate(var(--tilt));
+        transition:
+            transform 320ms cubic-bezier(0.3, 1.4, 0.5, 1),
+            box-shadow 200ms ease-out;
+    }
+
+    .project-card:hover,
+    .project-card:focus-visible {
+        z-index: 1;
+        transform: translateY(-4px) rotate(0deg);
+        box-shadow: 0 14px 30px -12px rgb(0 0 0 / 0.25);
+    }
+
+    .dark .project-card:hover,
+    .dark .project-card:focus-visible {
+        box-shadow: 0 16px 34px -12px rgb(0 0 0 / 0.7);
+    }
+
+    .project-card:focus-visible {
+        outline: 2px solid #0560ff;
+        outline-offset: 3px;
+    }
+
+    .project-plate {
+        aspect-ratio: 4 / 3;
+        overflow: hidden;
+        border-radius: 0.375rem 0.375rem 0 0;
+    }
+
+    @media (max-width: 460px) {
+        .project-plate {
+            aspect-ratio: 5 / 2;
+        }
+    }
+
+    .project-plate canvas,
+    .project-mini-plate {
+        display: block;
+        image-rendering: pixelated;
+    }
+
+    .project-plate canvas {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .project-mini-plate {
+        width: 1rem;
+        height: 1rem;
+        border-radius: 2px;
+    }
+
+    .project-stamp {
+        position: absolute;
+        top: 0.625rem;
+        right: 0.625rem;
+        padding: 0.3rem 0.45rem 0.25rem;
+        border: 1.5px solid currentColor;
+        border-radius: 3px;
+        background: white;
+        color: var(--color-neutral-500);
+        font-family: var(--font-mono);
+        font-size: 0.625rem;
+        font-weight: 600;
+        line-height: 1;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        transform: rotate(4deg);
+    }
+
+    .dark .project-stamp {
+        background: var(--color-neutral-800);
+        color: var(--color-neutral-400);
+    }
+
+    .project-stamp.project-stamp-fresh {
+        color: #0560ff;
+    }
+
+    .dark .project-stamp.project-stamp-fresh {
+        color: #5b93ff;
+    }
+
+    .project-card:hover .project-name,
+    .project-card:focus-visible .project-name,
+    .project-card:hover .project-arrow {
+        color: #0560ff;
+    }
+
+    .dark .project-card:hover .project-name,
+    .dark .project-card:focus-visible .project-name,
+    .dark .project-card:hover .project-arrow {
+        color: #5b93ff;
+    }
+
+    .project-arrow {
+        transition: transform 200ms;
+    }
+
+    .project-card:hover .project-arrow {
+        transform: translate(2px, -2px);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .project-card,
+        .project-arrow {
+            transition: none;
+        }
+    }
+</style>
+
+<script>
+    // Each project gets a dithered "plate" generated from its name, matching the
+    // dithered portrait on the About page. Plates turn blue and shimmer on hover.
+    const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map(
+        (value) => (value + 0.5) / 16,
+    );
+    const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
+
+    function hash(text: string) {
+        let h = 2166136261;
+        for (const char of text) {
+            h ^= char.charCodeAt(0);
+            h = Math.imul(h, 16777619);
+        }
+        return h >>> 0;
+    }
+
+    function random(seed: number) {
+        return () => {
+            seed = (seed + 0x6d2b79f5) | 0;
+            let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+            t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+            return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+    }
+
+    function palette(hot: boolean) {
+        const dark = document.documentElement.classList.contains("dark");
+        const ink = hot
+            ? dark ? [91, 147, 255] : [5, 96, 255]
+            : dark ? [241, 241, 241] : [11, 11, 12];
+        const paper = dark ? [38, 38, 38] : [255, 255, 255];
+        return { ink, paper };
+    }
+
+    function drawPlate(canvas: HTMLCanvasElement, hot = false, phase = 0) {
+        const name = canvas.dataset.projectPlate ?? "";
+        const { width, height } = canvas;
+        const context = canvas.getContext("2d");
+        if (!context) return;
+        const next = random(hash(name));
+        const blobs = Array.from({ length: 4 }, () => ({
+            x: next() * width,
+            y: next() * height,
+            size: (0.25 + next() * 0.45) * width,
+            weight: next() < 0.3 ? -0.6 : 1,
+        }));
+        const angle = next() * Math.PI * 2;
+        const ripple = 3 + next() * 6;
+        const field = new Float32Array(width * height);
+        let low = Infinity;
+        let high = -Infinity;
+        for (let y = 0; y < height; y++) {
+            for (let x = 0; x < width; x++) {
+                let value = 0;
+                for (const blob of blobs) {
+                    const distance = Math.hypot(x - blob.x, y - blob.y) / blob.size;
+                    value += blob.weight * Math.exp(-distance * distance);
+                }
+                value += 0.18 * Math.sin((x * Math.cos(angle) + y * Math.sin(angle)) / ripple + phase);
+                field[y * width + x] = value;
+                low = Math.min(low, value);
+                high = Math.max(high, value);
+            }
+        }
+        const { ink, paper } = palette(hot);
+        const image = context.createImageData(width, height);
+        for (let y = 0; y < height; y++) {
+            for (let x = 0; x < width; x++) {
+                const level = 0.04 + 0.62 * Math.pow((field[y * width + x] - low) / (high - low || 1), 1.4);
+                const color = level > BAYER[(y & 3) * 4 + (x & 3)] ? ink : paper;
+                const offset = (y * width + x) * 4;
+                image.data.set([...color, 255], offset);
+            }
+        }
+        context.putImageData(image, 0, 0);
+    }
+
+    function drawAll() {
+        document
+            .querySelectorAll<HTMLCanvasElement>("canvas[data-project-plate]")
+            .forEach((canvas) => drawPlate(canvas));
+    }
+
+    document.querySelectorAll<HTMLAnchorElement>(".project-card").forEach((card) => {
+        const canvas = card.querySelector<HTMLCanvasElement>("canvas[data-project-plate]");
+        if (!canvas) return;
+        let frame = 0;
+        let start: number | undefined;
+        const loop = (time: number) => {
+            start ??= time;
+            drawPlate(canvas, true, (time - start) / 400);
+            frame = requestAnimationFrame(loop);
+        };
+        const enter = () => {
+            if (reduceMotion.matches) return drawPlate(canvas, true);
+            start = undefined;
+            frame = requestAnimationFrame(loop);
+        };
+        const leave = () => {
+            cancelAnimationFrame(frame);
+            drawPlate(canvas);
+        };
+        card.addEventListener("mouseenter", enter);
+        card.addEventListener("focus", enter);
+        card.addEventListener("mouseleave", leave);
+        card.addEventListener("blur", leave);
+    });
+
+    // Cards sit slightly askew, like index cards on a table, and straighten on
+    // hover. "Deal again" reshuffles their order and tilt, purely for fun.
+    const table = document.querySelector<HTMLElement>("[data-project-table]");
+    const dealButton = document.querySelector<HTMLButtonElement>("[data-project-deal]");
+    let deals = 0;
+
+    function tilt() {
+        table?.querySelectorAll<HTMLElement>(".project-card").forEach((card) => {
+            const next = random(hash(card.getAttribute("href") ?? "") + deals * 977);
+            card.style.setProperty("--tilt", `${((next() * 2 - 1) * 3.2).toFixed(2)}deg`);
+            card.style.setProperty("--shift-y", `${((next() * 2 - 1) * 6).toFixed(1)}px`);
+            card.style.setProperty("--shift-x", `${((next() * 2 - 1) * 4).toFixed(1)}px`);
+        });
+    }
+
+    if (table && dealButton) {
+        dealButton.hidden = false;
+        dealButton.addEventListener("click", () => {
+            deals++;
+            const next = random(deals * 31);
+            const slots = [...table.children];
+            for (let i = slots.length - 1; i > 0; i--) {
+                const j = Math.floor(next() * (i + 1));
+                [slots[i], slots[j]] = [slots[j], slots[i]];
+            }
+            table.replaceChildren(...slots);
+            tilt();
+        });
+    }
+
+    tilt();
+    drawAll();
+    new MutationObserver(drawAll).observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["class"],
+    });
+</script>
