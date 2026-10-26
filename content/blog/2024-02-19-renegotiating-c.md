@@ -159,7 +159,7 @@ sitting with other programming language geeks at a conference years ago. In the 
 he explains, happily, that Haskell is useless, but is slowly becoming more useful.
 In the video, the other participants, themselves major contributors to other languages,
 jump in with their own funny anecdotes and comments. When I first watched this in my
-early 20's I thought it was kinda silly, kinda funny. What I see now is that all of
+early 20s I thought it was kinda silly, kinda funny. What I see now is that all of
 these people were _friends_. They weren't competitors; in fact they readily copy
 each other and learn from each other. In the video they talk about how Haskell
 learned things from C#!

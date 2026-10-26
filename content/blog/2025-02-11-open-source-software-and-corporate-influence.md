@@ -33,7 +33,7 @@ incentives and the mechanisms of hard and soft power do not change.
 
 ## A Brief History
 
-Open source software originated in the late 1990's as an outgrowth of and
+Open source software originated in the late 1990s as an outgrowth of and
 response to the free software movement, with a particular focus on being more
 appealing to commercial interests. Free software, both in attitude and in the
 terms of its common licenses, was unusable for many corporations; copyleft
@@ -47,7 +47,7 @@ point for a loose coalition of ideologues who believed in the virtues of free
 achieve an impact which license isolationism, while idealistic, would fail to
 reach.
 
-Over the next 10 years, through the early 2000's, open source saw massive
+Over the next 10 years, through the early 2000s, open source saw massive
 growth as an ecosystem of projects, and as an _idea_ with a shared definition
 and commonly-held social norms. The ["Open Source Definition,"] managed by the [Open Source Initiative], was codified in 1997, establishing clearly what qualifies a
 project as "open source."

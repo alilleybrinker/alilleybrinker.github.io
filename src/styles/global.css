@@ -7,12 +7,14 @@
 @import "@fontsource-variable/public-sans/wght-italic.css";
 @import "@fontsource/merriweather/400.css";
 @import "@fontsource/merriweather/700.css";
+@import "@fontsource-variable/jetbrains-mono/wght.css";
 
 @plugin "@tailwindcss/typography";
 
 @theme {
   --font-sans: "Public Sans Variable", sans-serif;
   --font-display: "Merriweather", serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
   /* The palette is grayscale, with one accent color. */
   --color-accent: #0560ff;
@@ -159,9 +161,7 @@ html {
 
 .topic-link {
   text-decoration-line: underline;
-  text-decoration-thickness: 1px;
   text-decoration-color: var(--color-rule);
-  text-underline-offset: 2px;
 }
 
 .topic-link:hover,
@@ -282,7 +282,67 @@ a:hover .topic-badge {
 }
 
 /* Post text is held to about 70 characters a line, which reads more easily than
-   the full column. Code, figures, tables and asides keep the full width. */
+   the full column. Code, figures, tables and asides keep the full width. In
+   that narrower column, hyphenation evens out the ragged right edge; only
+   words of seven or more letters break, leaving at least three on each side. */
 .post-body > :where(p, ul, ol, dl, blockquote) {
   max-width: 34em;
+  hyphens: auto;
+  hyphenate-limit-chars: 7 3 3;
+}
+
+/* Code is set in JetBrains Mono, without its programming ligatures, so code
+   reads exactly as typed. Its x-height is 0.55 of its size; holding fallback
+   fonts to the same keeps code the same size if the font hasn't loaded. */
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--font-mono);
+  font-variant-ligatures: none;
+  font-size-adjust: 0.55;
+  /* Identifiers are never broken with a hyphen. */
+  hyphens: manual;
+}
+
+/* Em dashes are closed up with a hair of space on either side (see
+   src/lib/typeset.ts). */
+.em-dash {
+  margin-inline: 0.08em;
+}
+
+/* Headings and titles that wrap split into lines of similar length, rather
+   than leaving one word on the last line. */
+h1,
+h2,
+h3,
+h4,
+[data-post-title] {
+  text-wrap: balance;
+}
+
+/* Underlines scale with the text, so they sit as well under a heading as
+   under body text. At body size these match the 1px line and 2px offset. */
+a,
+.topic-link {
+  text-underline-offset: 0.12em;
+  text-decoration-thickness: max(1px, 0.055em);
+}
+
+/* Paragraphs and quotes that open with a quotation mark pull it into the margin
+   by its width in Public Sans, so the text's left edge stays straight. The
+   classes come from src/lib/typeset.ts. */
+.hang-double {
+  text-indent: -0.419em;
+}
+
+.hang-single {
+  text-indent: -0.239em;
+}
+
+/* Large Merriweather titles are set a little tighter than its default
+   spacing, which is drawn for text sizes. */
+.prose h1 .font-display,
+.prose h1:not(:has(.font-display)) {
+  letter-spacing: -0.015em;
 }

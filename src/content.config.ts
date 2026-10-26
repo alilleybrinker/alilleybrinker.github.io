@@ -1,9 +1,12 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { typesetText } from './lib/typeset';
 
 const postSchema = z.object({
-  title: z.string(),
-  description: z.string().optional(),
+  // Front matter skips Markdown's smart quotes, so titles and descriptions are
+  // typeset here, once, for everywhere they appear.
+  title: z.string().transform(typesetText),
+  description: z.string().transform(typesetText).optional(),
   externalUrl: z.string().url().optional(),
   publication: z.string().optional(),
   publicationTitle: z.string().optional(),
