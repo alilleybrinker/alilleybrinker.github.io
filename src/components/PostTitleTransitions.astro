@@ -1,0 +1,33 @@
+<script>
+  // Morphs a post's title between a list and the post's heading, which is named
+  // post-title on every post page. Only the one list title a navigation involves
+  // gets the name: each named element is captured separately, and two elements
+  // can't share a name.
+  import type { TransitionBeforePreparationEvent, TransitionBeforeSwapEvent } from 'astro:transitions/client';
+
+  const name = 'post-title';
+  const titles = (root: ParentNode) => [...root.querySelectorAll<HTMLElement>('[data-post-title]')];
+  let clicked: { path: string; index: number } | undefined;
+
+  // Leaving a list for a post: name the title that was clicked.
+  document.addEventListener('astro:before-preparation', (event) => {
+    const { sourceElement } = event as TransitionBeforePreparationEvent;
+    const listed = titles(document);
+    listed.forEach((title) => title.style.removeProperty('view-transition-name'));
+    const title = sourceElement?.closest('a')?.querySelector<HTMLElement>('[data-post-title]');
+    if (!title) return;
+    title.style.viewTransitionName = name;
+    clicked = { path: location.pathname, index: listed.indexOf(title) };
+  });
+
+  // Coming back to a list from a post: name the title that was clicked to get
+  // there, or else the first one linking to that post.
+  document.addEventListener('astro:before-swap', (event) => {
+    const { from, to, newDocument } = event as TransitionBeforeSwapEvent;
+    const listed = titles(newDocument);
+    const matching = listed.filter((title) => title.closest('a')?.getAttribute('href') === from.pathname);
+    const remembered = clicked?.path === to.pathname ? listed[clicked.index] : undefined;
+    const title = remembered && matching.includes(remembered) ? remembered : matching[0];
+    if (title) title.style.viewTransitionName = name;
+  });
+</script>

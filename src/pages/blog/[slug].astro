@@ -45,14 +45,15 @@ const structuredData = {
 
 <BaseLayout title={post.data.title} description={post.data.description} canonical={canonical} type="article" socialImage={socialImage} socialImageAlt={post.data.title} structuredData={structuredData} standardDocumentUri={standardSite.documents[postSlug(post)]} markdown={markdown}>
   <article>
-    <h1 class="block mb-5 text-3xl md:text-4xl"><span class="leading-snug block mb-4 font-display" transition:name={`post-title-${postSlug(post)}`}>{post.data.title}</span><span class="font-sans flex flex-wrap items-center gap-2 text-sm md:text-base text-neutral-500"><span>{date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</span><span class="font-black text-neutral-400">·</span><span>Read in {readingTime} minutes</span>{topics.length > 0 && <><span class="font-black text-neutral-400">·</span><span>Topics: {topics.map((topic, index) => <><a class="!text-neutral-500" href={`/topics/${topic.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}/`}>{topic}</a>{index < topics.length - 1 && ', '}</>)}</span></>}</span></h1>
+    <h1 class="block mb-5 text-3xl md:text-4xl"><span class="leading-snug block mb-4 font-display [view-transition-name:post-title]">{post.data.title}</span><span class="font-sans flex flex-wrap items-center gap-2 text-sm md:text-base text-neutral-500"><span>{date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</span><span class="font-black text-neutral-400">·</span><span>Read in {readingTime} minutes</span>{topics.length > 0 && <><span class="font-black text-neutral-400">·</span><span>Topics: {topics.map((topic, index) => <><a class="!text-neutral-500" href={`/topics/${topic.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}/`}>{topic}</a>{index < topics.length - 1 && ', '}</>)}</span></>}</span></h1>
     {post.data.extra.toc && headings.length > 0 && (
-      <details id="table-of-contents" aria-label="Table of contents" class="group not-prose sticky top-0 z-10 mb-10 w-full rounded-lg border-2 border-dashed border-blue-100 bg-blue-50 font-sans text-sm transition-[width,translate,box-shadow] duration-300 ease-out motion-reduce:transition-none open:!border-solid open:!border-white open:!bg-white dark:border-neutral-700 dark:bg-neutral-800 dark:open:!border-neutral-700 dark:open:!bg-neutral-800">
-        <summary class="flex w-full cursor-pointer list-none items-center justify-between gap-2 px-4 py-3 font-semibold text-neutral-900 transition-[padding] duration-200 ease-out [&::-webkit-details-marker]:hidden dark:text-neutral-100 dark:open:!text-neutral-100">
+      <div id="table-of-contents-sentinel" aria-hidden="true"></div>
+      <details id="table-of-contents" aria-label="Table of contents" class="group not-prose sticky top-0 z-10 mb-10 w-full font-sans text-sm">
+        <summary class="flex w-full cursor-pointer list-none items-center justify-between gap-2 px-4 py-3 font-semibold text-neutral-900 [&::-webkit-details-marker]:hidden dark:text-neutral-100 dark:open:!text-neutral-100">
           Table of contents
           <span aria-hidden="true" class="text-sm transition-transform duration-200 ease-out group-open:rotate-180">▾</span>
         </summary>
-        <nav class="max-h-[calc(100vh-1rem)] w-full overflow-y-auto px-4 pb-6 transition-[padding] duration-200 ease-out" aria-label="Article sections">
+        <nav class="max-h-[calc(100vh-1rem)] w-full overflow-y-auto px-4 pb-6" aria-label="Article sections">
           <ol class="list-none space-y-2 text-neutral-700 dark:group-open:!text-neutral-200">
             {headings.map((heading) => (
               <li class:list={{ 'flex gap-2': true, 'ml-4': heading.depth === 3, 'ml-8': heading.depth >= 4 }}>
@@ -98,26 +99,27 @@ const structuredData = {
     // Runs on the first load and after every client-side navigation to a post.
     document.addEventListener('astro:page-load', () => {
       const tableOfContents = document.querySelector<HTMLDetailsElement>('#table-of-contents');
-      const tableOfContentsButton = tableOfContents?.querySelector('summary');
-      const tableOfContentsContent = tableOfContents?.querySelector('nav');
+      const tableOfContentsSentinel = document.querySelector('#table-of-contents-sentinel');
 
-      if (tableOfContents) {
-        const updateTableOfContentsPosition = () => {
-          const isStuck = tableOfContents.getBoundingClientRect().top <= 0;
-
-          tableOfContents.classList.toggle('!rounded-t-none', isStuck);
-          tableOfContents.classList.toggle('toc-is-stuck', isStuck);
-          tableOfContents.classList.toggle('!shadow-lg', isStuck);
-          tableOfContents.classList.toggle('!w-[calc(100%+2.5rem)]', isStuck);
-          tableOfContents.classList.toggle('!-translate-x-5', isStuck);
-          tableOfContentsButton?.classList.toggle('!px-5', isStuck);
-          tableOfContentsContent?.classList.toggle('!px-5', isStuck);
-        };
-        const listeners = new AbortController();
-        addEventListener('scroll', updateTableOfContentsPosition, { passive: true, signal: listeners.signal });
-        addEventListener('resize', updateTableOfContentsPosition, { signal: listeners.signal });
-        document.addEventListener('astro:before-swap', () => listeners.abort(), { once: true });
-        updateTableOfContentsPosition();
+      if (tableOfContents && tableOfContentsSentinel) {
+        // The table of contents is stuck once the spot it would otherwise sit in
+        // has scrolled above the viewport, which an observer reports without any
+        // work on each scroll.
+        const stuck = new IntersectionObserver(([entry]) => {
+          tableOfContents.classList.toggle('toc-is-stuck', !entry.isIntersecting && entry.boundingClientRect.top < 0);
+        });
+        // When stuck, its background grows by 1.25rem on each side. That growth
+        // is a scale, so it animates without layout, and needs the current width.
+        const width = new ResizeObserver(([entry]) => {
+          const boxWidth = entry.borderBoxSize[0].inlineSize;
+          tableOfContents.style.setProperty('--toc-stuck-scale', String((boxWidth + 40) / boxWidth));
+        });
+        stuck.observe(tableOfContentsSentinel);
+        width.observe(tableOfContents);
+        document.addEventListener('astro:before-swap', () => {
+          stuck.disconnect();
+          width.disconnect();
+        }, { once: true });
       }
 
       const copyLinkStatus = document.querySelector<HTMLElement>('#copy-link-status');

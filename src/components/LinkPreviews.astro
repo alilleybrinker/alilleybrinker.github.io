@@ -30,6 +30,8 @@
   }
 
   function hide() {
+    // Runs on every scroll event, so do nothing when there's nothing to hide.
+    if (card.hidden && !pending) return;
     window.clearTimeout(timer);
     card.hidden = true;
     pending = undefined;

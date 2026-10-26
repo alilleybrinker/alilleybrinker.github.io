@@ -182,21 +182,38 @@ const formatStars = new Intl.NumberFormat("en-US");
         --shift-y: 0px;
         position: relative;
         transform: translate(var(--shift-x), var(--shift-y)) rotate(var(--tilt));
-        transition:
-            transform 320ms cubic-bezier(0.3, 1.4, 0.5, 1),
-            box-shadow 200ms ease-out;
+        transition: transform 320ms cubic-bezier(0.3, 1.4, 0.5, 1);
+        /* Keeps each card on its own layer, so hovering one doesn't repaint and
+           re-layer the table as the card moves on and off a layer. */
+        will-change: transform;
     }
 
     .project-card:hover,
     .project-card:focus-visible {
         z-index: 1;
         transform: translateY(-4px) rotate(0deg);
-        box-shadow: 0 14px 30px -12px rgb(0 0 0 / 0.25);
     }
 
-    .dark .project-card:hover,
-    .dark .project-card:focus-visible {
+    /* The lifted shadow is drawn once and faded in, since animating box-shadow
+       itself repaints the card on every frame. */
+    .project-card::after {
+        position: absolute;
+        inset: 0;
+        content: "";
+        border-radius: inherit;
+        box-shadow: 0 14px 30px -12px rgb(0 0 0 / 0.25);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 200ms ease-out;
+    }
+
+    .dark .project-card::after {
         box-shadow: 0 16px 34px -12px rgb(0 0 0 / 0.7);
+    }
+
+    .project-card:hover::after,
+    .project-card:focus-visible::after {
+        opacity: 1;
     }
 
     .project-card:focus-visible {
@@ -287,6 +304,7 @@ const formatStars = new Intl.NumberFormat("en-US");
 
     @media (prefers-reduced-motion: reduce) {
         .project-card,
+        .project-card::after,
         .project-arrow {
             transition: none;
         }
@@ -319,22 +337,49 @@ const formatStars = new Intl.NumberFormat("en-US");
         };
     }
 
+    // A pixel is inked when 0.04 + 0.62 * level^1.4 clears its Bayer threshold,
+    // which is the same as level clearing a per-cell threshold computed here once,
+    // so drawing needs no Math.pow per pixel.
+    const LEVEL_THRESHOLDS = Float32Array.from(BAYER, (threshold) => {
+        const scaled = (threshold - 0.04) / 0.62;
+        return scaled < 0 ? -1 : Math.pow(scaled, 1 / 1.4);
+    });
+
+    // Packs an RGB color into one pixel of a Uint32Array view of ImageData.
+    function pixel([red, green, blue]: number[]) {
+        return new Uint32Array(Uint8ClampedArray.of(red, green, blue, 255).buffer)[0];
+    }
+
     function palette(hot: boolean) {
         const dark = document.documentElement.classList.contains("dark");
         const ink = hot
             ? dark ? [91, 147, 255] : [5, 96, 255]
             : dark ? [241, 241, 241] : [11, 11, 12];
         const paper = dark ? [38, 38, 38] : [255, 255, 255];
-        return { ink, paper };
+        return { ink: pixel(ink), paper: pixel(paper) };
     }
 
-    function drawPlate(canvas: HTMLCanvasElement, hot = false, phase = 0) {
-        const name = canvas.dataset.projectPlate ?? "";
-        const { width, height } = canvas;
+    type Plate = {
+        context: CanvasRenderingContext2D;
+        image: ImageData;
+        pixels: Uint32Array;
+        blobs: Float32Array;
+        wave: Float32Array;
+        field: Float32Array;
+    };
+    const plates = new WeakMap<HTMLCanvasElement, Plate>();
+
+    // Everything but the ripple's phase depends only on the project's name, so a
+    // plate's blob field and wave coordinates are computed once and reused by
+    // every frame of the shimmer.
+    function plateFor(canvas: HTMLCanvasElement) {
+        const cached = plates.get(canvas);
+        if (cached) return cached;
         const context = canvas.getContext("2d");
         if (!context) return;
-        const next = random(hash(name));
-        const blobs = Array.from({ length: 4 }, () => ({
+        const { width, height } = canvas;
+        const next = random(hash(canvas.dataset.projectPlate ?? ""));
+        const sources = Array.from({ length: 4 }, () => ({
             x: next() * width,
             y: next() * height,
             size: (0.25 + next() * 0.45) * width,
@@ -342,30 +387,52 @@ const formatStars = new Intl.NumberFormat("en-US");
         }));
         const angle = next() * Math.PI * 2;
         const ripple = 3 + next() * 6;
-        const field = new Float32Array(width * height);
-        let low = Infinity;
-        let high = -Infinity;
+        const blobs = new Float32Array(width * height);
+        const wave = new Float32Array(width * height);
         for (let y = 0; y < height; y++) {
             for (let x = 0; x < width; x++) {
                 let value = 0;
-                for (const blob of blobs) {
+                for (const blob of sources) {
                     const distance = Math.hypot(x - blob.x, y - blob.y) / blob.size;
                     value += blob.weight * Math.exp(-distance * distance);
                 }
-                value += 0.18 * Math.sin((x * Math.cos(angle) + y * Math.sin(angle)) / ripple + phase);
-                field[y * width + x] = value;
-                low = Math.min(low, value);
-                high = Math.max(high, value);
+                blobs[y * width + x] = value;
+                wave[y * width + x] = (x * Math.cos(angle) + y * Math.sin(angle)) / ripple;
             }
         }
-        const { ink, paper } = palette(hot);
         const image = context.createImageData(width, height);
+        const plate = {
+            context,
+            image,
+            pixels: new Uint32Array(image.data.buffer),
+            blobs,
+            wave,
+            field: new Float32Array(width * height),
+        };
+        plates.set(canvas, plate);
+        return plate;
+    }
+
+    function drawPlate(canvas: HTMLCanvasElement, hot = false, phase = 0) {
+        const plate = plateFor(canvas);
+        if (!plate) return;
+        const { context, image, pixels, blobs, wave, field } = plate;
+        const { width, height } = canvas;
+        let low = Infinity;
+        let high = -Infinity;
+        for (let i = 0; i < field.length; i++) {
+            const value = blobs[i] + 0.18 * Math.sin(wave[i] + phase);
+            field[i] = value;
+            if (value < low) low = value;
+            if (value > high) high = value;
+        }
+        const scale = 1 / (high - low || 1);
+        const { ink, paper } = palette(hot);
         for (let y = 0; y < height; y++) {
+            const row = (y & 3) * 4;
             for (let x = 0; x < width; x++) {
-                const level = 0.04 + 0.62 * Math.pow((field[y * width + x] - low) / (high - low || 1), 1.4);
-                const color = level > BAYER[(y & 3) * 4 + (x & 3)] ? ink : paper;
-                const offset = (y * width + x) * 4;
-                image.data.set([...color, 255], offset);
+                const i = y * width + x;
+                pixels[i] = (field[i] - low) * scale > LEVEL_THRESHOLDS[row + (x & 3)] ? ink : paper;
             }
         }
         context.putImageData(image, 0, 0);
