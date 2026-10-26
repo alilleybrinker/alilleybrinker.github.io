@@ -80,13 +80,14 @@ html {
   display: inline-block;
 }
 
-/* The avatar is line art used as a mask, so its lines take the text color in
-   either theme. On hover, a copy in the accent color fades in on top, which the
-   compositor animates without repainting. */
+/* The avatar is black line art used as a mask. In dark mode it sits on a light
+   disc, which brightens on hover. On hover, a copy of the line art in the
+   accent color fades in on top, which the compositor animates without
+   repainting. */
 .site-logo-face {
   position: absolute;
   inset: 0;
-  background-color: currentColor;
+  background-color: black;
   mask: url("/image/andrew_lineart-mask.png") center / contain no-repeat;
 }
 
@@ -96,12 +97,15 @@ html {
   transition: opacity 180ms ease-out;
 }
 
-.dark .site-logo-face-hover {
-  background-color: var(--color-accent-bright);
+.dark .site-logo-backdrop {
+  opacity: 0.6;
+  transition: opacity 180ms ease-out;
 }
 
 .site-logo:hover .site-logo-face-hover,
-.site-logo:focus-visible .site-logo-face-hover {
+.site-logo:focus-visible .site-logo-face-hover,
+.dark .site-logo:hover .site-logo-backdrop,
+.dark .site-logo:focus-visible .site-logo-backdrop {
   opacity: 1;
 }
 
@@ -142,6 +146,7 @@ html {
 
 @media (prefers-reduced-motion: reduce) {
   .site-logo-face-hover,
+  .dark .site-logo-backdrop,
   .about-photo-frame::before,
   .about-photo-frame::after {
     transition: none;
