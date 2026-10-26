@@ -33,7 +33,7 @@ others.
 
 Urbit, on the other hand, used insular language to create a sense of
 exclusivity and complexity, as part of Curtis Yarvin's attempt to gain an
-audience for his fascist political ideas. Throughout the 2010's, Yarvin
+audience for his fascist political ideas. Throughout the 2010s, Yarvin
 leveraged Urbit to gain entry to programmer forums and conferences, where he
 could then spread his politics alongside his software.
 

@@ -81,14 +81,14 @@ const structuredData = {
             Share on Bluesky
           </a>
           <p class="text-sm text-neutral-600 dark:text-neutral-300">
-            <button id="copy-link" class="cursor-pointer underline decoration-rule underline-offset-2 hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white" type="button">Copy link</button>
+            <button id="copy-link" class="cursor-pointer underline decoration-rule hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white" type="button">Copy link</button>
             <span aria-hidden="true"> · </span>
-            <a href={`mailto:?subject=${encodeURIComponent(post.data.title)}&body=${encodeURIComponent(`${post.data.title}\n\n${new URL(postPath(post), Astro.site)}`)}`} class="underline decoration-rule underline-offset-2 hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white">Share by email</a>
+            <a href={`mailto:?subject=${encodeURIComponent(post.data.title)}&body=${encodeURIComponent(`${post.data.title}\n\n${new URL(postPath(post), Astro.site)}`)}`} class="underline decoration-rule hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white">Share by email</a>
           </p>
           <p class="text-sm text-neutral-600 dark:text-neutral-300">
-            <button id="copy-markdown" data-markdown={markdown} class="cursor-pointer underline decoration-rule underline-offset-2 hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white" type="button">Copy as Markdown</button>
+            <button id="copy-markdown" data-markdown={markdown} class="cursor-pointer underline decoration-rule hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white" type="button">Copy as Markdown</button>
             <span aria-hidden="true"> · </span>
-            <a href={`https://claude.ai/new?q=${encodeURIComponent(claudePrompt)}`} class="underline decoration-rule underline-offset-2 hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white">Discuss with Claude</a>
+            <a href={`https://claude.ai/new?q=${encodeURIComponent(claudePrompt)}`} class="underline decoration-rule hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white">Discuss with Claude</a>
           </p>
         </div>
       </div>
