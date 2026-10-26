@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import HomePostList from '../components/HomePostList.astro';
 import Icon from '../components/Icon.astro';
-import { byNewest, isListedPost, postDate, postPath, postReadingTime, postSlug, readingTimeStrength, topicSlug } from '../lib/site';
+import { byNewest, isListedPost, publicationColors, postDate, postPath, postReadingTime, postSlug, readingTimeStrength, topicSlug } from '../lib/site';
 const allPosts = await getCollection('blog');
 const posts = allPosts.filter(isListedPost).sort(byNewest);
 const topics = Object.entries(
@@ -53,16 +53,16 @@ const lede = 'I’m a Member of Technical Staff at Anthropic. I write about soft
 <BaseLayout title="Software Security Engineer" description={lede} socialImage="/social/home.png" socialImageAlt="Software Security Engineer">
   <p class="!mb-12 font-medium text-black dark:text-neutral-100 [&_a]:!font-medium">I’m a Member of Technical Staff at <a href="https://www.anthropic.com">Anthropic</a>. I write about software security, memory safety, Rust, and open source.</p>
   <section aria-labelledby="start-here-heading" data-no-preview class="not-prose mb-16">
-    <h2 id="start-here-heading" class="mb-6 font-sans text-sm font-semibold uppercase tracking-widest text-slate-400 dark:text-neutral-400">Start Here</h2>
+    <h2 id="start-here-heading" class="mb-6 font-sans text-sm font-semibold uppercase tracking-widest text-muted">Start Here</h2>
     <ul class="list-none space-y-6 p-0">
       {startHerePosts.map((post) => (
         <li>
           <a class="group block py-2 text-black dark:text-white" href={post.href}>
             <span class="flex flex-col items-start gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
-              <span class="inline-flex items-center gap-1"><span class="group-hover:underline" data-post-title>{post.title}</span>{'publication' in post && <span title={post.publicationTitle} class="relative top-px mx-0.5 rounded-sm bg-stone-200/65 px-1.5 py-0.5 font-sans text-xs font-semibold text-stone-700 group-hover:bg-[#0085CA] group-hover:text-white dark:bg-neutral-500/70 dark:text-neutral-200">{post.publication}</span>}{post.external && <><Icon name="arrow-up-right" class="!h-4 !w-4 text-neutral-400 group-hover:text-black dark:text-neutral-500 dark:group-hover:text-white" /><span class="sr-only"> (external article)</span></>}</span>
-              <time class="shrink-0 text-sm text-neutral-500" datetime={post.date.toISOString()}>{post.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })} / <span class="reading-time" style={`--reading-time-strength: ${post.readingStrength}`}>{post.readingTime} min read</span></time>
+              <span class="inline-flex items-center gap-1"><span class="group-hover:underline" data-post-title>{post.title}</span>{'publication' in post && <span title={post.publicationTitle} class="relative top-px mx-0.5 rounded-sm bg-stone-200/65 px-1.5 py-0.5 font-sans text-xs font-semibold text-stone-700 group-hover:bg-(--publication-color) group-hover:text-white dark:bg-neutral-500/70 dark:text-neutral-200" style={`--publication-color: ${publicationColors[post.publication]}`}>{post.publication}</span>}{post.external && <><Icon name="arrow-up-right" class="!h-4 !w-4 text-neutral-400 group-hover:text-black dark:text-neutral-500 dark:group-hover:text-white" /><span class="sr-only"> (external article)</span></>}</span>
+              <time class="shrink-0 text-sm text-muted" datetime={post.date.toISOString()}>{post.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })} / <span class="reading-time" style={`--reading-time-strength: ${post.readingStrength}`}>{post.readingTime} min read</span></time>
             </span>
-            {post.description && <span class="mt-1 block max-w-[34rem] text-sm leading-relaxed text-neutral-500 dark:text-neutral-400">{post.description}</span>}
+            {post.description && <span class="mt-1 block max-w-[34rem] text-sm leading-relaxed text-muted">{post.description}</span>}
           </a>
         </li>
       ))}
@@ -70,22 +70,22 @@ const lede = 'I’m a Member of Technical Staff at Anthropic. I write about soft
   </section>
   <section aria-labelledby="blog-heading" class="not-prose">
     <div class="flex items-center justify-between">
-      <h2 id="blog-heading" class="font-sans text-sm font-semibold uppercase tracking-widest text-slate-400 dark:text-neutral-400">Blog</h2>
+      <h2 id="blog-heading" class="font-sans text-sm font-semibold uppercase tracking-widest text-muted">Blog</h2>
       <div class="flex items-center gap-3">
         <a href="/rss.xml" aria-label="RSS feed" class="text-neutral-400 hover:text-black dark:hover:text-white"><Icon name="rss" class="!h-5 !w-5" /></a>
         <a href="https://standard-reader.app/p/did:plc:geozyv62fx63m7jhr4eraubc/alilleybrinker-site" aria-label="Read this publication on Standard Reader" class="text-neutral-400 hover:text-black dark:hover:text-white"><span aria-hidden="true" class="block h-5 w-5 bg-current [mask-image:url('/icons/standard-site-logo.svg')] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]"></span></a>
       </div>
     </div>
-    <HomePostList posts={otherPosts} />
+    <HomePostList posts={otherPosts} featured={new Set(startHerePosts.map((post) => post.href))} />
   </section>
   <section aria-labelledby="topics-heading" class="not-prose pb-4 pt-10">
-    <h2 id="topics-heading" class="mb-6 font-sans text-sm font-semibold uppercase tracking-widest text-slate-400 dark:text-neutral-400">Topics</h2>
+    <h2 id="topics-heading" class="mb-6 font-sans text-sm font-semibold uppercase tracking-widest text-muted">Topics</h2>
     <ul class="flex flex-wrap gap-x-4 gap-y-2 list-none p-0">
       {topics.map(([topic, count]) => (
         <li class="flex items-center" style="white-space: nowrap">
           <a class="group flex items-center" href={`/topics/${topicSlug(topic)}/`}>
             <span class="topic-link">{topic}</span>
-            <span class="topic-badge ml-1.5 inline-flex size-[1.125rem] items-center justify-center rounded-full bg-stone-200 font-sans text-[10px] text-stone-700 dark:bg-neutral-700 dark:text-neutral-200">{count}</span>
+            <span class="topic-badge ml-1.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-stone-200 px-1 font-sans text-xs text-stone-700 dark:bg-neutral-700 dark:text-neutral-200">{count}</span>
           </a>
         </li>
       ))}

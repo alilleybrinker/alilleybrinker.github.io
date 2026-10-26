@@ -2,7 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import Icon from '../../components/Icon.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { isListedPost, postDate, postPath, postReadingTime, postSlug } from '../../lib/site';
+import { isListedPost, postDate, postPath, postReadingTime, postSlug, topicSlug } from '../../lib/site';
 import standardSite from '../../data/standard-site.json';
 import { markdownPath } from '../../lib/markdown';
 
@@ -44,8 +44,8 @@ const structuredData = {
 ---
 
 <BaseLayout title={post.data.title} description={post.data.description} canonical={canonical} type="article" socialImage={socialImage} socialImageAlt={post.data.title} structuredData={structuredData} standardDocumentUri={standardSite.documents[postSlug(post)]} markdown={markdown}>
-  <article>
-    <h1 class="block mb-5 text-3xl md:text-4xl"><span class="leading-snug block mb-4 font-display [view-transition-name:post-title]">{post.data.title}</span><span class="font-sans flex flex-wrap items-center gap-2 text-sm md:text-base text-neutral-500"><span>{date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</span><span class="font-black text-neutral-400">·</span><span>Read in {readingTime} minutes</span>{topics.length > 0 && <><span class="font-black text-neutral-400">·</span><span>Topics: {topics.map((topic, index) => <><a class="!text-neutral-500" href={`/topics/${topic.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}/`}>{topic}</a>{index < topics.length - 1 && ', '}</>)}</span></>}</span></h1>
+  <article class="post-body">
+    <h1 class="block mb-5 text-3xl md:text-4xl"><span class="leading-snug block mb-4 font-display [view-transition-name:post-title]">{post.data.title}</span><span class="font-sans flex flex-wrap items-center gap-2 text-sm md:text-base text-muted"><span>{date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</span><span aria-hidden="true" class="font-black text-muted">·</span><span>Read in {readingTime} minutes</span>{topics.length > 0 && <><span aria-hidden="true" class="font-black text-muted">·</span><span>Topics: {topics.map((topic, index) => <><a class="!text-muted" href={`/topics/${topicSlug(topic)}/`}>{topic}</a>{index < topics.length - 1 && ', '}</>)}</span></>}</span></h1>
     {post.data.extra.toc && headings.length > 0 && (
       <div id="table-of-contents-sentinel" aria-hidden="true"></div>
       <details id="table-of-contents" aria-label="Table of contents" class="group not-prose sticky top-0 z-10 mb-10 w-full font-sans text-sm">
@@ -57,7 +57,7 @@ const structuredData = {
           <ol class="list-none space-y-2 text-neutral-700 dark:group-open:!text-neutral-200">
             {headings.map((heading) => (
               <li class:list={{ 'flex gap-2': true, 'ml-4': heading.depth === 3, 'ml-8': heading.depth >= 4 }}>
-                {heading.depth > 2 && <span aria-hidden="true" class="text-neutral-400">↳</span>}
+                {heading.depth > 2 && <span aria-hidden="true" class="text-muted">↳</span>}
                 <a class="no-underline hover:underline" href={`#${heading.slug}`}>{heading.text}</a>
               </li>
             ))}
@@ -66,7 +66,7 @@ const structuredData = {
       </details>
     )}
     <Content />
-    <aside aria-labelledby="share-post-heading" class="not-prose mt-20 rounded-2xl border border-blue-100 bg-blue-50 p-6 text-base leading-normal dark:border-neutral-700 dark:bg-neutral-800 sm:p-8">
+    <aside aria-labelledby="share-post-heading" class="not-prose mt-20 rounded-2xl border border-panel-border bg-panel p-6 text-base leading-normal dark:border-neutral-700 dark:bg-neutral-800 sm:p-8">
       <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 id="share-post-heading" class="font-display text-xl font-semibold text-neutral-900 dark:text-neutral-100">Enjoyed this post?</h2>
@@ -75,20 +75,20 @@ const structuredData = {
         <div class="flex flex-col items-center gap-3 sm:items-end">
           <a
             href={`https://bsky.app/intent/compose?text=${encodeURIComponent(`${post.data.title} by @alilleybrinker.com ${new URL(postPath(post), Astro.site)}`)}`}
-            class="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-[#0560FF] px-5 py-3 font-semibold text-white no-underline transition-[filter] hover:brightness-90 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0560FF]"
+            class="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-accent px-5 py-3 font-semibold text-white no-underline transition-[filter] hover:brightness-90 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
           >
             <Icon name="bluesky" class="!h-5 !w-5" />
             Share on Bluesky
           </a>
           <p class="text-sm text-neutral-600 dark:text-neutral-300">
-            <button id="copy-link" class="cursor-pointer underline decoration-blue-400 underline-offset-2 hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white" type="button">Copy link</button>
+            <button id="copy-link" class="cursor-pointer underline decoration-rule underline-offset-2 hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white" type="button">Copy link</button>
             <span aria-hidden="true"> · </span>
-            <a href={`mailto:?subject=${encodeURIComponent(post.data.title)}&body=${encodeURIComponent(`${post.data.title}\n\n${new URL(postPath(post), Astro.site)}`)}`} class="underline decoration-blue-400 underline-offset-2 hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white">Share by email</a>
+            <a href={`mailto:?subject=${encodeURIComponent(post.data.title)}&body=${encodeURIComponent(`${post.data.title}\n\n${new URL(postPath(post), Astro.site)}`)}`} class="underline decoration-rule underline-offset-2 hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white">Share by email</a>
           </p>
           <p class="text-sm text-neutral-600 dark:text-neutral-300">
-            <button id="copy-markdown" data-markdown={markdown} class="cursor-pointer underline decoration-blue-400 underline-offset-2 hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white" type="button">Copy as Markdown</button>
+            <button id="copy-markdown" data-markdown={markdown} class="cursor-pointer underline decoration-rule underline-offset-2 hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white" type="button">Copy as Markdown</button>
             <span aria-hidden="true"> · </span>
-            <a href={`https://claude.ai/new?q=${encodeURIComponent(claudePrompt)}`} class="underline decoration-blue-400 underline-offset-2 hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white">Discuss with Claude</a>
+            <a href={`https://claude.ai/new?q=${encodeURIComponent(claudePrompt)}`} class="underline decoration-rule underline-offset-2 hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white">Discuss with Claude</a>
           </p>
         </div>
       </div>

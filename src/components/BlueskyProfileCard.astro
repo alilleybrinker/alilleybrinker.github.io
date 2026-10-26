@@ -8,18 +8,18 @@ const profileUrl = `https://bsky.app/profile/${handle}`;
 
 <a
     href={profileUrl}
-    class="group block h-fit self-start rounded-lg bg-white p-5 !no-underline shadow-sm transition hover:ring-2 hover:ring-blue-500 dark:bg-neutral-800"
+    class="group block h-fit self-start rounded-lg bg-white p-5 !no-underline shadow-sm transition hover:ring-2 hover:ring-neutral-500 dark:bg-neutral-800"
     data-bluesky-profile-card
 >
     <div class="flex gap-4">
-        <div class="flex size-12 shrink-0 self-center items-center justify-center rounded-full bg-blue-50 text-blue-500 dark:bg-neutral-700">
+        <div class="flex size-12 shrink-0 self-center items-center justify-center rounded-full bg-panel text-neutral-500 dark:bg-neutral-700">
             <Icon name="bluesky" class="!h-6 !w-6" />
         </div>
         <div class="min-w-0">
             <p class="!m-0 !font-sans !text-base !font-semibold text-black dark:text-white" data-bluesky-handle
                 >@alilleybrinker.com</p
             >
-            <p class="!mt-2 !mb-0 !font-sans !text-sm text-neutral-500 dark:text-neutral-400" data-bluesky-stats
+            <p class="!mt-2 !mb-0 !font-sans !text-sm text-muted" data-bluesky-stats
                 >Follow Andrew’s writing and conversations on Bluesky.</p
             >
         </div>
