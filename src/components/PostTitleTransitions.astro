@@ -8,6 +8,8 @@
   const name = 'post-title';
   const titles = (root: ParentNode) => [...root.querySelectorAll<HTMLElement>('[data-post-title]')];
   let clicked: { path: string; index: number } | undefined;
+  // Whether this navigation morphs a list title into the post's heading.
+  let morphing = false;
 
   // Leaving a list for a post: name the title that was clicked.
   document.addEventListener('astro:before-preparation', (event) => {
@@ -15,6 +17,7 @@
     const listed = titles(document);
     listed.forEach((title) => title.style.removeProperty('view-transition-name'));
     const title = sourceElement?.closest('a')?.querySelector<HTMLElement>('[data-post-title]');
+    morphing = Boolean(title);
     if (!title) return;
     title.style.viewTransitionName = name;
     clicked = { path: location.pathname, index: listed.indexOf(title) };
@@ -24,6 +27,9 @@
   // there, or else the first one linking to that post.
   document.addEventListener('astro:before-swap', (event) => {
     const { from, to, newDocument } = event as TransitionBeforeSwapEvent;
+    // A heading that morphs in from a list doesn't also resolve from dither.
+    if (morphing) newDocument.querySelector('.resolve-in')?.classList.remove('resolve-in');
+    morphing = false;
     const listed = titles(newDocument);
     const matching = listed.filter((title) => title.closest('a')?.getAttribute('href') === from.pathname);
     const remembered = clicked?.path === to.pathname ? listed[clicked.index] : undefined;
