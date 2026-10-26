@@ -68,7 +68,7 @@ const talks = [...talksData.talks].sort((a, b) => b.date.localeCompare(a.date));
     <h2 class="flex items-center justify-between gap-4">
         <span>Work</span><a
             href="/resume.pdf"
-            class="group inline-flex shrink-0 items-center gap-2 rounded-md border border-gray-200 px-3 py-2 font-sans text-sm font-medium leading-none !no-underline hover:bg-blue-100 dark:border-neutral-700 dark:hover:bg-neutral-800"
+            class="group inline-flex shrink-0 items-center gap-2 rounded-md border border-gray-200 px-3 py-2 font-sans text-sm font-medium leading-none !no-underline hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-800"
             >Résumé <span
                 class="rounded-sm bg-neutral-100 px-1 py-0.5 text-[0.625rem] font-semibold tracking-wide group-hover:bg-neutral-200 dark:bg-neutral-700 dark:group-hover:bg-neutral-600"
                 >PDF</span
@@ -108,7 +108,7 @@ const talks = [...talksData.talks].sort((a, b) => b.date.localeCompare(a.date));
     </p>
     <h3
         id="talks"
-        class="!font-sans !text-lg !font-normal !tracking-normal text-neutral-500 dark:text-neutral-400"
+        class="!font-sans !text-lg !font-normal !tracking-normal text-muted"
     >
         Talks
     </h3>
@@ -123,7 +123,7 @@ const talks = [...talksData.talks].sort((a, b) => b.date.localeCompare(a.date));
                         {talk.title}
                     </a>
                 </h4>
-                <div class="flex gap-4 flex-wrap text-sm text-gray-500">
+                <div class="flex gap-4 flex-wrap text-sm text-muted">
                     <span>
                         {talk.type === "panel"
                             ? "Participated in panel at"
@@ -161,7 +161,7 @@ const talks = [...talksData.talks].sort((a, b) => b.date.localeCompare(a.date));
     </div>
     <p class="!mb-2">Message me on Bluesky for my Signal username to chat.</p>
     <p
-        class="!mt-2 !text-sm !leading-relaxed text-neutral-500 dark:text-neutral-400 [&_a]:!text-neutral-500 dark:[&_a]:!text-neutral-400"
+        class="!mt-2 !text-sm !leading-relaxed text-muted [&_a]:!text-muted"
     >
         You can also find me on <a href="https://hachyderm.io/@alilleybrinker"
             >Mastodon</a

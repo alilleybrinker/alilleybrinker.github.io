@@ -2,6 +2,13 @@ import type { CollectionEntry } from 'astro:content';
 
 export type Post = CollectionEntry<'blog'>;
 
+// Each publication's brand color, filling its badge when a post it published is
+// hovered.
+export const publicationColors: Record<string, string> = {
+  CACM: '#0085CA',
+  Inkstick: '#964a40',
+};
+
 export function isListedPost(post: Post) {
   return !post.data.unlisted;
 }

@@ -30,13 +30,13 @@ const formatStars = new Intl.NumberFormat("en-US");
         <div class="mb-7 flex flex-wrap items-center justify-between gap-4">
             <h2
                 id="workbench-heading"
-                class="font-sans text-sm font-semibold uppercase tracking-widest text-slate-400 dark:text-neutral-400"
+                class="font-sans text-sm font-semibold uppercase tracking-widest text-muted"
             >
                 On the Workbench
             </h2>
             <button
                 type="button"
-                class="project-deal inline-flex cursor-pointer items-center gap-2 rounded-md border border-gray-200 px-3 py-2 font-sans text-sm leading-none text-neutral-500 hover:border-transparent hover:bg-blue-100 hover:text-black dark:border-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-white"
+                class="project-deal inline-flex cursor-pointer items-center gap-2 rounded-md border border-gray-200 px-3 py-2 font-sans text-sm leading-none text-muted hover:border-transparent hover:bg-neutral-100 hover:text-black dark:border-neutral-700 dark:hover:bg-neutral-800 dark:hover:text-white"
                 data-project-deal
                 hidden
             >
@@ -78,12 +78,12 @@ const formatStars = new Intl.NumberFormat("en-US");
                                     </span>
                                     <span
                                         aria-hidden="true"
-                                        class="project-arrow ml-auto text-neutral-400"
+                                        class="project-arrow ml-auto text-muted"
                                     >
                                         ↗
                                     </span>
                                 </span>
-                                <span class="-mt-1.5 text-xs text-neutral-400">
+                                <span class="-mt-1.5 text-xs text-muted">
                                     <span aria-label={`${project.stars} stars`}>
                                         ★ {formatStars.format(project.stars)}
                                     </span>
@@ -97,7 +97,7 @@ const formatStars = new Intl.NumberFormat("en-US");
                                         </>
                                     )}
                                 </span>
-                                <span class="text-sm leading-relaxed text-pretty text-neutral-500 dark:text-neutral-400">
+                                <span class="text-sm leading-relaxed text-pretty text-muted">
                                     {project.description}
                                 </span>
                                 {project.topics.length > 0 && (
@@ -120,7 +120,7 @@ const formatStars = new Intl.NumberFormat("en-US");
     <section aria-labelledby="earlier-heading" class="not-prose mt-16">
         <h2
             id="earlier-heading"
-            class="mb-4 font-sans text-sm font-semibold uppercase tracking-widest text-slate-400 dark:text-neutral-400"
+            class="mb-4 font-sans text-sm font-semibold uppercase tracking-widest text-muted"
         >
             Earlier &amp; Elsewhere
         </h2>
@@ -142,11 +142,11 @@ const formatStars = new Intl.NumberFormat("en-US");
                             >
                                 {project.name}
                             </a>
-                            <span class="text-neutral-500 dark:text-neutral-400">
+                            <span class="text-muted">
                                 {project.description}
                             </span>
                         </span>
-                        <span class="shrink-0 text-sm tabular-nums text-neutral-400">
+                        <span class="shrink-0 text-sm tabular-nums text-muted">
                             {project.note}
                         </span>
                     </li>
@@ -217,7 +217,7 @@ const formatStars = new Intl.NumberFormat("en-US");
     }
 
     .project-card:focus-visible {
-        outline: 2px solid #0560ff;
+        outline: 2px solid var(--color-accent);
         outline-offset: 3px;
     }
 
@@ -275,23 +275,23 @@ const formatStars = new Intl.NumberFormat("en-US");
     }
 
     .project-stamp.project-stamp-fresh {
-        color: #0560ff;
+        color: var(--color-accent);
     }
 
     .dark .project-stamp.project-stamp-fresh {
-        color: #5b93ff;
+        color: var(--color-accent-bright);
     }
 
     .project-card:hover .project-name,
     .project-card:focus-visible .project-name,
     .project-card:hover .project-arrow {
-        color: #0560ff;
+        color: var(--color-accent);
     }
 
     .dark .project-card:hover .project-name,
     .dark .project-card:focus-visible .project-name,
     .dark .project-card:hover .project-arrow {
-        color: #5b93ff;
+        color: var(--color-accent-bright);
     }
 
     .project-arrow {
@@ -352,6 +352,7 @@ const formatStars = new Intl.NumberFormat("en-US");
 
     function palette(hot: boolean) {
         const dark = document.documentElement.classList.contains("dark");
+        // The accent colors (--color-accent-bright and --color-accent) as RGB.
         const ink = hot
             ? dark ? [91, 147, 255] : [5, 96, 255]
             : dark ? [241, 241, 241] : [11, 11, 12];

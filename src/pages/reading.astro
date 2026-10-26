@@ -44,7 +44,7 @@ for (const item of items) {
             >.
         </p>
     </header>
-    <p class="!-mt-4 text-sm text-neutral-500">
+    <p class="!-mt-4 text-sm text-muted">
         Last updated{" "}
         <time datetime={updatedAt.toISOString()}>{formatUpdatedAt.format(updatedAt)}</time>
     </p>
@@ -54,7 +54,7 @@ for (const item of items) {
             <div class="not-prose mt-14">
                 {[...years.entries()].map(([year, yearItems]) => (
                     <section class="mb-6">
-                        <h2 class="mb-1 text-sm font-normal text-neutral-400">
+                        <h2 class="mb-1 text-sm font-normal text-muted">
                             {year}
                         </h2>
                         <ol class="list-none p-0">
@@ -86,7 +86,7 @@ for (const item of items) {
                                                 </time>
                                             )}
                                         </div>
-                                        <div class="mt-1 flex items-baseline gap-x-2 text-xs text-neutral-500">
+                                        <div class="mt-1 flex items-baseline gap-x-2 text-xs text-muted">
                                             <span>{item.rootDomain}</span>
                                             <span aria-hidden="true">·</span>
                                             <span
@@ -173,9 +173,7 @@ for (const item of items) {
             rgb(23 23 23) calc(100% - var(--reading-link-strength)),
             oklch(0.5 0.22 145) var(--reading-link-strength)
         );
-        font-family:
-            Public Sans,
-            sans-serif;
+        font-family: var(--font-sans);
         font-size: 1.125rem;
         font-weight: var(--reading-link-weight);
         line-height: 1.35;

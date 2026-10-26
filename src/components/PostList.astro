@@ -16,10 +16,10 @@ const displayed = limit === undefined ? posts : posts.slice(0, limit);
       <h2 class="!m-0 !mb-1 !text-xl lg:!text-2xl !font-medium">
         <a class="text-black dark:text-white no-underline hover:underline" href={postPath(post)}>{post.data.title}</a>
       </h2>
-      <div class="text-sm lg:text-base text-gray-500">
+      <div class="text-sm lg:text-base text-muted">
         {postDate(post).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}
       </div>
-      <div class="mt-4"><a class="inline-block !no-underline !text-blue-500 hover:underline" href={postPath(post)}>Keep reading</a></div>
+      <div class="mt-4"><a class="inline-block !no-underline !text-neutral-500 hover:underline" href={postPath(post)}>Keep reading</a></div>
     </article>
   ))}
 </div>
