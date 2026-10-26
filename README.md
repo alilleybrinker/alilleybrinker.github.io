@@ -6,6 +6,26 @@ Set `unlisted: true` in an article's front matter to keep its direct URL
 available while excluding it from the home page, topic pages and feeds, and
 topic post counts.
 
+## Reading by agents
+
+Every post with a page on the site also has a plain-Markdown copy at the same
+path with `.md` in place of the trailing slash (for example,
+`/blog/cpp-must-become-safer.md`), with its links made absolute. `/llms.txt`
+lists the listed posts with links to those copies, and `/llms-full.txt` holds
+their full text. Post pages link their copy with
+`<link rel="alternate" type="text/markdown">` and offer "Copy as Markdown" and
+"Discuss with Claude" next to the share buttons.
+
+## Navigation
+
+The site uses Astro's client router, so moving between pages swaps the content
+in place: links prefetch on hover, and a post's title in a list morphs into the
+heading of the post. Page scripts therefore run their setup on
+`astro:page-load` rather than at the top level, since a module script only runs
+once per visit. Hovering or focusing a link to a post shows a preview card,
+built from `/blog/previews.json`; mark a list with `data-no-preview` when it
+already shows descriptions.
+
 ## Writing locally
 
 `npm run write` starts a local writing UI at <http://localhost:4444> alongside

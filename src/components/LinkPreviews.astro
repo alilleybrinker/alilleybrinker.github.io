@@ -1,0 +1,90 @@
+---
+// A card previewing the post behind a link, shown on hover or keyboard focus.
+// Lists that already show a post's description opt out with data-no-preview.
+---
+
+<div id="link-preview" role="tooltip" hidden transition:persist class="pointer-events-none fixed z-50 w-[22rem] max-w-[calc(100vw-2rem)] rounded-xl bg-white p-4 font-sans shadow-lg ring-1 ring-black/5 dark:bg-neutral-800 dark:ring-white/10">
+  <p data-preview-meta class="text-xs text-neutral-500 dark:text-neutral-400"></p>
+  <p data-preview-title class="mt-1 font-display text-base leading-snug text-black dark:text-white"></p>
+  <p data-preview-description class="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300"></p>
+</div>
+
+<script>
+  type Preview = { title: string; description?: string; date: string; readingTime: number; topics: string[] };
+
+  const card = document.querySelector<HTMLElement>('#link-preview')!;
+  const delay = 350;
+  let previews: Promise<Record<string, Preview>> | undefined;
+  let timer: number | undefined;
+  let pending: HTMLAnchorElement | undefined;
+  let active: HTMLAnchorElement | undefined;
+
+  const load = () => previews ??= fetch('/blog/previews.json').then((response) => response.json()).catch(() => ({}));
+
+  function previewPath(link: HTMLAnchorElement) {
+    if (link.closest('[data-no-preview], header')) return;
+    const url = new URL(link.href);
+    if (url.host !== location.host && url.host !== 'www.alilleybrinker.com') return;
+    if (!/^\/blog\/[^/]+\/$/.test(url.pathname) || url.pathname === location.pathname) return;
+    return url.pathname;
+  }
+
+  function hide() {
+    // Runs on every scroll event, so do nothing when there's nothing to hide.
+    if (card.hidden && !pending) return;
+    window.clearTimeout(timer);
+    card.hidden = true;
+    pending = undefined;
+    active?.removeAttribute('aria-describedby');
+    active = undefined;
+  }
+
+  function place(link: HTMLAnchorElement) {
+    const rect = link.getBoundingClientRect();
+    const margin = 16;
+    const left = Math.min(Math.max(margin, rect.left), innerWidth - card.offsetWidth - margin);
+    const below = rect.bottom + 8;
+    const top = below + card.offsetHeight > innerHeight - margin ? rect.top - card.offsetHeight - 8 : below;
+    card.style.left = `${left}px`;
+    card.style.top = `${top}px`;
+  }
+
+  function schedule(link: HTMLAnchorElement) {
+    const path = previewPath(link);
+    if (!path || link === pending || link === active) return;
+    hide();
+    pending = link;
+    load();
+    timer = window.setTimeout(async () => {
+      const preview = (await load())[path];
+      if (!preview || pending !== link) return;
+      card.querySelector('[data-preview-meta]')!.textContent = [preview.date, `${preview.readingTime} min read`, ...preview.topics].join(' · ');
+      card.querySelector('[data-preview-title]')!.textContent = preview.title;
+      card.querySelector('[data-preview-description]')!.textContent = preview.description ?? '';
+      card.hidden = false;
+      place(link);
+      active = link;
+      link.setAttribute('aria-describedby', card.id);
+    }, delay);
+  }
+
+  document.addEventListener('pointerover', (event) => {
+    if (event.pointerType !== 'mouse') return;
+    const link = (event.target as Element).closest?.('a');
+    if (link) schedule(link);
+  });
+  document.addEventListener('pointerout', (event) => {
+    const link = (event.target as Element).closest?.('a');
+    if (link && !link.contains(event.relatedTarget as Node)) hide();
+  });
+  document.addEventListener('focusin', (event) => {
+    const link = (event.target as Element).closest?.('a');
+    if (link?.matches(':focus-visible')) schedule(link);
+  });
+  document.addEventListener('focusout', hide);
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') hide();
+  });
+  addEventListener('scroll', hide, { passive: true });
+  document.addEventListener('astro:before-swap', hide);
+</script>
