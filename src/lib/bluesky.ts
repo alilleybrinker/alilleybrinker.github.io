@@ -281,6 +281,12 @@ async function getArticleMetadataFromMicrolink(url: string) {
   }
 }
 
+// Article pages put all sorts of text in their date meta tags. Keep only dates
+// that parse, since the reading page formats them and throws on any that don't.
+function parseableDate(date: string | undefined) {
+  return date !== undefined && !Number.isNaN(Date.parse(date)) ? date : undefined;
+}
+
 async function getArticleMetadata(url: string) {
   const metadata = await getArticleMetadataFromPage(url);
   if (metadata.articleTitle) return metadata;
@@ -348,7 +354,7 @@ async function loadReadingItems() {
     const articleTitle = TITLE_OVERRIDES.get(item.url) ?? metadata.articleTitle ?? articleTitleFromUrl(item.url);
     return {
       ...item,
-      articlePublishedAt: metadata.articlePublishedAt,
+      articlePublishedAt: parseableDate(metadata.articlePublishedAt),
       articleTitle,
       articleTitleHtml: formatArticleTitleHtml(articleTitle),
     };
