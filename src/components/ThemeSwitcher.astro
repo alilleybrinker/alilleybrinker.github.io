@@ -37,8 +37,12 @@ import Icon from './Icon.astro';
     applyTheme(target);
   };
 
-  applyTheme(resolvedTheme());
-  document.querySelectorAll<HTMLButtonElement>('.theme-switcher').forEach((button) => button.addEventListener('click', toggleTheme));
+  // Runs on the first load and after every client-side navigation, since each
+  // navigation brings in new buttons.
+  document.addEventListener('astro:page-load', () => {
+    applyTheme(resolvedTheme());
+    document.querySelectorAll<HTMLButtonElement>('.theme-switcher').forEach((button) => button.addEventListener('click', toggleTheme));
+  });
   colorScheme.addEventListener('change', () => {
     if (!storedTheme()) applyTheme(systemTheme());
   });

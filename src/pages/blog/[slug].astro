@@ -4,6 +4,7 @@ import Icon from '../../components/Icon.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { isListedPost, postDate, postPath, postReadingTime, postSlug } from '../../lib/site';
 import standardSite from '../../data/standard-site.json';
+import { markdownPath } from '../../lib/markdown';
 
 export async function getStaticPaths() {
   return (await getCollection('blog'))
@@ -22,6 +23,8 @@ const topics = post.data.taxonomies.topics.filter((topic) => listedTopics.has(to
 const readingTime = postReadingTime(post);
 const canonical = new URL(postPath(post), Astro.site);
 const socialImage = `/social/${postSlug(post)}.png`;
+const markdown = markdownPath(post);
+const claudePrompt = `I'm reading “${post.data.title}” by Andrew Lilley Brinker. Here is the text: ${new URL(markdown, Astro.site)}\n\nHelp me understand its argument and where it might be weakest.`;
 const structuredData = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
@@ -40,9 +43,9 @@ const structuredData = {
 };
 ---
 
-<BaseLayout title={post.data.title} description={post.data.description} canonical={canonical} type="article" socialImage={socialImage} socialImageAlt={post.data.title} structuredData={structuredData} standardDocumentUri={standardSite.documents[postSlug(post)]}>
+<BaseLayout title={post.data.title} description={post.data.description} canonical={canonical} type="article" socialImage={socialImage} socialImageAlt={post.data.title} structuredData={structuredData} standardDocumentUri={standardSite.documents[postSlug(post)]} markdown={markdown}>
   <article>
-    <h1 class="block mb-5 text-3xl md:text-4xl"><span class="leading-snug block mb-4 font-display">{post.data.title}</span><span class="font-sans flex flex-wrap items-center gap-2 text-sm md:text-base text-neutral-500"><span>{date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</span><span class="font-black text-neutral-400">·</span><span>Read in {readingTime} minutes</span>{topics.length > 0 && <><span class="font-black text-neutral-400">·</span><span>Topics: {topics.map((topic, index) => <><a class="!text-neutral-500" href={`/topics/${topic.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}/`}>{topic}</a>{index < topics.length - 1 && ', '}</>)}</span></>}</span></h1>
+    <h1 class="block mb-5 text-3xl md:text-4xl"><span class="leading-snug block mb-4 font-display" transition:name={`post-title-${postSlug(post)}`}>{post.data.title}</span><span class="font-sans flex flex-wrap items-center gap-2 text-sm md:text-base text-neutral-500"><span>{date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</span><span class="font-black text-neutral-400">·</span><span>Read in {readingTime} minutes</span>{topics.length > 0 && <><span class="font-black text-neutral-400">·</span><span>Topics: {topics.map((topic, index) => <><a class="!text-neutral-500" href={`/topics/${topic.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}/`}>{topic}</a>{index < topics.length - 1 && ', '}</>)}</span></>}</span></h1>
     {post.data.extra.toc && headings.length > 0 && (
       <details id="table-of-contents" aria-label="Table of contents" class="group not-prose sticky top-0 z-10 mb-10 w-full rounded-lg border-2 border-dashed border-blue-100 bg-blue-50 font-sans text-sm transition-[width,translate,box-shadow] duration-300 ease-out motion-reduce:transition-none open:!border-solid open:!border-white open:!bg-white dark:border-neutral-700 dark:bg-neutral-800 dark:open:!border-neutral-700 dark:open:!bg-neutral-800">
         <summary class="flex w-full cursor-pointer list-none items-center justify-between gap-2 px-4 py-3 font-semibold text-neutral-900 transition-[padding] duration-200 ease-out [&::-webkit-details-marker]:hidden dark:text-neutral-100 dark:open:!text-neutral-100">
@@ -81,47 +84,78 @@ const structuredData = {
             <span aria-hidden="true"> · </span>
             <a href={`mailto:?subject=${encodeURIComponent(post.data.title)}&body=${encodeURIComponent(`${post.data.title}\n\n${new URL(postPath(post), Astro.site)}`)}`} class="underline decoration-blue-400 underline-offset-2 hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white">Share by email</a>
           </p>
+          <p class="text-sm text-neutral-600 dark:text-neutral-300">
+            <button id="copy-markdown" data-markdown={markdown} class="cursor-pointer underline decoration-blue-400 underline-offset-2 hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white" type="button">Copy as Markdown</button>
+            <span aria-hidden="true"> · </span>
+            <a href={`https://claude.ai/new?q=${encodeURIComponent(claudePrompt)}`} class="underline decoration-blue-400 underline-offset-2 hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white">Discuss with Claude</a>
+          </p>
         </div>
       </div>
       <p id="copy-link-status" class="sr-only" aria-live="polite"></p>
     </aside>
   </article>
   <script>
-    const tableOfContents = document.querySelector<HTMLDetailsElement>('#table-of-contents');
-    const tableOfContentsButton = tableOfContents?.querySelector('summary');
-    const tableOfContentsContent = tableOfContents?.querySelector('nav');
+    // Runs on the first load and after every client-side navigation to a post.
+    document.addEventListener('astro:page-load', () => {
+      const tableOfContents = document.querySelector<HTMLDetailsElement>('#table-of-contents');
+      const tableOfContentsButton = tableOfContents?.querySelector('summary');
+      const tableOfContentsContent = tableOfContents?.querySelector('nav');
 
-    function updateTableOfContentsPosition() {
-      const isStuck = tableOfContents?.getBoundingClientRect().top <= 0;
+      if (tableOfContents) {
+        const updateTableOfContentsPosition = () => {
+          const isStuck = tableOfContents.getBoundingClientRect().top <= 0;
 
-      tableOfContents?.classList.toggle('!rounded-t-none', isStuck);
-      tableOfContents?.classList.toggle('toc-is-stuck', isStuck);
-      tableOfContents?.classList.toggle('!shadow-lg', isStuck);
-      tableOfContents?.classList.toggle('!w-[calc(100%+2.5rem)]', isStuck);
-      tableOfContents?.classList.toggle('!-translate-x-5', isStuck);
-      tableOfContentsButton?.classList.toggle('!px-5', isStuck);
-      tableOfContentsContent?.classList.toggle('!px-5', isStuck);
-    }
-
-    addEventListener('scroll', updateTableOfContentsPosition, { passive: true });
-    addEventListener('resize', updateTableOfContentsPosition);
-    updateTableOfContentsPosition();
-
-    const copyLink = document.querySelector<HTMLButtonElement>('#copy-link');
-    const copyLinkStatus = document.querySelector<HTMLElement>('#copy-link-status');
-    const defaultCopyLinkLabel = copyLink?.textContent;
-
-    copyLink?.addEventListener('click', async () => {
-      try {
-        await navigator.clipboard.writeText(window.location.href);
-        copyLink.textContent = 'Copied!';
-        copyLinkStatus!.textContent = 'Post link copied to the clipboard.';
-        window.setTimeout(() => {
-          copyLink.textContent = defaultCopyLinkLabel;
-        }, 2_000);
-      } catch {
-        copyLinkStatus!.textContent = 'Could not copy the link. Please copy it from your browser’s address bar.';
+          tableOfContents.classList.toggle('!rounded-t-none', isStuck);
+          tableOfContents.classList.toggle('toc-is-stuck', isStuck);
+          tableOfContents.classList.toggle('!shadow-lg', isStuck);
+          tableOfContents.classList.toggle('!w-[calc(100%+2.5rem)]', isStuck);
+          tableOfContents.classList.toggle('!-translate-x-5', isStuck);
+          tableOfContentsButton?.classList.toggle('!px-5', isStuck);
+          tableOfContentsContent?.classList.toggle('!px-5', isStuck);
+        };
+        const listeners = new AbortController();
+        addEventListener('scroll', updateTableOfContentsPosition, { passive: true, signal: listeners.signal });
+        addEventListener('resize', updateTableOfContentsPosition, { signal: listeners.signal });
+        document.addEventListener('astro:before-swap', () => listeners.abort(), { once: true });
+        updateTableOfContentsPosition();
       }
+
+      const copyLinkStatus = document.querySelector<HTMLElement>('#copy-link-status');
+      const copyButton = (button: HTMLButtonElement | null, text: () => Promise<string>, copied: string, failed: string) => {
+        const defaultLabel = button?.textContent;
+        button?.addEventListener('click', async () => {
+          try {
+            // Safari only allows clipboard writes started synchronously from the
+            // click, so hand it a pending item rather than awaiting the text first.
+            const blob = text().then((value) => new Blob([value], { type: 'text/plain' }));
+            await navigator.clipboard.write([new ClipboardItem({ 'text/plain': blob })]);
+            button.textContent = 'Copied!';
+            copyLinkStatus!.textContent = copied;
+            window.setTimeout(() => {
+              button.textContent = defaultLabel;
+            }, 2_000);
+          } catch {
+            copyLinkStatus!.textContent = failed;
+          }
+        });
+      };
+
+      const copyMarkdown = document.querySelector<HTMLButtonElement>('#copy-markdown');
+      copyButton(
+        document.querySelector<HTMLButtonElement>('#copy-link'),
+        async () => window.location.href,
+        'Post link copied to the clipboard.',
+        'Could not copy the link. Please copy it from your browser’s address bar.',
+      );
+      copyButton(
+        copyMarkdown,
+        () => fetch(copyMarkdown!.dataset.markdown!).then((response) => {
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          return response.text();
+        }),
+        'Post copied to the clipboard as Markdown.',
+        'Could not copy the post as Markdown.',
+      );
     });
   </script>
 </BaseLayout>

@@ -5,7 +5,7 @@ const routes: Record<string, string> = {
   '@/talks/index.md': '/talks/',
 };
 
-function legacyRoute(path: string) {
+export function legacyRoute(path: string) {
   if (routes[path]) return routes[path];
   const match = path.match(/^@\/(blog|mini)\/(?:\d{4}-\d{2}-\d{2}-)?(.+)\.md$/);
   return match ? `/blog/${match[2]}/` : undefined;
