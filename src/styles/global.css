@@ -282,9 +282,13 @@ a:hover .topic-badge {
 }
 
 /* Post text is held to about 70 characters a line, which reads more easily than
-   the full column. Code, figures, tables and asides keep the full width. */
+   the full column. Code, figures, tables and asides keep the full width. In
+   that narrower column, hyphenation evens out the ragged right edge; only
+   words of seven or more letters break, leaving at least three on each side. */
 .post-body > :where(p, ul, ol, dl, blockquote) {
   max-width: 34em;
+  hyphens: auto;
+  hyphenate-limit-chars: 7 3 3;
 }
 
 /* Code is set in JetBrains Mono, without its programming ligatures, so code
@@ -297,6 +301,8 @@ pre {
   font-family: var(--font-mono);
   font-variant-ligatures: none;
   font-size-adjust: 0.55;
+  /* Identifiers are never broken with a hyphen. */
+  hyphens: manual;
 }
 
 /* Em dashes are closed up with a hair of space on either side (see
@@ -321,4 +327,22 @@ a,
 .topic-link {
   text-underline-offset: 0.12em;
   text-decoration-thickness: max(1px, 0.055em);
+}
+
+/* Paragraphs and quotes that open with a quotation mark pull it into the margin
+   by its width in Public Sans, so the text's left edge stays straight. The
+   classes come from src/lib/typeset.ts. */
+.hang-double {
+  text-indent: -0.419em;
+}
+
+.hang-single {
+  text-indent: -0.239em;
+}
+
+/* Large Merriweather titles are set a little tighter than its default
+   spacing, which is drawn for text sizes. */
+.prose h1 .font-display,
+.prose h1:not(:has(.font-display)) {
+  letter-spacing: -0.015em;
 }

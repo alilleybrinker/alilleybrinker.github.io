@@ -60,25 +60,80 @@ function splitDashes(value: string): Node[] {
   ]);
 }
 
+// Paragraphs and quotes that open with a quotation mark get a class that pulls
+// the mark into the margin by its own width, so the text's left edge stays
+// straight. CSS sets the widths.
+const HANGS = new Set(['p', 'blockquote']);
+
+// Raw HTML may write the mark as an entity.
+function hangClass(text: string) {
+  const start = text.trimStart();
+  if (/^(“|&ldquo;|&#8220;|&#x201c;)/i.test(start)) return 'hang-double';
+  if (/^(‘|&lsquo;|&#8216;|&#x2018;)/i.test(start)) return 'hang-single';
+  return undefined;
+}
+
+function addClass(tag: string, name: string) {
+  return /\sclass="/.test(tag)
+    ? tag.replace(/\sclass="/, (attribute) => `${attribute}${name} `)
+    : tag.replace(/^<([a-z0-9]+)/i, `<$1 class="${name}"`);
+}
+
+// The start of the first text in a node, or '' when code comes first.
+function firstText(node: Node): string | undefined {
+  for (const child of node.children ?? []) {
+    if (child.type === 'text' && child.value?.trim()) return child.value.trimStart();
+    if (child.type === 'element') {
+      if (child.tagName && VERBATIM.has(child.tagName)) return '';
+      const text = firstText(child);
+      if (text !== undefined) return text;
+    }
+  }
+  return undefined;
+}
+
+function markHangingQuotes(node: Node) {
+  for (const child of node.children ?? []) {
+    if (child.type !== 'element') continue;
+    // A quote's own paragraphs are marked instead, so it isn't indented twice.
+    const holdsParagraphs = child.children?.some((c) => c.type === 'element' && c.tagName === 'p');
+    const hang = child.tagName && HANGS.has(child.tagName) && !holdsParagraphs ? hangClass(firstText(child) ?? '') : undefined;
+    if (hang) {
+      const classes = child.properties?.className;
+      child.properties = { ...child.properties, className: [...(Array.isArray(classes) ? classes : []), hang] };
+    }
+    markHangingQuotes(child);
+  }
+}
+
 export default function rehypeTypeset() {
   return (tree: Node) => {
     let previous = '';
     // Raw HTML written into a post arrives as a string. Only the text between
     // its tags is typeset, never attributes, and never inside code.
     const typesetRaw = (html: string) => {
+      const parts = html.split(/(<[^>]*>)/);
       let verbatim = 0;
-      return html.split(/(<[^>]*>)/).map((part, index) => {
+      // The opening tag of a paragraph or quote whose text hasn't started yet.
+      let opening: number | undefined;
+      parts.forEach((part, index) => {
         if (index % 2 === 1) {
           const tag = part.match(/^<(\/?)([a-z0-9]+)/i);
-          if (tag && VERBATIM.has(tag[2].toLowerCase()) && !part.endsWith('/>')) verbatim += tag[1] ? -1 : 1;
-          if (tag && !tag[1] && BLOCKS.has(tag[2].toLowerCase())) previous = '';
-          return part;
+          const name = tag?.[2].toLowerCase() ?? '';
+          if (tag && VERBATIM.has(name) && !part.endsWith('/>')) verbatim += tag[1] ? -1 : 1;
+          if (tag && !tag[1] && BLOCKS.has(name)) previous = '';
+          if (tag && !tag[1] && HANGS.has(name)) opening = index;
+          return;
         }
-        if (verbatim > 0 || !part) return part;
+        if (verbatim > 0 || !part.trim()) return;
         const text = smartQuotes(part, previous);
         previous = text.slice(-1) || previous;
-        return text.replace(/\s*—\s*/g, '<span class="em-dash">—</span>');
-      }).join('');
+        const hang = opening === undefined ? undefined : hangClass(text);
+        if (hang && opening !== undefined) parts[opening] = addClass(parts[opening], hang);
+        opening = undefined;
+        parts[index] = text.replace(/\s*—\s*/g, '<span class="em-dash">—</span>');
+      });
+      return parts.join('');
     };
     const visit = (node: Node) => {
       if (node.tagName && VERBATIM.has(node.tagName)) {
@@ -100,5 +155,6 @@ export default function rehypeTypeset() {
       });
     };
     visit(tree);
+    markHangingQuotes(tree);
   };
 }
