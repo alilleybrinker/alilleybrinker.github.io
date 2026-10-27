@@ -500,6 +500,13 @@ a,
     background: var(--color-accent);
     transform: translateX(-100%);
     animation: reading-progress linear both;
+  }
+
+  /* The timeline is set in a rule of its own, since the minifier would
+     otherwise fold it into the animation shorthand, which doesn't accept
+     one, and the browser would drop the whole animation. It comes after the
+     shorthand, which would reset it. */
+  :root .reading-progress::before {
     animation-timeline: scroll(root);
   }
 
