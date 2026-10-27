@@ -1,0 +1,96 @@
+---
+// A dithered field across the top of every page, in the same 4×4 ordered
+// dither as the project plates and the About photo. It drifts slowly, gathers
+// and warms toward the accent near the cursor, and each page has its own,
+// seeded from its path, so moving between pages morphs one into the next. A
+// fragment shader draws it (src/lib/dither-field.ts), in a worker where the
+// browser can, so the page's main thread only passes events along. Each page
+// has its own canvas; the field's state carries over from one to the next. It
+// stops when scrolled out of view, holds still for reduced motion, and is
+// absent without WebGL.
+---
+
+<canvas id="dither-field" aria-hidden="true"></canvas>
+
+<script>
+  import { createField, type Message } from '../lib/dither-field';
+
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+
+  // The worker draws when the browser can hand it a canvas; otherwise the
+  // field draws here. Either way, `send` passes it what it needs to know, and
+  // `attach` gives it each page's canvas.
+  let send: (message: Message) => void;
+  let attach: (canvas: HTMLCanvasElement) => boolean;
+  if ('transferControlToOffscreen' in HTMLCanvasElement.prototype && typeof Worker === 'function') {
+    const worker = new Worker(new URL('../lib/dither-field.worker.ts', import.meta.url), { type: 'module' });
+    worker.postMessage({ type: 'start', path: location.pathname, reduce: reduceMotion.matches });
+    worker.onmessage = (event) => {
+      if (event.data.type === 'unavailable') document.querySelector('#dither-field')?.remove();
+    };
+    send = (message) => worker.postMessage(message);
+    attach = (canvas) => {
+      const offscreen = canvas.transferControlToOffscreen();
+      worker.postMessage({ type: 'attach', canvas: offscreen }, [offscreen]);
+      return true;
+    };
+  } else {
+    const field = createField(location.pathname, reduceMotion.matches);
+    send = field.send;
+    attach = field.attach;
+  }
+
+  // Colors come from the page's theme as RGB, through a 2D canvas, which
+  // understands any CSS color.
+  const rgb = (color: string) => {
+    const context = Object.assign(document.createElement('canvas'), { width: 1, height: 1 }).getContext('2d')!;
+    context.fillStyle = color;
+    context.fillRect(0, 0, 1, 1);
+    const [r, g, b] = context.getImageData(0, 0, 1, 1).data;
+    return [r / 255, g / 255, b / 255];
+  };
+  const sendColors = () => {
+    const dark = document.documentElement.classList.contains('dark');
+    const accent = getComputedStyle(document.documentElement).getPropertyValue(dark ? '--color-accent-bright' : '--color-accent').trim();
+    send({ type: 'colors', ink: rgb(dark ? 'oklch(0.36 0 0)' : 'oklch(0.8 0 0)'), hot: rgb(accent || '#0560ff') });
+  };
+  sendColors();
+  new MutationObserver(sendColors).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  reduceMotion.addEventListener('change', () => send({ type: 'reduce-motion', reduce: reduceMotion.matches }));
+
+  // The field's height, kept from its last resize, so following the pointer
+  // never needs to read layout.
+  let height = 0;
+  const resizes = new ResizeObserver(([entry]) => {
+    height = entry.contentRect.height;
+    send({ type: 'size', width: entry.contentRect.width, height });
+  });
+  const visibility = new IntersectionObserver(([entry]) => send({ type: 'visible', visible: entry.isIntersecting }));
+
+  // Each page has its own canvas, which the field moves onto as the page
+  // arrives.
+  document.addEventListener('astro:page-load', () => {
+    const canvas = document.querySelector<HTMLCanvasElement>('#dither-field');
+    if (!canvas) return;
+    resizes.disconnect();
+    visibility.disconnect();
+    if (!attach(canvas)) {
+      canvas.remove();
+      return;
+    }
+    resizes.observe(canvas);
+    visibility.observe(canvas);
+  });
+
+  // The field sits at the top of the page, so the pointer's place in it is
+  // its place in the page.
+  addEventListener('pointermove', (event) => {
+    if (event.pointerType !== 'mouse') return;
+    const y = event.clientY + scrollY;
+    send({ type: 'pointer', x: event.clientX, y, inside: y < height });
+  }, { passive: true });
+  document.documentElement.addEventListener('pointerleave', () => send({ type: 'pointer', x: -1e4, y: -1e4, inside: false }));
+
+  // A new page's field grows out of the one on screen.
+  document.addEventListener('astro:after-swap', () => send({ type: 'morph', path: location.pathname }));
+</script>
