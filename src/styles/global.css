@@ -526,3 +526,48 @@ a,
     background-image: linear-gradient(currentColor, currentColor);
   }
 }
+
+/* The command palette (CommandPalette.astro) sits a little above center, over
+   a backdrop dotted in the field's grain, and resolves out of the dither as it
+   opens. */
+.command-palette {
+  width: min(36rem, calc(100vw - 2rem));
+  max-width: none;
+  max-height: none;
+  margin: 12vh auto auto;
+  padding: 0;
+  overflow: visible;
+  background: transparent;
+}
+
+.command-palette::backdrop {
+  background-color: rgb(250 250 249 / 0.6);
+  background-image: radial-gradient(rgb(0 0 0 / 0.14) 0.75px, transparent 0.75px);
+  background-size: 6px 6px;
+}
+
+.dark .command-palette::backdrop {
+  background-color: rgb(23 23 23 / 0.7);
+  background-image: radial-gradient(rgb(255 255 255 / 0.1) 0.75px, transparent 0.75px);
+}
+
+.command-palette[open] .command-palette-panel {
+  mask-size: 12px 12px;
+  animation: resolve-from-dither 240ms both;
+}
+
+.command-palette-option[aria-selected="true"] {
+  background: rgb(115 115 115 / 0.1);
+}
+
+.command-palette-option mark {
+  background: none;
+  color: inherit;
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .command-palette[open] .command-palette-panel {
+    animation: none;
+  }
+}
