@@ -3,6 +3,8 @@
 // so the page's main thread does no drawing at all, and on the main thread
 // otherwise. Either way, this is the same code.
 
+import { fieldFor } from './dither-pattern';
+
 // One cell of the dither is this many CSS pixels.
 export const CELL = 3;
 // How long one page's field takes to become the next one's.
@@ -66,38 +68,6 @@ const FRAGMENT = `
     gl_FragColor = vec4(mix(ink, hot, 0.35 * smoothstep(0.1, 0.5, warmth)), 1.0);
   }
 `;
-
-// The same hash and generator as the project plates, so a page's path always
-// makes the same field.
-function hash(text: string) {
-  let h = 2166136261;
-  for (const char of text) {
-    h ^= char.charCodeAt(0);
-    h = Math.imul(h, 16777619);
-  }
-  return h >>> 0;
-}
-
-function random(seed: number) {
-  return () => {
-    seed = (seed + 0x6d2b79f5) | 0;
-    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-type Field = { blobs: Float32Array; ripple: Float32Array };
-
-// Blobs keep to the upper band and spread across its width.
-function fieldFor(path: string): Field {
-  const next = random(hash(path));
-  const blobs = new Float32Array(12);
-  for (let i = 0; i < 3; i++) {
-    blobs.set([(i + 0.2 + next() * 0.6) / 3, 0.1 + next() * 0.45, 0.18 + next() * 0.22, next() < 0.25 ? -0.5 : 1], i * 4);
-  }
-  return { blobs, ripple: Float32Array.of(next() * Math.PI * 2, 4 + next() * 8) };
-}
 
 export type Message =
   | { type: 'size'; width: number; height: number }
