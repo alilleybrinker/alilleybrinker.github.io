@@ -20,10 +20,6 @@ const formatUpdatedAt = new Intl.DateTimeFormat("en-US", {
     timeZoneName: "short",
     year: "numeric",
 });
-const highestMentionCount = Math.max(...items.map((item) => item.mentions.length), 1);
-const mentionStrength = (mentionCount: number) => highestMentionCount > 1
-    ? (mentionCount - 1) / (highestMentionCount - 1)
-    : 0;
 const years = new Map<number, typeof items>();
 for (const item of items) {
     const year = new Date(item.mentions[0].publishedAt).getUTCFullYear();
@@ -62,10 +58,7 @@ for (const item of items) {
                                 <li class="reading-link-item py-2.5">
                                     <article>
                                         <div class="reading-link-preview">
-                                            <h3
-                                                class="reading-link-preview-title"
-                                                style={`--reading-link-strength: ${mentionStrength(item.mentions.length) * 100}%; --reading-link-weight: ${400 + Math.round(mentionStrength(item.mentions.length) * 2) * 100}`}
-                                            >
+                                            <h3 class="reading-link-preview-title">
                                                 <a
                                                     href={item.url}
                                                     set:html={
@@ -168,14 +161,10 @@ for (const item of items) {
 
     .reading-link-preview-title {
         margin: 0;
-        color: color-mix(
-            in oklch,
-            rgb(23 23 23) calc(100% - var(--reading-link-strength)),
-            oklch(0.5 0.22 145) var(--reading-link-strength)
-        );
+        color: rgb(23 23 23);
         font-family: var(--font-sans);
         font-size: 1.125rem;
-        font-weight: var(--reading-link-weight);
+        font-weight: 400;
         line-height: 1.35;
     }
 
@@ -233,11 +222,7 @@ for (const item of items) {
     }
 
     .dark .reading-link-preview-title {
-        color: color-mix(
-            in oklch,
-            white calc(100% - var(--reading-link-strength)),
-            oklch(0.66 0.15 150) var(--reading-link-strength)
-        );
+        color: white;
     }
 
     .dark .reading-link-preview-title code {

@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import HomePostList from '../components/HomePostList.astro';
 import Icon from '../components/Icon.astro';
-import { byNewest, isListedPost, publicationColors, postDate, postPath, postReadingTime, postSlug, readingTimeStrength, topicSlug } from '../lib/site';
+import { byNewest, isListedPost, publicationColors, postDate, postPath, postReadingTime, postSlug, topicSlug } from '../lib/site';
 const allPosts = await getCollection('blog');
 const posts = allPosts.filter(isListedPost).sort(byNewest);
 const topics = Object.entries(
@@ -43,7 +43,6 @@ const startHerePosts = startHere.map((entry) => {
     description: post.data.description,
     date,
     readingTime,
-    readingStrength: readingTimeStrength(readingTime),
   };
 });
 const otherPosts = posts;
@@ -61,7 +60,7 @@ const lede = 'I’m a Member of Technical Staff at Anthropic. I write about soft
           <a class="group block py-2 text-black dark:text-white" href={post.href}>
             <span class="flex flex-col items-start gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
               <span class="inline-flex items-center gap-1"><span class="dither-underline" data-post-title>{post.title}</span>{'publication' in post && <span title={post.publicationTitle} class="relative top-px mx-0.5 rounded-sm bg-stone-200/65 px-1.5 py-0.5 font-sans text-xs font-semibold text-stone-700 group-hover:bg-(--publication-color) group-hover:text-white dark:bg-neutral-500/70 dark:text-neutral-200" style={`--publication-color: ${publicationColors[post.publication]}`}>{post.publication}</span>}{post.external && <><Icon name="arrow-up-right" class="!h-4 !w-4 text-neutral-400 group-hover:text-black dark:text-neutral-500 dark:group-hover:text-white" /><span class="sr-only"> (external article)</span></>}</span>
-              <time class="shrink-0 text-sm tabular-nums text-muted" datetime={post.date.toISOString()}>{post.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })} / <span class="reading-time" style={`--reading-time-strength: ${post.readingStrength}`}>{post.readingTime} min read</span></time>
+              <time class="shrink-0 text-sm tabular-nums text-muted" datetime={post.date.toISOString()}>{post.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })} / {post.readingTime} min read</time>
             </span>
             {post.description && <span class="mt-1 block max-w-[34rem] text-sm leading-relaxed text-muted">{post.description}</span>}
           </a>
