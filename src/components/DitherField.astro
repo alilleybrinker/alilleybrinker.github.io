@@ -1,7 +1,7 @@
 ---
 // A dithered field across the top of every page, in the same 4×4 ordered
 // dither as the project plates and the About photo. It drifts slowly, gathers
-// and warms toward the accent near the cursor, and each page has its own,
+// and warms toward the signal orange near the cursor, and each page has its own,
 // seeded from its path, so moving between pages morphs one into the next. A
 // fragment shader draws it (src/lib/dither-field.ts), in a worker where the
 // browser can, so the page's main thread only passes events along. Each page
@@ -64,8 +64,8 @@
   };
   const sendColors = () => {
     const dark = document.documentElement.classList.contains('dark');
-    const accent = getComputedStyle(document.documentElement).getPropertyValue(dark ? '--color-accent-bright' : '--color-accent').trim();
-    send({ type: 'colors', ink: rgb(dark ? 'oklch(0.27 0 0)' : 'oklch(0.91 0 0)'), hot: rgb(accent || '#0560ff') });
+    const signal = getComputedStyle(document.documentElement).getPropertyValue('--color-signal').trim();
+    send({ type: 'colors', ink: rgb(dark ? 'oklch(0.27 0 0)' : 'oklch(0.91 0 0)'), hot: rgb(signal || '#f25a00') });
   };
   sendColors();
   new MutationObserver(sendColors).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });

@@ -16,10 +16,19 @@
   --font-display: "Merriweather", serif;
   --font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  /* The palette is grayscale, with one accent color. */
+  /* The palette is grayscale, with two colors that each have one job. Blue,
+     the accent, is for things you do: buttons and focus. */
   --color-accent: #0560ff;
   /* The accent lightened for text and strokes on dark backgrounds. */
   --color-accent-bright: #5b93ff;
+  /* Orange, the signal, says where you are or what's live, like an indicator
+     light: the reading progress line, the section being read, the field's
+     warmth near the cursor and featured posts' stars. Only marks and lines,
+     never text or large areas; 3.2:1 on the page here and 5.3:1 in dark. */
+  --color-signal: #f25a00;
+  /* The signal for the one glyph that wears it, the featured star: deeper on
+     the light page to reach 4.5:1 (4.9:1); dark mode's signal already does. */
+  --color-signal-text: #c2410c;
 
   /* Secondary text: dates, labels, metadata. Dark mode lightens it (below), so
      it keeps at least 4.5:1 contrast against either background. */
@@ -48,6 +57,8 @@
 
 .dark {
   --color-muted: oklch(0.64 0 0);
+  --color-signal: #ff5f00;
+  --color-signal-text: #ff5f00;
 }
 
 html {
@@ -527,7 +538,7 @@ a,
     position: absolute;
     inset: 0;
     content: "";
-    background: var(--color-accent);
+    background: var(--color-signal);
     transform: translateX(-100%);
     animation: reading-progress linear both;
   }
@@ -540,9 +551,6 @@ a,
     animation-timeline: scroll(root);
   }
 
-  .dark .reading-progress::before {
-    background: var(--color-accent-bright);
-  }
 }
 
 @keyframes reading-progress {
@@ -649,7 +657,8 @@ a,
 
 /* While stuck and closed, the table of contents names the section being read
    after its title, which steps back to make room. In the open list, that
-   section is marked. */
+   section is marked. Either way a signal dot sits beside it, in the list out
+   in the gutter so no text moves. */
 #table-of-contents .toc-current {
   display: none;
   font-weight: 400;
@@ -670,6 +679,30 @@ a,
 #table-of-contents nav a[aria-current] {
   color: black;
   font-weight: 600;
+}
+
+#table-of-contents .toc-current::before,
+#table-of-contents nav li:has(> a[aria-current])::before {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: 0.5em;
+  border-radius: 50%;
+  background: var(--color-signal);
+  content: "";
+  vertical-align: 0.1em;
+}
+
+/* In the list, every dot sits in one column at the list's edge, however far
+   its section is indented. */
+#table-of-contents nav ol {
+  position: relative;
+}
+
+#table-of-contents nav li:has(> a[aria-current])::before {
+  position: absolute;
+  left: -14px;
+  margin: 0.55em 0 0;
 }
 
 .dark #table-of-contents nav a[aria-current] {
