@@ -69,20 +69,24 @@ const lede = 'I’m a Member of Technical Staff at Anthropic. I write about soft
     </ul>
   </section>
   <section aria-labelledby="blog-heading" class="not-prose">
-    <div class="flex flex-wrap items-baseline gap-x-6 gap-y-3">
+    <div class="flex items-baseline gap-6">
       <h2 id="blog-heading" class="font-sans text-sm font-semibold uppercase tracking-widest text-muted">Blog</h2>
-      <nav aria-label="Topics" class="order-last basis-full sm:order-none sm:basis-0 sm:flex-1">
-        <ul class="flex flex-wrap gap-x-3 gap-y-1.5 list-none p-0 text-sm">
+      <details class="topics-menu group relative text-sm">
+        <summary class="flex cursor-pointer list-none items-baseline gap-1.5 rounded text-muted hover:text-black focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent dark:hover:text-white [&::-webkit-details-marker]:hidden">
+          Topics
+          <span aria-hidden="true" class="text-[0.7em] transition-transform duration-150 group-open:rotate-180 motion-reduce:transition-none">▾</span>
+        </summary>
+        <ul class="absolute left-0 z-30 mt-2 min-w-60 list-none rounded-lg bg-white p-2 shadow-lg ring-1 ring-black/5 dark:bg-neutral-800 dark:ring-white/10">
           {topics.map(([topic, count]) => (
-            <li class="flex items-center whitespace-nowrap">
-              <a class="group flex items-center" href={`/topics/${topicSlug(topic)}/`}>
-                <span class="topic-link">{topic}</span>
-                <span class="topic-badge ml-1 inline-flex h-[1.125rem] min-w-[1.125rem] items-center justify-center rounded-full bg-stone-200 px-1 font-sans text-xs text-stone-700 dark:bg-neutral-700 dark:text-neutral-200">{count}<span class="sr-only"> posts</span></span>
+            <li>
+              <a class="flex items-baseline justify-between gap-6 rounded px-3 py-1.5 text-black hover:bg-neutral-100 dark:text-neutral-100 dark:hover:bg-neutral-500/25" href={`/topics/${topicSlug(topic)}/`}>
+                {topic}
+                <span class="text-xs tabular-nums text-muted">{count}<span class="sr-only"> posts</span></span>
               </a>
             </li>
           ))}
         </ul>
-      </nav>
+      </details>
       <div class="ml-auto flex items-center gap-3 self-center">
         <a href="/rss.xml" aria-label="RSS feed" class="text-neutral-400 hover:text-black dark:hover:text-white"><Icon name="rss" class="!h-5 !w-5" /></a>
         <a href="https://standard-reader.app/p/did:plc:geozyv62fx63m7jhr4eraubc/alilleybrinker-site" aria-label="Read this publication on Standard Reader" class="text-neutral-400 hover:text-black dark:hover:text-white"><span aria-hidden="true" class="block h-5 w-5 bg-current [mask-image:url('/icons/standard-site-logo.svg')] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]"></span></a>
@@ -91,3 +95,23 @@ const lede = 'I’m a Member of Technical Staff at Anthropic. I write about soft
     <HomePostList posts={otherPosts} featured={new Set(startHerePosts.map((post) => post.href))} />
   </section>
 </BaseLayout>
+
+<script>
+  // The topics menu closes on Escape or a click anywhere outside it, like any
+  // other menu.
+  document.addEventListener('astro:page-load', () => {
+    const menu = document.querySelector<HTMLDetailsElement>('.topics-menu');
+    if (!menu) return;
+    const listeners = new AbortController();
+    document.addEventListener('click', (event) => {
+      if (menu.open && !menu.contains(event.target as Node)) menu.open = false;
+    }, { signal: listeners.signal });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && menu.open) {
+        menu.open = false;
+        menu.querySelector('summary')?.focus();
+      }
+    }, { signal: listeners.signal });
+    document.addEventListener('astro:before-swap', () => listeners.abort(), { once: true });
+  });
+</script>
