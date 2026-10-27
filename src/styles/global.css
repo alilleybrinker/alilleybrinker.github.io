@@ -585,6 +585,7 @@ a,
   width: 1026px;
   height: 330px;
   margin-left: -513px;
+  z-index: -1;
   pointer-events: none;
   background: oklch(0.91 0 0);
   mask: var(--post-end-field) no-repeat;
@@ -592,4 +593,165 @@ a,
 
 .dark .post-end-field {
   background: oklch(0.27 0 0);
+}
+
+/* While stuck and closed, the table of contents names the section being read
+   after its title, which steps back to make room. In the open list, that
+   section is marked. */
+#table-of-contents .toc-current {
+  display: none;
+  font-weight: 400;
+}
+
+#table-of-contents.toc-is-stuck:not([open]) .toc-current:not(:empty) {
+  display: block;
+}
+
+#table-of-contents.toc-is-stuck:not([open]):has(.toc-current:not(:empty)) .toc-title {
+  color: var(--color-muted);
+}
+
+#table-of-contents.toc-is-stuck:not([open]):has(.toc-current:not(:empty)) .toc-title::after {
+  content: " /";
+}
+
+#table-of-contents nav a[aria-current] {
+  color: black;
+  font-weight: 600;
+}
+
+.dark #table-of-contents nav a[aria-current] {
+  color: white;
+}
+
+/* Code is colored from the site's palette rather than a stock theme: a quiet
+   panel, the accent for keywords, and a few muted hues, each at least 4.5:1
+   against the panel in both themes. */
+:root {
+  --astro-code-background: var(--color-panel);
+  --astro-code-foreground: oklch(0.27 0 0);
+  --astro-code-token-keyword: #0447c2;
+  --astro-code-token-function: #6a3fc0;
+  --astro-code-token-string: #1d7a3a;
+  --astro-code-token-string-expression: #1d7a3a;
+  --astro-code-token-constant: #a04a0a;
+  --astro-code-token-parameter: oklch(0.27 0 0);
+  --astro-code-token-comment: oklch(0.5 0 0);
+  --astro-code-token-punctuation: oklch(0.45 0 0);
+  --astro-code-token-link: #0447c2;
+}
+
+.dark {
+  --astro-code-background: var(--color-neutral-800);
+  --astro-code-foreground: oklch(0.92 0 0);
+  --astro-code-token-keyword: #8cb4ff;
+  --astro-code-token-function: #c3b1ff;
+  --astro-code-token-string: #7fd59a;
+  --astro-code-token-string-expression: #7fd59a;
+  --astro-code-token-constant: #f0b27a;
+  --astro-code-token-parameter: oklch(0.92 0 0);
+  --astro-code-token-comment: oklch(0.7 0 0);
+  --astro-code-token-punctuation: oklch(0.75 0 0);
+  --astro-code-token-link: #8cb4ff;
+}
+
+.post-body pre.astro-code {
+  border: 1px solid var(--color-panel-border);
+  border-radius: 1rem;
+}
+
+.dark .post-body pre.astro-code {
+  border-color: var(--color-neutral-700);
+}
+
+/* Comments are italic, picked out by the color Shiki gives them. */
+.post-body pre.astro-code [style*="--astro-code-token-comment"] {
+  font-style: italic;
+}
+
+/* Each code block gets a copy button in its corner, shown on hover or focus
+   where there's a pointer to hover with, and always on touch screens. */
+.code-block {
+  position: relative;
+}
+
+.code-copy {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  opacity: 0;
+  transition: opacity 150ms ease-out;
+}
+
+.code-block:hover .code-copy,
+.code-copy:focus-visible {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .code-copy {
+    opacity: 1;
+  }
+}
+
+/* Where the window leaves room beside the text, footnotes sit in the margin
+   next to their references, floated out past the text's right edge with a
+   negative margin that keeps them from narrowing its lines. The list at the
+   end is then hidden from sight but kept for screen readers, which skip the
+   sidenotes. Narrower windows keep the list. */
+.sidenote {
+  display: none;
+}
+
+@media (min-width: 1100px) {
+  .sidenote {
+    display: block;
+    float: right;
+    clear: right;
+    width: 14rem;
+    margin: 0.2em -16rem 1em 0;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    font-style: normal;
+    font-weight: 400;
+    hyphens: manual;
+    color: var(--color-neutral-600);
+    transition: color 300ms ease-out;
+  }
+
+  .dark .sidenote {
+    color: var(--color-neutral-400);
+  }
+
+  .sidenote-number {
+    margin-right: 0.4em;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-muted);
+  }
+
+  .sidenote-paragraph {
+    display: block;
+  }
+
+  /* The number runs into the note's first line. */
+  .sidenote-number + .sidenote-paragraph {
+    display: inline;
+  }
+
+  .sidenote-paragraph + .sidenote-paragraph {
+    margin-top: 0.5em;
+  }
+
+  .sidenote[data-flash] {
+    color: var(--color-accent);
+  }
+
+  .post-body [data-footnotes] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
 }
