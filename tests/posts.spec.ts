@@ -32,9 +32,13 @@ test('reading progress tracks the scroll', async ({ page }) => {
   const supported = await page.evaluate(() => CSS.supports('animation-timeline: scroll()'));
   test.skip(!supported, 'this browser has no scroll timelines');
   await page.evaluate(() => scrollTo(0, (document.documentElement.scrollHeight - innerHeight) / 2));
-  // Halfway down, the line has moved half its width in from the left.
+  // The line has moved in from the left as far as the page has scrolled. The
+  // page's length settles a little as paragraphs are drawn, so this measures
+  // against its length now rather than when it scrolled.
   await expect.poll(() => page.evaluate(() => {
     const line = document.querySelector('.reading-progress')!;
-    return Math.round(new DOMMatrix(getComputedStyle(line, '::before').transform).m41 / line.getBoundingClientRect().width * 100);
-  })).toBe(-50);
+    const moved = 1 + new DOMMatrix(getComputedStyle(line, '::before').transform).m41 / line.getBoundingClientRect().width;
+    const scrolled = scrollY / (document.documentElement.scrollHeight - innerHeight);
+    return Math.round(Math.abs(moved - scrolled) * 100);
+  })).toBe(0);
 });

@@ -303,6 +303,29 @@ a:hover .topic-badge {
   }
 }
 
+/* A post's paragraphs and headings below the window skip style and layout
+   until they're scrolled near, so opening a long post styles and lays out
+   little more than what's on screen. Each keeps a placeholder height until
+   it has been drawn once, then remembers its own. Only these: skipping also
+   stops margins collapsing through an element, which would add space inside
+   code blocks, quotes, lists and figures. The clip margin leaves room for
+   what draws outside a paragraph: sidenotes and hanging quotes. */
+.post-body > :is(p, h2, h3, h4, h5, h6) {
+  content-visibility: auto;
+  contain-intrinsic-block-size: auto 1lh;
+  overflow-clip-margin: 20rem;
+}
+
+/* The placeholders are the posts' typical heights, so the page's length and
+   its reading progress barely move as paragraphs are drawn. */
+.post-body > p {
+  contain-intrinsic-block-size: auto 5lh;
+
+  @media (width < 768px) {
+    contain-intrinsic-block-size: auto 8lh;
+  }
+}
+
 /* Post text is held to about 70 characters a line, which reads more easily than
    the full column. Code, figures, tables and asides keep the full width. In
    that narrower column, hyphenation evens out the ragged right edge; only
