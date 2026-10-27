@@ -571,3 +571,25 @@ a,
     animation: none;
   }
 }
+
+/* Each post closes with a still copy of the field it opened with, turned
+   upside down so it rises from behind the share panel
+   (src/pages/field/[slug].svg.ts). The field is a mask, so it takes the live
+   field's ink for the theme. It's wider than the column; the layout's
+   wrapper clips it at the window's edges. */
+/* Its densest part, at the bottom, tucks 6rem behind the top of the panel. */
+.post-end-field {
+  position: absolute;
+  top: calc(6rem - 330px);
+  left: 50%;
+  width: 1026px;
+  height: 330px;
+  margin-left: -513px;
+  pointer-events: none;
+  background: oklch(0.91 0 0);
+  mask: var(--post-end-field) no-repeat;
+}
+
+.dark .post-end-field {
+  background: oklch(0.27 0 0);
+}

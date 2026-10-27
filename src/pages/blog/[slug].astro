@@ -67,34 +67,37 @@ const structuredData = {
       </details>
     )}
     <Content />
-    <aside aria-labelledby="share-post-heading" class="not-prose mt-20 rounded-2xl border border-panel-border bg-panel p-6 text-base leading-normal dark:border-neutral-700 dark:bg-neutral-800 sm:p-8">
-      <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h2 id="share-post-heading" class="font-display text-xl font-semibold text-neutral-900 dark:text-neutral-100">Enjoyed this post?</h2>
-          <p class="mt-2 text-neutral-600 dark:text-neutral-300">Share it with someone who might find it useful.</p>
+    <div class="post-end relative mt-20">
+      <div class="post-end-field" aria-hidden="true" style={`--post-end-field: url(/field/${postSlug(post)}.svg)`}></div>
+      <aside aria-labelledby="share-post-heading" class="not-prose relative rounded-2xl border border-panel-border bg-panel p-6 text-base leading-normal dark:border-neutral-700 dark:bg-neutral-800 sm:p-8">
+        <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 id="share-post-heading" class="font-display text-xl font-semibold text-neutral-900 dark:text-neutral-100">Enjoyed this post?</h2>
+            <p class="mt-2 text-neutral-600 dark:text-neutral-300">Share it with someone who might find it useful.</p>
+          </div>
+          <div class="flex flex-col items-center gap-3 sm:items-end">
+            <a
+              href={`https://bsky.app/intent/compose?text=${encodeURIComponent(`${post.data.title} by @alilleybrinker.com ${new URL(postPath(post), Astro.site)}`)}`}
+              class="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-accent px-5 py-3 font-semibold text-white no-underline transition-[filter] hover:brightness-90 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+            >
+              <Icon name="bluesky" class="!h-5 !w-5" />
+              Share on Bluesky
+            </a>
+            <p class="text-sm text-neutral-600 dark:text-neutral-300">
+              <button id="copy-link" class="cursor-pointer underline decoration-rule hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white" type="button">Copy link</button>
+              <span aria-hidden="true"> · </span>
+              <a href={`mailto:?subject=${encodeURIComponent(post.data.title)}&body=${encodeURIComponent(`${post.data.title}\n\n${new URL(postPath(post), Astro.site)}`)}`} class="underline decoration-rule hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white">Share by email</a>
+            </p>
+            <p class="text-sm text-neutral-600 dark:text-neutral-300">
+              <button id="copy-markdown" data-markdown={markdown} class="cursor-pointer underline decoration-rule hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white" type="button">Copy as Markdown</button>
+              <span aria-hidden="true"> · </span>
+              <a href={`https://claude.ai/new?q=${encodeURIComponent(claudePrompt)}`} class="underline decoration-rule hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white">Discuss with Claude</a>
+            </p>
+          </div>
         </div>
-        <div class="flex flex-col items-center gap-3 sm:items-end">
-          <a
-            href={`https://bsky.app/intent/compose?text=${encodeURIComponent(`${post.data.title} by @alilleybrinker.com ${new URL(postPath(post), Astro.site)}`)}`}
-            class="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-accent px-5 py-3 font-semibold text-white no-underline transition-[filter] hover:brightness-90 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
-          >
-            <Icon name="bluesky" class="!h-5 !w-5" />
-            Share on Bluesky
-          </a>
-          <p class="text-sm text-neutral-600 dark:text-neutral-300">
-            <button id="copy-link" class="cursor-pointer underline decoration-rule hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white" type="button">Copy link</button>
-            <span aria-hidden="true"> · </span>
-            <a href={`mailto:?subject=${encodeURIComponent(post.data.title)}&body=${encodeURIComponent(`${post.data.title}\n\n${new URL(postPath(post), Astro.site)}`)}`} class="underline decoration-rule hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white">Share by email</a>
-          </p>
-          <p class="text-sm text-neutral-600 dark:text-neutral-300">
-            <button id="copy-markdown" data-markdown={markdown} class="cursor-pointer underline decoration-rule hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white" type="button">Copy as Markdown</button>
-            <span aria-hidden="true"> · </span>
-            <a href={`https://claude.ai/new?q=${encodeURIComponent(claudePrompt)}`} class="underline decoration-rule hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white">Discuss with Claude</a>
-          </p>
-        </div>
-      </div>
-      <p id="copy-link-status" class="sr-only" aria-live="polite"></p>
-    </aside>
+        <p id="copy-link-status" class="sr-only" aria-live="polite"></p>
+      </aside>
+    </div>
   </article>
   <script>
     // Runs on the first load and after every client-side navigation to a post.

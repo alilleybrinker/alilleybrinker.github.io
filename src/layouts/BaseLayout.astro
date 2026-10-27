@@ -112,7 +112,7 @@ const jsonLd = (data: Record<string, unknown>) => JSON.stringify(data).replace(/
   <body class="bg-stone-50 dark:bg-neutral-900">
     <DitherField />
     <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif?collect-dnt=true" alt="" referrerpolicy="no-referrer-when-downgrade" /></noscript>
-    <div class="subpixel-antialiased">
+    <div class="subpixel-antialiased overflow-x-clip">
       <header transition:name="site-header" transition:animate="none" class="relative z-20 pt-8 pb-0 mb-4 text-black dark:text-neutral-100 text-base md:pt-16 md:text-lg px-5 md:px-0 md:max-w-(--breakpoint-md) md:mx-auto">
         <nav class="flex items-center gap-2 font-normal" aria-label="Primary navigation">
           <a href="/" class="site-logo inline-flex min-w-0 items-center gap-2 whitespace-nowrap leading-none hover:underline font-semibold">
@@ -129,7 +129,7 @@ const jsonLd = (data: Record<string, unknown>) => JSON.stringify(data).replace(/
           <div class="ml-auto hidden shrink-0 items-center gap-2 md:-mr-6 md:flex">
             <button type="button" data-command-palette-open aria-label="Search" aria-keyshortcuts="Meta+K Control+K /" class="mr-1 flex h-8 cursor-pointer items-center gap-2 rounded-full bg-neutral-500/10 pl-3 pr-2 text-sm text-neutral-600 hover:bg-neutral-500/15 hover:text-black dark:text-muted dark:hover:text-white">
               <svg aria-hidden="true" viewBox="0 0 20 20" class="size-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><circle cx="8.5" cy="8.5" r="5.75" /><path d="m13 13 4.25 4.25" /></svg>
-              <kbd data-command-palette-shortcut class="rounded-full bg-neutral-500/10 px-1.5 font-sans text-xs leading-5">⌘K</kbd>
+              <span data-command-palette-shortcut class="rounded-full bg-neutral-500/10 px-1.5 text-xs leading-5">⌘K</span>
             </button>
             <a href="https://bsky.app/profile/alilleybrinker.com" aria-label="Bluesky" class="flex size-8 items-center justify-center text-neutral-400 hover:text-neutral-500"><Icon name="bluesky" class="!h-5 !w-5" /></a>
             <a href="https://github.com/alilleybrinker" aria-label="GitHub" class="flex size-8 items-center justify-center text-neutral-400 hover:text-neutral-500"><Icon name="github" class="!h-5 !w-5" /></a>

@@ -3,7 +3,8 @@ import type { APIRoute } from 'astro';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { Resvg } from '@resvg/resvg-js';
-import { isListedPost, postDate, postSlug, topicSlug } from '../../lib/site';
+import { ditherPath, fieldFor, fieldValue, smoothstep } from '../../lib/dither-pattern';
+import { isListedPost, postDate, postPath, postSlug, topicSlug } from '../../lib/site';
 
 const width = 1356;
 const height = 628;
@@ -46,6 +47,20 @@ function wrapTitle(title: string, maxCharacters = 20) {
 interface SocialCard {
   title: string;
   date?: Date;
+  // The page the card is for, whose dithered field it carries.
+  path: string;
+}
+
+// The same field as the top of the card's page, in cells a little larger than
+// the page's so they survive being shown as a thumbnail, and fading out
+// toward the bottom as it does there.
+const cell = 4;
+function field(path: string) {
+  const columns = Math.floor(width / cell);
+  const rows = Math.floor(height / cell);
+  const shape = fieldFor(path);
+  return ditherPath(columns, rows, cell, (u, v) =>
+    0.26 * smoothstep(0.35, 1.2, fieldValue(shape, u, v, columns, rows)) * (1 - smoothstep(0.3, 1, v)));
 }
 
 function socialCard(card: SocialCard) {
@@ -69,6 +84,7 @@ function socialCard(card: SocialCard) {
         .date { fill: #737373; font-family: 'Public Sans'; font-size: 30px; font-weight: 400; }
       </style>
       <rect width="100%" height="100%" fill="#fafaf9" />
+      <path d="${field(card.path)}" fill="#dcdcdc" shape-rendering="crispEdges" />
       <defs><clipPath id="avatar"><circle cx="174" cy="96" r="44" /></clipPath></defs>
       <image x="130" y="52" width="88" height="88" href="data:image/png;base64,${avatar.toString('base64')}" xlink:href="data:image/png;base64,${avatar.toString('base64')}" clip-path="url(#avatar)" />
       <text x="242" y="106" class="brand">Andrew Lilley Brinker</text>
@@ -83,17 +99,17 @@ export async function getStaticPaths() {
     posts.filter(isListedPost).flatMap((post) => post.data.taxonomies.topics),
   )];
   const pages = [
-    { slug: 'home', title: 'Software Security Engineer' },
-    { slug: 'about', title: 'About — Software Security' },
-    { slug: 'projects', title: 'Projects' },
-    { slug: 'topics', title: 'Blog Topics' },
-    ...topics.map((topic) => ({ slug: `topic-${topicSlug(topic)}`, title: `${topic} Posts` })),
+    { slug: 'home', title: 'Software Security Engineer', path: '/' },
+    { slug: 'about', title: 'About — Software Security', path: '/about/' },
+    { slug: 'projects', title: 'Projects', path: '/projects/' },
+    { slug: 'topics', title: 'Blog Topics', path: '/topics/' },
+    ...topics.map((topic) => ({ slug: `topic-${topicSlug(topic)}`, title: `${topic} Posts`, path: `/topics/${topicSlug(topic)}/` })),
   ];
 
   return [
     ...posts.filter((post) => !post.data.externalUrl).map((post) => ({
       params: { slug: postSlug(post) },
-      props: { title: post.data.title, date: postDate(post) },
+      props: { title: post.data.title, date: postDate(post), path: postPath(post) },
     })),
     ...pages.map((page) => ({ params: { slug: page.slug }, props: page })),
   ];
