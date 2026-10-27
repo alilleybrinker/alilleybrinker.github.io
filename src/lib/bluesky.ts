@@ -181,7 +181,8 @@ function isVerificationNotice(title: string) {
 function getLinkFacets(post: FeedPost) {
   return (post.record.facets ?? []).flatMap((facet) => {
     const link = facet.features?.find((feature) => feature.$type === 'app.bsky.richtext.facet#link');
-    if (!link?.uri || !/^https?:\/\//.test(link.uri) || isVideoUrl(link.uri) || !isLikelyArticleUrl(link.uri)) return [];
+    // A link that isn't a valid URL is skipped before anything parses it.
+    if (!link?.uri || !URL.canParse(link.uri) || !/^https?:\/\//.test(link.uri) || isVideoUrl(link.uri) || !isLikelyArticleUrl(link.uri)) return [];
     return [{ ...facet.index, url: withoutFragment(link.uri) }];
   }).sort((a, b) => a.byteStart - b.byteStart);
 }
@@ -323,6 +324,9 @@ async function loadReadingItems() {
     const data = await response.json() as AuthorFeedResponse;
     for (const { post } of data.feed) {
       if (post.author.handle !== BLUESKY_HANDLE) continue;
+      // One odd post shouldn't fail the whole build, so a post without a date
+      // the reading page can format is skipped.
+      if (!parseableDate(post.record.createdAt)) continue;
       const links = getLinkFacets(post);
       if (links.length === 0) continue;
 
