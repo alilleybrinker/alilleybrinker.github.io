@@ -174,10 +174,6 @@ html {
   }
 }
 
-.reading-time {
-  color: oklch(0.5 calc(var(--reading-time-strength) * 0.22) 145);
-}
-
 .topic-link {
   text-decoration-line: underline;
   text-decoration-color: var(--color-rule);
@@ -200,11 +196,6 @@ a:hover .topic-badge {
 
 .dark a:hover .topic-badge {
   background-color: var(--color-neutral-800);
-}
-
-/* Lighter than in light mode, so it keeps 4.5:1 contrast on the dark background. */
-.dark .reading-time {
-  color: oklch(0.66 calc(var(--reading-time-strength) * 0.15) 150);
 }
 
 .info-callout {
