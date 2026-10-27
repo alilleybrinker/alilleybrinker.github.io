@@ -112,9 +112,14 @@ const frameRequest: (callback: (now: number) => void) => unknown =
     ? requestAnimationFrame
     : (callback) => setTimeout(() => callback(performance.now()), 1000 / 60);
 
-// Starts the field on a canvas and returns a function that takes messages, or
-// undefined when WebGL isn't available.
-export function startField(canvas: HTMLCanvasElement | OffscreenCanvas, path: string, reduce: boolean) {
+type Surface = {
+  canvas: HTMLCanvasElement | OffscreenCanvas;
+  gl: WebGLRenderingContext;
+  u: Record<string, WebGLUniformLocation | null>;
+};
+
+// Sets up the shader on a canvas, or returns undefined without WebGL.
+function surfaceOn(canvas: HTMLCanvasElement | OffscreenCanvas): Surface | undefined {
   const gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: false, antialias: false }) as WebGLRenderingContext | null;
   if (!gl) return undefined;
   const compile = (type: number, source: string) => {
@@ -128,7 +133,6 @@ export function startField(canvas: HTMLCanvasElement | OffscreenCanvas, path: st
   gl.attachShader(program, compile(gl.FRAGMENT_SHADER, FRAGMENT));
   gl.linkProgram(program);
   if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return undefined;
-
   gl.useProgram(program);
   gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
   gl.bufferData(gl.ARRAY_BUFFER, Float32Array.of(-1, -1, 3, -1, -1, 3), gl.STATIC_DRAW);
@@ -139,7 +143,18 @@ export function startField(canvas: HTMLCanvasElement | OffscreenCanvas, path: st
     ['resolution', 'time', 'blobsFrom', 'blobsTo', 'rippleFrom', 'rippleTo', 'morph', 'pointer', 'heat', 'ink', 'hot']
       .map((name) => [name, gl.getUniformLocation(program, name)]),
   );
+  return { canvas, gl, u };
+}
 
+// The field's state lasts across pages; each page has its own canvas, which
+// `attach` binds it to. (Moving one live WebGL canvas from page to page with
+// transition:persist crashes Chrome when anything else, such as an
+// extension's element, sits directly in <html>.) `send` passes it the rest of
+// what it needs to know.
+export function createField(path: string, reduce: boolean) {
+  let surface: Surface | undefined;
+  let size = { width: 0, height: 0 };
+  let colors = { ink: [0.8, 0.8, 0.8], hot: [0.02, 0.38, 1] };
   let from = fieldFor(path);
   let to = from;
   let morphStart = -Infinity;
@@ -154,22 +169,36 @@ export function startField(canvas: HTMLCanvasElement | OffscreenCanvas, path: st
   let changed = true;
   const start = performance.now();
 
+  const resize = () => {
+    if (!surface) return;
+    const { canvas, gl, u } = surface;
+    canvas.width = Math.max(1, Math.ceil(size.width / CELL));
+    canvas.height = Math.max(1, Math.ceil(size.height / CELL));
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.uniform2f(u.resolution, canvas.width, canvas.height);
+  };
+
   const draw = (now: number) => {
     const t = Math.min(1, (now - morphStart) / MORPH_MS);
     // Ease out, so the new field settles into place.
     const morph = 1 - (1 - t) ** 3;
     heat += (heatTarget - heat) * 0.08;
-    gl.uniform1f(u.time, reduceMotion ? 0 : (now - start) / 1000);
-    gl.uniform4fv(u.blobsFrom, from.blobs);
-    gl.uniform4fv(u.blobsTo, to.blobs);
-    gl.uniform2fv(u.rippleFrom, from.ripple);
-    gl.uniform2fv(u.rippleTo, to.ripple);
-    gl.uniform1f(u.morph, morph);
-    gl.uniform2f(u.pointer, pointer.x, pointer.y);
-    gl.uniform1f(u.heat, heat);
-    gl.clearColor(0, 0, 0, 0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    if (surface) {
+      const { gl, u } = surface;
+      gl.uniform1f(u.time, reduceMotion ? 0 : (now - start) / 1000);
+      gl.uniform4fv(u.blobsFrom, from.blobs);
+      gl.uniform4fv(u.blobsTo, to.blobs);
+      gl.uniform2fv(u.rippleFrom, from.ripple);
+      gl.uniform2fv(u.rippleTo, to.ripple);
+      gl.uniform1f(u.morph, morph);
+      gl.uniform2f(u.pointer, pointer.x, pointer.y);
+      gl.uniform1f(u.heat, heat);
+      gl.uniform3fv(u.ink, colors.ink);
+      gl.uniform3fv(u.hot, colors.hot);
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+    }
     // Still settling: a morph in progress or warmth still easing.
     return t < 1 || Math.abs(heatTarget - heat) > 0.001;
   };
@@ -178,7 +207,7 @@ export function startField(canvas: HTMLCanvasElement | OffscreenCanvas, path: st
   // the field neither drifts nor answers the pointer.
   const loop = (now: number) => {
     scheduled = false;
-    if (!visible) return;
+    if (!visible || !surface) return;
     if (changed || now - lastDraw >= DRIFT_FRAME_MS) {
       changed = draw(now);
       lastDraw = now;
@@ -186,7 +215,7 @@ export function startField(canvas: HTMLCanvasElement | OffscreenCanvas, path: st
     if (!reduceMotion || changed) schedule();
   };
   const schedule = () => {
-    if (scheduled || !visible) return;
+    if (scheduled || !visible || !surface) return;
     scheduled = true;
     frameRequest(loop);
   };
@@ -195,21 +224,28 @@ export function startField(canvas: HTMLCanvasElement | OffscreenCanvas, path: st
     schedule();
   };
 
-  return (message: Message) => {
+  // Binds the field to a page's canvas, letting go of the last one. Returns
+  // false without WebGL.
+  const attach = (canvas: HTMLCanvasElement | OffscreenCanvas) => {
+    surface?.gl.getExtension('WEBGL_lose_context')?.loseContext();
+    surface = surfaceOn(canvas);
+    resize();
+    update();
+    return Boolean(surface);
+  };
+
+  const send = (message: Message) => {
     switch (message.type) {
       case 'size':
-        canvas.width = Math.max(1, Math.ceil(message.width / CELL));
-        canvas.height = Math.max(1, Math.ceil(message.height / CELL));
-        gl.viewport(0, 0, canvas.width, canvas.height);
-        gl.uniform2f(u.resolution, canvas.width, canvas.height);
+        size = { width: message.width, height: message.height };
+        resize();
         break;
       case 'colors':
-        gl.uniform3fv(u.ink, message.ink);
-        gl.uniform3fv(u.hot, message.hot);
+        colors = { ink: message.ink, hot: message.hot };
         break;
       case 'pointer':
         if (reduceMotion) return;
-        pointer = { x: message.x / CELL, y: canvas.height - message.y / CELL };
+        pointer = { x: message.x / CELL, y: Math.ceil(size.height / CELL) - message.y / CELL };
         heatTarget = message.inside ? 1 : 0;
         break;
       case 'morph':
@@ -228,4 +264,6 @@ export function startField(canvas: HTMLCanvasElement | OffscreenCanvas, path: st
     }
     update();
   };
+
+  return { attach, send };
 }

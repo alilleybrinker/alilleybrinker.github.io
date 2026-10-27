@@ -1,15 +1,13 @@
-// Draws the dithered field off the main thread, on the canvas the page hands
+// Draws the dithered field off the main thread, on each canvas the page hands
 // over (DitherField.astro).
-import { startField, type Message } from './dither-field';
+import { createField, type Message } from './dither-field';
 
-let send: ((message: Message) => void) | undefined;
+let field: ReturnType<typeof createField> | undefined;
 
 self.onmessage = (event: MessageEvent) => {
   const data = event.data;
-  if (data.type === 'start') {
-    send = startField(data.canvas as OffscreenCanvas, data.path, data.reduce);
-    if (!send) self.postMessage({ type: 'unavailable' });
-    return;
-  }
-  send?.(data as Message);
+  if (data.type === 'start') field = createField(data.path, data.reduce);
+  else if (data.type === 'attach') {
+    if (!field?.attach(data.canvas as OffscreenCanvas)) self.postMessage({ type: 'unavailable' });
+  } else field?.send(data as Message);
 };

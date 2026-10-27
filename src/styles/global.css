@@ -348,8 +348,11 @@ a,
 }
 
 /* The dithered field across the top of each page (DitherField.astro). It sits
-   behind everything, each cell drawn crisp, and fades out downward. */
+   behind everything, each cell drawn crisp, and fades out downward. Its own
+   view transition name keeps the incoming page's field live during a page
+   change, rather than a snapshot taken before it has drawn. */
 #dither-field {
+  view-transition-name: dither-field;
   position: absolute;
   inset: 0 0 auto;
   z-index: -1;
