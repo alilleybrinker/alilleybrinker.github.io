@@ -3,7 +3,7 @@
 // Lists that already show a post's description opt out with data-no-preview.
 ---
 
-<div id="link-preview" role="tooltip" hidden transition:persist class="pointer-events-none fixed z-50 w-[22rem] max-w-[calc(100vw-2rem)] rounded-xl bg-white p-4 font-sans shadow-lg ring-1 ring-black/5 dark:bg-neutral-800 dark:ring-white/10">
+<div id="link-preview" role="tooltip" hidden class="pointer-events-none fixed z-50 w-[22rem] max-w-[calc(100vw-2rem)] rounded-xl bg-white p-4 font-sans shadow-lg ring-1 ring-black/5 dark:bg-neutral-800 dark:ring-white/10">
   <p data-preview-meta class="text-xs text-muted"></p>
   <p data-preview-title class="mt-1 font-display text-base leading-snug text-black dark:text-white"></p>
   <p data-preview-description class="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300"></p>
@@ -12,7 +12,10 @@
 <script>
   type Preview = { title: string; description?: string; date: string; readingTime: number; topics: string[] };
 
-  const card = document.querySelector<HTMLElement>('#link-preview')!;
+  // Each page has its own card. Moving one card from page to page with
+  // transition:persist crashed Chrome when anything else, such as an
+  // extension's element, sat directly in <html>.
+  let card = document.querySelector<HTMLElement>('#link-preview')!;
   const delay = 350;
   let previews: Promise<Record<string, Preview>> | undefined;
   let timer: number | undefined;
@@ -87,4 +90,7 @@
   });
   addEventListener('scroll', hide, { passive: true });
   document.addEventListener('astro:before-swap', hide);
+  document.addEventListener('astro:after-swap', () => {
+    card = document.querySelector<HTMLElement>('#link-preview')!;
+  });
 </script>
