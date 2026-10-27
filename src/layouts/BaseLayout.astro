@@ -132,14 +132,17 @@ const jsonLd = (data: Record<string, unknown>) => JSON.stringify(data).replace(/
           </div>
           <div class="ml-auto md:hidden">
             <details class="group relative">
-              <summary class="flex h-9 cursor-pointer items-center rounded-md bg-white px-3 text-muted shadow-sm ring-1 ring-black/5 hover:bg-neutral-100 hover:text-neutral-500 dark:bg-neutral-800 dark:ring-white/10 dark:hover:bg-neutral-500/25">Menu</summary>
-              <ul class="absolute right-0 z-10 mt-2 min-w-56 list-none rounded-lg bg-white p-2 shadow-lg ring-1 ring-black/5 dark:bg-neutral-800 dark:ring-white/10">
-                <li><a href="/about/" class="block rounded px-3 py-2 hover:bg-neutral-100 hover:text-neutral-600 dark:hover:bg-neutral-500/25">About</a></li>
-                <li><a href="/reading/" class="block rounded px-3 py-2 hover:bg-neutral-100 hover:text-neutral-600 dark:hover:bg-neutral-500/25">Reading</a></li>
-                <li><a href="/projects/" class="block rounded px-3 py-2 hover:bg-neutral-100 hover:text-neutral-600 dark:hover:bg-neutral-500/25">Projects</a></li>
-                <li class="mt-1 flex items-center gap-2 border-t border-neutral-200 px-3 pt-2 dark:border-neutral-700">
-                  <a href="https://bsky.app/profile/alilleybrinker.com" aria-label="Bluesky" class="flex size-8 items-center justify-center text-neutral-400 hover:text-neutral-500"><Icon name="bluesky" class="!h-5 !w-5" /></a>
-                  <a href="https://github.com/alilleybrinker" aria-label="GitHub" class="flex size-8 items-center justify-center text-neutral-400 hover:text-neutral-500"><Icon name="github" class="!h-5 !w-5" /></a>
+              <summary class="flex h-8 cursor-pointer list-none items-center gap-1.5 rounded-full bg-neutral-500/10 px-3.5 text-sm text-muted hover:bg-neutral-500/15 hover:text-black group-open:bg-neutral-500/15 group-open:text-black dark:hover:text-white dark:group-open:text-white [&::-webkit-details-marker]:hidden">
+                Menu
+                <span aria-hidden="true" class="text-[0.7em] transition-transform duration-150 group-open:rotate-180 motion-reduce:transition-none">▾</span>
+              </summary>
+              <ul class="absolute right-0 z-10 mt-2 min-w-48 list-none rounded-3xl bg-white p-1.5 text-base shadow-[0_12px_32px_-16px_rgb(0_0_0/0.25)] ring-1 ring-black/5 dark:bg-neutral-800 dark:ring-white/10">
+                <li><a href="/about/" class="block rounded-full px-4 py-2 hover:bg-neutral-500/10">About</a></li>
+                <li><a href="/reading/" class="block rounded-full px-4 py-2 hover:bg-neutral-500/10">Reading</a></li>
+                <li><a href="/projects/" class="block rounded-full px-4 py-2 hover:bg-neutral-500/10">Projects</a></li>
+                <li class="flex items-center gap-1 px-2.5 pb-1">
+                  <a href="https://bsky.app/profile/alilleybrinker.com" aria-label="Bluesky" class="flex size-8 items-center justify-center rounded-full text-neutral-400 hover:bg-neutral-500/10 hover:text-neutral-500"><Icon name="bluesky" class="!h-5 !w-5" /></a>
+                  <a href="https://github.com/alilleybrinker" aria-label="GitHub" class="flex size-8 items-center justify-center rounded-full text-neutral-400 hover:bg-neutral-500/10 hover:text-neutral-500"><Icon name="github" class="!h-5 !w-5" /></a>
                   <ThemeSwitcher />
                 </li>
               </ul>
@@ -147,7 +150,7 @@ const jsonLd = (data: Record<string, unknown>) => JSON.stringify(data).replace(/
           </div>
         </nav>
       </header>
-      <main class="pt-12 pb-24 px-5 md:px-0 md:max-w-(--breakpoint-md) md:mx-auto"><div class="mb-12 prose lg:prose-lg lg:leading-relaxed prose-stone dark:prose-invert prose-headings:font-medium prose-h1:font-display prose-headings:text-black dark:prose-headings:text-neutral-100 prose-a:text-black dark:prose-a:text-white prose-a:font-normal prose-a:decoration-rule prose-a:hover:decoration-black dark:prose-a:hover:decoration-white prose-code:after:content-none prose-code:before:content-none prose-blockquote:my-0 prose-blockquote:border-rule prose-blockquote:px-5 prose-blockquote:py-5 prose-blockquote:font-normal prose-blockquote:not-italic prose-blockquote:text-inherit prose-figure:overflow-hidden prose-figure:bg-white dark:prose-figure:bg-neutral-800 prose-figure:rounded-xl prose-figure:shadow-lg prose-figcaption:px-5 prose-figcaption:pb-5 prose-figcaption:text-sm prose-figcaption:leading-relaxed prose-figcaption:[overflow-wrap:anywhere] prose-pre:p-5 lg:prose-pre:p-8 prose-pre:-mx-5 lg:prose-pre:-mx-8 md:prose-pre:rounded-3xl text-pretty max-w-full"><slot /></div><footer class="mt-8 text-xs text-muted"><p>Copyright Andrew Lilley Brinker. Made with <Icon name="heart" class="-mt-0.5 !h-3 !w-3" /> in California · <a href="/about/#ai-policy" class="whitespace-nowrap underline decoration-rule hover:text-neutral-700 dark:hover:text-neutral-200">AI Policy</a> · <a href="/colophon/" class="whitespace-nowrap underline decoration-rule hover:text-neutral-700 dark:hover:text-neutral-200">Colophon</a></p></footer></main>
+      <main class="pt-12 pb-24 px-5 md:px-0 md:max-w-(--breakpoint-md) md:mx-auto"><div class="prose lg:prose-lg site-prose mb-12"><slot /></div><footer class="mt-8 text-xs text-muted"><p>Copyright Andrew Lilley Brinker. Made with <Icon name="heart" class="-mt-0.5 !h-3 !w-3" /> in California · <a href="/about/#ai-policy" class="whitespace-nowrap underline decoration-rule hover:text-neutral-700 dark:hover:text-neutral-200">AI Policy</a> · <a href="/colophon/" class="whitespace-nowrap underline decoration-rule hover:text-neutral-700 dark:hover:text-neutral-200">Colophon</a></p></footer></main>
     </div>
     <LinkPreviews />
     <PostTitleTransitions />

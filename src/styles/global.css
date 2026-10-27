@@ -54,6 +54,25 @@ html {
   font-family: var(--font-sans);
 }
 
+/* The text styles of every page, on top of Tailwind Typography's prose: its
+   grays and accents, and how links, quotes, figures and code look. The layout
+   keeps the prose and lg:prose-lg classes themselves, because their own rules
+   refer to those class names. This sits with the utilities, as the classes it
+   replaced did, so it keeps their precedence over per-page classes. */
+@layer utilities {
+  .site-prose {
+    @apply prose-stone dark:prose-invert lg:leading-relaxed text-pretty max-w-full;
+    @apply prose-headings:font-medium prose-headings:text-black dark:prose-headings:text-neutral-100;
+    @apply prose-h1:font-display;
+    @apply prose-a:text-black dark:prose-a:text-white prose-a:font-normal prose-a:decoration-rule prose-a:hover:decoration-black dark:prose-a:hover:decoration-white;
+    @apply prose-code:after:content-none prose-code:before:content-none;
+    @apply prose-blockquote:my-0 prose-blockquote:border-rule prose-blockquote:px-5 prose-blockquote:py-5 prose-blockquote:font-normal prose-blockquote:not-italic prose-blockquote:text-inherit;
+    @apply prose-figure:overflow-hidden prose-figure:bg-white dark:prose-figure:bg-neutral-800 prose-figure:rounded-xl prose-figure:shadow-lg;
+    @apply prose-figcaption:px-5 prose-figcaption:pb-5 prose-figcaption:text-sm prose-figcaption:leading-relaxed prose-figcaption:[overflow-wrap:anywhere];
+    @apply prose-pre:p-5 lg:prose-pre:p-8 prose-pre:-mx-5 lg:prose-pre:-mx-8 md:prose-pre:rounded-3xl;
+  }
+}
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
@@ -235,13 +254,12 @@ a:hover .topic-badge {
 }
 
 #table-of-contents::before {
-  border: 2px dashed var(--color-panel-border);
+  border: 1px solid var(--color-gray-200);
   background: var(--color-panel);
 }
 
 #table-of-contents[open]::before,
 #table-of-contents.toc-is-stuck::before {
-  border-style: solid;
   border-color: white;
   background: white;
 }
@@ -267,11 +285,6 @@ a:hover .topic-badge {
 .dark #table-of-contents.toc-is-stuck::before {
   border-color: var(--color-neutral-700);
   background: var(--color-neutral-800);
-}
-
-.dark #table-of-contents[open]::before,
-.dark #table-of-contents.toc-is-stuck::before {
-  border-style: solid;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -342,8 +355,8 @@ a,
 
 /* Large Merriweather titles are set a little tighter than its default
    spacing, which is drawn for text sizes. */
-.prose h1 .font-display,
-.prose h1:not(:has(.font-display)) {
+.site-prose h1 .font-display,
+.site-prose h1:not(:has(.font-display)) {
   letter-spacing: -0.015em;
 }
 
@@ -405,4 +418,23 @@ a,
   .resolve-in {
     animation: none;
   }
+}
+
+/* Longer posts open with a summary paragraph set off by a rule. The summary
+   reads as a lede, a little larger and darker than the text after it, and
+   the rule is a short mark rather than a full-width break. */
+.post-body > p:first-of-type:has(+ hr) {
+  font-size: 1.125em;
+  line-height: 1.6;
+  color: var(--color-neutral-800);
+}
+
+.dark .post-body > p:first-of-type:has(+ hr) {
+  color: var(--color-neutral-100);
+}
+
+.post-body > p:first-of-type + hr {
+  width: 3rem;
+  margin-block: 2em;
+  border-color: var(--color-rule);
 }
