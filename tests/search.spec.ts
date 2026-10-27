@@ -15,15 +15,20 @@ test('the command palette finds a post and opens it in place', async ({ page }) 
   expect(await sameDocument(page)).toBe(true);
 });
 
-test('the command palette closes on Escape and on a click outside, and says when nothing matches', async ({ page }) => {
+test('the command palette holds focus, closes on Escape and on a click outside, and says when nothing matches', async ({ page }) => {
   await page.goto('/');
   const palette = page.locator('#command-palette');
-  await page.locator('button[data-command-palette-open] >> visible=true').click();
+  const button = page.locator('button[data-command-palette-open] >> visible=true');
+  await button.click();
   await expect(palette).toBeVisible();
   await page.keyboard.type('zzzqqq');
   await expect(page.locator('#command-palette-results')).toHaveText('No matches');
+  // Tab doesn't leave for the page behind, and Escape returns to the button.
+  await page.keyboard.press('Tab');
+  await expect(page.locator('#command-palette-input')).toBeFocused();
   await page.keyboard.press('Escape');
   await expect(palette).toBeHidden();
+  await expect(button).toBeFocused();
   await page.keyboard.press('/');
   await expect(palette).toBeVisible();
   await page.mouse.click(10, 10);
