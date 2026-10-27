@@ -189,6 +189,19 @@ const structuredData = {
         'Could not copy the post as Markdown.',
       );
 
+      // With sidenotes showing, a footnote reference points at its sidenote,
+      // which flashes, rather than jumping to the hidden list at the end.
+      const sidenotes = matchMedia('(min-width: 1100px)');
+      document.querySelectorAll<HTMLAnchorElement>('.post-body a[data-footnote-ref]').forEach((reference) => {
+        reference.addEventListener('click', (event) => {
+          const sidenote = document.querySelector<HTMLElement>(`[data-sidenote="${reference.hash.slice(1)}"]`);
+          if (!sidenotes.matches || !sidenote) return;
+          event.preventDefault();
+          sidenote.dataset.flash = '';
+          window.setTimeout(() => delete sidenote.dataset.flash, 900);
+        });
+      });
+
       // Each code block gets a copy button. The wrapper has no border or
       // padding, so the block's margins collapse through it and the button
       // sits in the block's own corner rather than scrolling with its code.
