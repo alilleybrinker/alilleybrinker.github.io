@@ -60,7 +60,7 @@ const FRAGMENT = `
     float value = mix(field(uv, blobsFrom, rippleFrom), field(uv, blobsTo, rippleTo), morph);
     // Sparse overall, and fading out toward the bottom of the band.
     float level = 0.22 * smoothstep(0.35, 1.2, value) * (1.0 - smoothstep(0.25, 1.0, uv.y));
-    // Near the pointer the dots gather a little and tint toward the accent.
+    // Near the pointer the dots gather a little and tint toward the signal orange.
     vec2 away = (cell - pointer) / 18.0;
     float warmth = heat * exp(-dot(away, away));
     level += 0.08 * warmth;
