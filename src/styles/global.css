@@ -112,6 +112,15 @@ html {
   mask: url("/image/andrew_lineart-mask.png") center / contain no-repeat;
 }
 
+/* On phones the avatar starts the column. Without the dark disc, the line
+   art's own margin would set it 8px in from the text below, so it moves over
+   to line up. */
+@media (width < 768px) {
+  :root:not(.dark) .site-logo-face {
+    translate: -8px 0;
+  }
+}
+
 .site-logo-face-hover {
   background-color: var(--color-accent);
   opacity: 0;
