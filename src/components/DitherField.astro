@@ -65,7 +65,19 @@
     height = entry.contentRect.height;
     send({ type: 'size', width: entry.contentRect.width, height });
   });
-  const visibility = new IntersectionObserver(([entry]) => send({ type: 'visible', visible: entry.isIntersecting }));
+  // The field draws only while it's on screen and nothing covers the page,
+  // such as the command palette, which announces itself with page-cover.
+  let onScreen = true;
+  let covered = false;
+  const sendVisible = () => send({ type: 'visible', visible: onScreen && !covered });
+  const visibility = new IntersectionObserver(([entry]) => {
+    onScreen = entry.isIntersecting;
+    sendVisible();
+  });
+  document.addEventListener('page-cover', (event) => {
+    covered = (event as CustomEvent<boolean>).detail;
+    sendVisible();
+  });
 
   // Each page has its own canvas, which the field moves onto as the page
   // arrives.

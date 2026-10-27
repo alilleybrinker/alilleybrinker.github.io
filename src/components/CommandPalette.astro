@@ -180,6 +180,7 @@
     if (!parts || parts.dialog.open) return;
     parts.input.value = '';
     parts.dialog.showModal();
+    document.dispatchEvent(new CustomEvent('page-cover', { detail: true }));
     parts.input.focus();
     render();
   }
@@ -228,6 +229,13 @@
     const option = (event.target as Element).closest?.<HTMLElement>('#command-palette [role="option"]');
     if (option && Number(option.dataset.index) !== active) setActive(Number(option.dataset.index));
   });
+
+  // While open, the palette covers the page, so the dither field behind it
+  // can rest. However the dialog closes, it fires close, which doesn't bubble,
+  // so it's caught on the way down.
+  document.addEventListener('close', (event) => {
+    if ((event.target as Element).id === 'command-palette') document.dispatchEvent(new CustomEvent('page-cover', { detail: false }));
+  }, true);
 
   // The palette is part of each page, so close it before the page it's on
   // leaves, and show the shortcut for this platform on the header buttons.

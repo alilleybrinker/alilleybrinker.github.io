@@ -36,3 +36,21 @@ jobs:
           # Lets the projects page read repos from the GitHub API without
           # hitting the unauthenticated rate limit.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Browser checks on the built site: contrast, navigation and title
+      # morphs, previews, the command palette, posts' table of contents, code
+      # and reading progress, layout on phones, and no long main-thread tasks
+      # (tests/).
+      - name: Install a browser for the checks
+        run: npx playwright install --with-deps chromium
+
+      - name: Check the site in a browser
+        run: npm test
+
+      - name: Keep traces of failed checks
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-check-traces
+          path: test-results/
+          retention-days: 7
