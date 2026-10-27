@@ -80,10 +80,17 @@
   });
 
   // Each page has its own canvas, which the field moves onto as the page
-  // arrives.
-  document.addEventListener('astro:page-load', () => {
+  // arrives. Handing a canvas over takes a few milliseconds, so it waits until
+  // the page has drawn once, rather than lengthening the first frame of the
+  // move between pages, while the new page's field is still fading in.
+  // Two quick moves can both find the newest page's canvas, which can only be
+  // handed over once.
+  const afterPaint = (callback: () => void) => requestAnimationFrame(() => setTimeout(callback));
+  let attached: HTMLCanvasElement | undefined;
+  document.addEventListener('astro:page-load', () => afterPaint(() => {
     const canvas = document.querySelector<HTMLCanvasElement>('#dither-field');
-    if (!canvas) return;
+    if (!canvas || canvas === attached) return;
+    attached = canvas;
     resizes.disconnect();
     visibility.disconnect();
     if (!attach(canvas)) {
@@ -92,7 +99,7 @@
     }
     resizes.observe(canvas);
     visibility.observe(canvas);
-  });
+  }));
 
   // The field sits at the top of the page, so the pointer's place in it is
   // its place in the page.

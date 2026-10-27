@@ -576,6 +576,12 @@ a,
   background-image: radial-gradient(rgb(255 255 255 / 0.1) 0.75px, transparent 0.75px);
 }
 
+/* In dark mode the panel is a step lighter than the page, so muted text in it
+   is a step lighter too, to keep 4.5:1 on the panel and the selected row. */
+.dark .command-palette {
+  --color-muted: oklch(0.7 0 0);
+}
+
 .command-palette-panel {
   width: min(36rem, 100%);
   margin-inline: auto;
