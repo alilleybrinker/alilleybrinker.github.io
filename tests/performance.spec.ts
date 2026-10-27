@@ -3,6 +3,8 @@ import { test, expect, TOC_POST } from './fixtures';
 // A frame takes 8.3ms at 120fps. A task of 50ms or more on the main thread (a
 // "long task") drops several frames at once, and none of these interactions
 // should ever cause one.
+test.describe.configure({ mode: 'serial' });
+
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
     (window as any).__longTasks = [];

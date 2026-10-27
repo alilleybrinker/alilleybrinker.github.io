@@ -7,6 +7,12 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   reporter: process.env.CI ? [['github'], ['list']] : 'list',
+  // Timing checks share the CPU with nothing else: they run after the rest,
+  // one at a time, since other browsers running beside them slow them down.
+  projects: [
+    { name: 'checks', testIgnore: /performance\.spec\.ts/ },
+    { name: 'performance', testMatch: /performance\.spec\.ts/, dependencies: ['checks'], fullyParallel: false },
+  ],
   use: {
     ...devices['Desktop Chrome'],
     baseURL: 'http://localhost:4399',
