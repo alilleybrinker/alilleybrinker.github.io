@@ -447,3 +447,82 @@ a,
   margin-block: 2em;
   border-color: var(--color-rule);
 }
+
+/* Post titles in lists underline by resolving out of the dither: a sparse
+   row of dots, then a denser one, then a solid line, in the same grain as the
+   field. Drawn as a background, it follows the title across wrapped lines,
+   and repaints only the title for three frames. */
+.dither-underline {
+  background-repeat: repeat-x;
+  background-position: 0 100%;
+  background-size: 100% 1px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+@keyframes underline-from-dither {
+  0% { background-image: repeating-linear-gradient(90deg, currentColor 0 1px, transparent 1px 4px); }
+  33% { background-image: repeating-linear-gradient(90deg, currentColor 0 1px, transparent 1px 2px); }
+  67%, 100% { background-image: linear-gradient(currentColor, currentColor); }
+}
+
+.dither-underline:hover,
+.group:hover .dither-underline,
+.group:focus-visible .dither-underline {
+  animation: underline-from-dither 180ms forwards;
+}
+
+/* Posts show how far through they've been read as a dotted line across the
+   top of the window, in the field's grain. A scroll-driven animation moves it,
+   so it costs no script and runs on the compositor; browsers without scroll
+   timelines leave it out. */
+.reading-progress {
+  display: none;
+}
+
+@supports (animation-timeline: scroll()) {
+  .reading-progress {
+    display: block;
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 40;
+    height: 4px;
+    overflow: hidden;
+    pointer-events: none;
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 2' shape-rendering='crispEdges'%3E%3Crect x='0' y='0' width='1' height='1'/%3E%3Crect x='1' y='1' width='1' height='1'/%3E%3C/svg%3E");
+    mask-size: 4px 4px;
+  }
+
+  .reading-progress::before {
+    position: absolute;
+    inset: 0;
+    content: "";
+    background: var(--color-accent);
+    transform: translateX(-100%);
+    animation: reading-progress linear both;
+    animation-timeline: scroll(root);
+  }
+
+  .dark .reading-progress::before {
+    background: var(--color-accent-bright);
+  }
+}
+
+@keyframes reading-progress {
+  to { transform: translateX(0); }
+}
+
+/* In dark mode the About photo dims to the gray of the header avatar's disc
+   rather than glowing white on the dark page. */
+.dark .about-photo-frame img {
+  filter: brightness(0.83);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dither-underline:hover,
+  .group:hover .dither-underline,
+  .group:focus-visible .dither-underline {
+    animation: none;
+    background-image: linear-gradient(currentColor, currentColor);
+  }
+}
