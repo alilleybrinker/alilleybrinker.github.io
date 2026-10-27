@@ -113,11 +113,11 @@ html {
 }
 
 /* On phones the avatar starts the column. Without the dark disc, the line
-   art's own margin would set it 8px in from the text below, so it moves over
-   to line up. */
+   art's own margin would set it 8px in from the text below, so it and the
+   name move over to line up. */
 @media (width < 768px) {
-  :root:not(.dark) .site-logo-face {
-    translate: -8px 0;
+  :root:not(.dark) .site-logo {
+    margin-left: -8px;
   }
 }
 
