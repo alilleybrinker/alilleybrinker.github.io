@@ -66,12 +66,14 @@
 
   // Every word of the query has to appear somewhere; where it appears decides
   // the order, with title matches first and the newest post winning ties.
-  function score(entry: Entry, words: string[], query: string) {
+  type Word = { text: string; start: RegExp };
+
+  function score(entry: Entry, words: Word[], query: string) {
     let total = entry.haystack.title.includes(query) ? 8 : 0;
-    for (const word of words) {
+    for (const { text: word, start } of words) {
       const { title, topics, description } = entry.haystack;
       if (title.startsWith(word)) total += 6;
-      else if (new RegExp(`(^|[^a-z0-9])${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`).test(title)) total += 4;
+      else if (start.test(title)) total += 4;
       else if (title.includes(word)) total += 3;
       else if (topics.includes(word)) total += 2;
       else if (description.includes(word)) total += 1;
@@ -88,7 +90,9 @@
         { label: 'Recent posts', items: all.filter((entry) => entry.kind === 'post').slice(0, 5) },
       ];
     }
-    const words = query.split(/\s+/);
+    // Each word's pattern for the start of a word in a title, made once per
+    // search rather than once per entry.
+    const words = query.split(/\s+/).map((text): Word => ({ text, start: new RegExp(`(^|[^a-z0-9])${text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`) }));
     const ranked = all
       .map((entry, order) => ({ entry, order, score: score(entry, words, query) }))
       .filter((result) => result.score > 0)
@@ -138,10 +142,49 @@
     const parts = elements();
     if (!parts || !rendered.length) return;
     active = (index + rendered.length) % rendered.length;
-    parts.results.querySelectorAll('[role="option"]').forEach((option, i) => option.setAttribute('aria-selected', String(i === active)));
+    parts.results.querySelectorAll('[role="option"]').forEach((option, i) => {
+      if (option.getAttribute('aria-selected') !== String(i === active)) option.setAttribute('aria-selected', String(i === active));
+    });
     const option = parts.results.querySelector<HTMLElement>(`#command-palette-option-${active}`);
     parts.input.setAttribute('aria-activedescendant', option?.id ?? '');
     option?.scrollIntoView({ block: 'nearest' });
+  }
+
+  // Rows stay between searches, found again by path, and a row's title is
+  // only rewritten when its highlighting changes. Typing then lays out and
+  // shapes the text of only the rows that changed, not the whole list.
+  const rows = new Map<string, { row: HTMLLIElement; title: HTMLSpanElement; html: string }>();
+  const labels = new Map<string, HTMLLIElement>();
+
+  function label(text: string, className = 'px-4 pb-1 pt-3 text-xs font-semibold uppercase tracking-widest text-muted') {
+    let item = labels.get(text);
+    if (!item) {
+      item = document.createElement('li');
+      item.setAttribute('role', 'presentation');
+      item.className = className;
+      item.textContent = text;
+      labels.set(text, item);
+    }
+    return item;
+  }
+
+  function option(entry: Entry, words: string[], index: number) {
+    let known = rows.get(entry.path);
+    if (!known) {
+      const row = document.createElement('li');
+      row.setAttribute('role', 'option');
+      row.className = 'command-palette-option flex cursor-pointer flex-col gap-0.5 rounded-2xl px-4 py-2.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4';
+      row.innerHTML = `<span class="min-w-0"></span>${entry.detail ? `<span class="text-sm text-muted tabular-nums sm:max-w-[45%] sm:shrink-0 sm:truncate">${escape(entry.detail)}</span>` : ''}`;
+      known = { row, title: row.firstElementChild as HTMLSpanElement, html: '' };
+      rows.set(entry.path, known);
+    }
+    const html = highlight(entry.title, words) + (entry.external ? '<span aria-hidden="true" class="text-muted"> ↗</span><span class="sr-only"> (external article)</span>' : '');
+    if (known.html !== html) known.title.innerHTML = known.html = html;
+    if (known.row.dataset.index !== String(index)) {
+      known.row.id = `command-palette-option-${index}`;
+      known.row.dataset.index = String(index);
+    }
+    return known.row;
   }
 
   async function render() {
@@ -154,14 +197,14 @@
     const words = fold(raw.trim()).split(/\s+/).filter(Boolean);
     rendered = groups.flatMap((group) => group.items);
     let i = 0;
-    parts.results.innerHTML = groups.map((group) => `
-      <li role="presentation" class="px-4 pb-1 pt-3 text-xs font-semibold uppercase tracking-widest text-muted">${group.label}</li>
-      ${group.items.map((entry) => `
-        <li role="option" id="command-palette-option-${i}" data-index="${i++}" aria-selected="false" class="command-palette-option flex cursor-pointer flex-col gap-0.5 rounded-2xl px-4 py-2.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
-          <span class="min-w-0">${highlight(entry.title, words)}${entry.external ? '<span aria-hidden="true" class="text-muted"> ↗</span><span class="sr-only"> (external article)</span>' : ''}</span>
-          ${entry.detail ? `<span class="text-sm text-muted tabular-nums sm:max-w-[45%] sm:shrink-0 sm:truncate">${escape(entry.detail)}</span>` : ''}
-        </li>`).join('')}`).join('')
-      || '<li role="presentation" class="px-4 py-6 text-center text-muted">No matches</li>';
+    const items = groups.flatMap((group) => [label(group.label), ...group.items.map((entry) => option(entry, words, i++))]);
+    if (!items.length) items.push(label('No matches', 'px-4 py-6 text-center text-muted'));
+    // Move only what's out of place, so rows that stay keep their layout.
+    items.forEach((item, at) => {
+      const current = parts.results.children[at];
+      if (current !== item) parts.results.insertBefore(item, current ?? null);
+    });
+    while (parts.results.children.length > items.length) parts.results.lastElementChild!.remove();
     parts.status.textContent = raw.trim() ? `${rendered.length} ${rendered.length === 1 ? 'result' : 'results'}` : '';
     setActive(0);
   }
