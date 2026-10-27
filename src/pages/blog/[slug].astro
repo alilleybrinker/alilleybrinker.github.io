@@ -188,6 +188,22 @@ const structuredData = {
         'Post copied to the clipboard as Markdown.',
         'Could not copy the post as Markdown.',
       );
+
+      // Each code block gets a copy button. The wrapper has no border or
+      // padding, so the block's margins collapse through it and the button
+      // sits in the block's own corner rather than scrolling with its code.
+      document.querySelectorAll<HTMLPreElement>('.post-body pre.astro-code').forEach((pre) => {
+        const block = document.createElement('div');
+        block.className = 'code-block';
+        pre.replaceWith(block);
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'code-copy cursor-pointer rounded-full bg-white px-3 py-1 font-sans text-xs text-neutral-600 ring-1 ring-black/5 hover:text-black dark:bg-neutral-700 dark:text-neutral-200 dark:ring-white/10 dark:hover:text-white';
+        button.textContent = 'Copy';
+        button.setAttribute('aria-label', 'Copy code');
+        block.append(pre, button);
+        copyButton(button, async () => pre.innerText, 'Code copied to the clipboard.', 'Could not copy the code.');
+      });
     });
   </script>
 </BaseLayout>

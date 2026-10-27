@@ -16,6 +16,8 @@ export default defineConfig({
   },
   markdown: {
     processor: unified({ remarkPlugins: [remarkLegacyLinks], rehypePlugins: [rehypeTypeset] }),
+    // Code is colored from CSS variables, set for each theme in global.css.
+    shikiConfig: { theme: 'css-variables' },
   },
   vite: {
     plugins: [tailwindcss()],

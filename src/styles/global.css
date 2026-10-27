@@ -622,3 +622,73 @@ a,
 .dark #table-of-contents nav a[aria-current] {
   color: white;
 }
+
+/* Code is colored from the site's palette rather than a stock theme: a quiet
+   panel, the accent for keywords, and a few muted hues, each at least 4.5:1
+   against the panel in both themes. */
+:root {
+  --astro-code-background: var(--color-panel);
+  --astro-code-foreground: oklch(0.27 0 0);
+  --astro-code-token-keyword: #0447c2;
+  --astro-code-token-function: #6a3fc0;
+  --astro-code-token-string: #1d7a3a;
+  --astro-code-token-string-expression: #1d7a3a;
+  --astro-code-token-constant: #a04a0a;
+  --astro-code-token-parameter: oklch(0.27 0 0);
+  --astro-code-token-comment: oklch(0.5 0 0);
+  --astro-code-token-punctuation: oklch(0.45 0 0);
+  --astro-code-token-link: #0447c2;
+}
+
+.dark {
+  --astro-code-background: var(--color-neutral-800);
+  --astro-code-foreground: oklch(0.92 0 0);
+  --astro-code-token-keyword: #8cb4ff;
+  --astro-code-token-function: #c3b1ff;
+  --astro-code-token-string: #7fd59a;
+  --astro-code-token-string-expression: #7fd59a;
+  --astro-code-token-constant: #f0b27a;
+  --astro-code-token-parameter: oklch(0.92 0 0);
+  --astro-code-token-comment: oklch(0.7 0 0);
+  --astro-code-token-punctuation: oklch(0.75 0 0);
+  --astro-code-token-link: #8cb4ff;
+}
+
+.post-body pre.astro-code {
+  border: 1px solid var(--color-panel-border);
+  border-radius: 1rem;
+}
+
+.dark .post-body pre.astro-code {
+  border-color: var(--color-neutral-700);
+}
+
+/* Comments are italic, picked out by the color Shiki gives them. */
+.post-body pre.astro-code [style*="--astro-code-token-comment"] {
+  font-style: italic;
+}
+
+/* Each code block gets a copy button in its corner, shown on hover or focus
+   where there's a pointer to hover with, and always on touch screens. */
+.code-block {
+  position: relative;
+}
+
+.code-copy {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  opacity: 0;
+  transition: opacity 150ms ease-out;
+}
+
+.code-block:hover .code-copy,
+.code-copy:focus-visible {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .code-copy {
+    opacity: 1;
+  }
+}
