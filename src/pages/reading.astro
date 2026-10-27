@@ -161,7 +161,7 @@ for (const item of items) {
 
     .reading-link-preview-date {
         margin: 0;
-        color: rgb(115 115 115);
+        color: var(--color-muted);
         font-size: 0.75rem;
         line-height: 1.5;
     }
@@ -204,9 +204,12 @@ for (const item of items) {
         z-index: 1;
     }
 
+    /* Code in a title is set in ink, not the title's green, which no chip
+       behind it would leave readable. */
     .reading-link-preview-title code {
         border-radius: 0.25rem;
         background: rgb(231 229 228);
+        color: rgb(23 23 23);
         padding: 0.1rem 0.25rem;
         font-family: var(--font-mono);
         font-size: 0.875em;
@@ -233,12 +236,13 @@ for (const item of items) {
         color: color-mix(
             in oklch,
             white calc(100% - var(--reading-link-strength)),
-            oklch(0.53 0.15 150) var(--reading-link-strength)
+            oklch(0.66 0.15 150) var(--reading-link-strength)
         );
     }
 
     .dark .reading-link-preview-title code {
         background: rgb(64 64 64);
+        color: white;
     }
 
     .dark .reading-link-preview-date {

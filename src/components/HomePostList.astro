@@ -9,8 +9,10 @@ interface Props {
   // Where the posts to mark with a star link to, such as those featured in
   // Start Here. Matching on the link covers posts published elsewhere.
   featured?: Set<string>;
+  // The level of the years' headings: one below whatever heads the list.
+  yearHeading?: 'h2' | 'h3';
 }
-const { posts, limit, featured } = Astro.props;
+const { posts, limit, featured, yearHeading: YearHeading = 'h3' } = Astro.props;
 const displayed = limit === undefined ? posts : posts.slice(0, limit);
 const years = new Map<number, Post[]>();
 for (const post of displayed) {
@@ -23,7 +25,7 @@ for (const post of displayed) {
 <div class="mt-10 not-prose">
   {[...years.entries()].map(([year, yearPosts]) => (
     <section class="mb-6">
-      <h3 class="mb-1 text-sm font-normal text-muted">{year}</h3>
+      <YearHeading class="mb-1 text-sm font-normal text-muted">{year}</YearHeading>
       <ul class="list-none p-0">
         {yearPosts.map((post) => (
           <li>
