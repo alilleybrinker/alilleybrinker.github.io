@@ -64,7 +64,7 @@ for (const item of items) {
                                         <div class="reading-link-preview">
                                             <h3
                                                 class="reading-link-preview-title"
-                                                style={`--reading-link-strength: ${mentionStrength(item.mentions.length) * 100}%; --reading-link-weight: ${400 + Math.round(mentionStrength(item.mentions.length) * 2) * 100}`}
+                                                style={`--reading-link-weight: ${400 + Math.round(mentionStrength(item.mentions.length) * 2) * 100}`}
                                             >
                                                 <a
                                                     href={item.url}
@@ -168,11 +168,7 @@ for (const item of items) {
 
     .reading-link-preview-title {
         margin: 0;
-        color: color-mix(
-            in oklch,
-            rgb(23 23 23) calc(100% - var(--reading-link-strength)),
-            oklch(0.5 0.22 145) var(--reading-link-strength)
-        );
+        color: rgb(23 23 23);
         font-family: var(--font-sans);
         font-size: 1.125rem;
         font-weight: var(--reading-link-weight);
@@ -230,11 +226,7 @@ for (const item of items) {
     }
 
     .dark .reading-link-preview-title {
-        color: color-mix(
-            in oklch,
-            white calc(100% - var(--reading-link-strength)),
-            oklch(0.53 0.15 150) var(--reading-link-strength)
-        );
+        color: white;
     }
 
     .dark .reading-link-preview-title code {
