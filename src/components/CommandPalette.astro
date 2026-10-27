@@ -1,0 +1,241 @@
+---
+// A command palette for jumping to any post, topic or page, opened with ⌘K
+// (Ctrl+K elsewhere), "/", or the search buttons in the header. It searches
+// an index built with the site (src/pages/search.json.ts), so it needs no
+// server, and resolves out of the dither as it opens.
+---
+
+<dialog id="command-palette" aria-label="Search the site" class="command-palette">
+  <div class="command-palette-panel overflow-hidden rounded-3xl bg-white font-sans text-base text-black shadow-[0_24px_64px_-24px_rgb(0_0_0/0.4)] ring-1 ring-black/5 dark:bg-neutral-800 dark:text-neutral-100 dark:ring-white/10">
+    <div class="flex items-center gap-3 border-b border-black/5 px-5 dark:border-white/10">
+      <svg aria-hidden="true" viewBox="0 0 20 20" class="size-5 shrink-0 text-muted" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><circle cx="8.5" cy="8.5" r="5.75" /><path d="m13 13 4.25 4.25" /></svg>
+      <input
+        id="command-palette-input"
+        type="text"
+        role="combobox"
+        aria-expanded="true"
+        aria-controls="command-palette-results"
+        aria-autocomplete="list"
+        autocomplete="off"
+        spellcheck="false"
+        placeholder="Search posts, topics and pages"
+        class="h-14 w-full bg-transparent text-lg outline-none placeholder:text-neutral-500 dark:placeholder:text-neutral-400"
+      />
+      <kbd class="hidden shrink-0 rounded-md bg-neutral-500/10 px-1.5 py-0.5 font-sans text-xs text-neutral-600 sm:block dark:text-muted">esc</kbd>
+    </div>
+    <ul id="command-palette-results" role="listbox" aria-label="Results" class="max-h-[min(60vh,28rem)] list-none overflow-y-auto overscroll-contain p-1.5"></ul>
+    <p id="command-palette-status" class="sr-only" aria-live="polite"></p>
+  </div>
+</dialog>
+
+<script>
+  import { navigate } from 'astro:transitions/client';
+
+  type Entry = { kind: 'page' | 'post' | 'topic'; title: string; path: string; detail?: string; external?: boolean; haystack: { title: string; topics: string; description: string } };
+  type Index = {
+    pages: { title: string; path: string }[];
+    posts: { title: string; description?: string; topics: string[]; year: number; path: string; external: boolean }[];
+    topics: { name: string; count: number; path: string }[];
+  };
+
+  // Lowercase, without accents, and with curly quotes made straight, so
+  // "it's" finds "It’s". Highlighting relies on this keeping the length.
+  const fold = (text: string) => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[‘’]/g, "'").replace(/[“”]/g, '"').toLowerCase();
+  // For matching only, "C++" is also "cpp", as it's often typed.
+  const normalize = (text: string) => fold(text).replace(/c\+\+/g, 'cpp');
+
+  let entries: Promise<Entry[]> | undefined;
+  const load = () => entries ??= fetch('/search.json')
+    .then((response) => response.json() as Promise<Index>)
+    .then((index) => [
+      ...index.pages.map((page): Entry => ({ kind: 'page', title: page.title, path: page.path, haystack: { title: normalize(page.title), topics: '', description: '' } })),
+      ...index.posts.map((post): Entry => ({
+        kind: 'post',
+        title: post.title,
+        path: post.path,
+        external: post.external,
+        detail: [post.year, ...post.topics].join(' · '),
+        haystack: { title: normalize(post.title), topics: normalize(post.topics.join(' ')), description: normalize(post.description ?? '') },
+      })),
+      ...index.topics.map((topic): Entry => ({ kind: 'topic', title: topic.name, path: topic.path, detail: `${topic.count} ${topic.count === 1 ? 'post' : 'posts'}`, haystack: { title: normalize(topic.name), topics: '', description: '' } })),
+    ])
+    .catch(() => {
+      entries = undefined;
+      return [];
+    });
+
+  // Every word of the query has to appear somewhere; where it appears decides
+  // the order, with title matches first and the newest post winning ties.
+  function score(entry: Entry, words: string[], query: string) {
+    let total = entry.haystack.title.includes(query) ? 8 : 0;
+    for (const word of words) {
+      const { title, topics, description } = entry.haystack;
+      if (title.startsWith(word)) total += 6;
+      else if (new RegExp(`(^|[^a-z0-9])${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`).test(title)) total += 4;
+      else if (title.includes(word)) total += 3;
+      else if (topics.includes(word)) total += 2;
+      else if (description.includes(word)) total += 1;
+      else return 0;
+    }
+    return total;
+  }
+
+  function search(all: Entry[], raw: string) {
+    const query = normalize(raw.trim());
+    if (!query) {
+      return [
+        { label: 'Pages', items: all.filter((entry) => entry.kind === 'page') },
+        { label: 'Recent posts', items: all.filter((entry) => entry.kind === 'post').slice(0, 5) },
+      ];
+    }
+    const words = query.split(/\s+/);
+    const ranked = all
+      .map((entry, order) => ({ entry, order, score: score(entry, words, query) }))
+      .filter((result) => result.score > 0)
+      .sort((a, b) => b.score - a.score || a.order - b.order)
+      .map((result) => result.entry);
+    return [
+      { label: 'Posts', items: ranked.filter((entry) => entry.kind === 'post').slice(0, 8) },
+      { label: 'Topics', items: ranked.filter((entry) => entry.kind === 'topic').slice(0, 4) },
+      { label: 'Pages', items: ranked.filter((entry) => entry.kind === 'page') },
+    ].filter((group) => group.items.length > 0);
+  }
+
+  const escape = (text: string) => text.replace(/[&<>"']/g, (character) => `&#${character.charCodeAt(0)};`);
+
+  // Marks where the query's words fall in a title. Titles are matched without
+  // accents, which only rarely changes their length, so fall back to no marks.
+  function highlight(title: string, words: string[]) {
+    const plain = fold(title);
+    if (!words.length || plain.length !== title.length) return escape(title);
+    const marked = new Array<boolean>(title.length).fill(false);
+    for (const word of words) {
+      for (let at = plain.indexOf(word); at !== -1; at = plain.indexOf(word, at + word.length)) marked.fill(true, at, at + word.length);
+    }
+    let html = '';
+    for (let i = 0; i < title.length;) {
+      let end = i;
+      while (end < title.length && marked[end] === marked[i]) end++;
+      const text = escape(title.slice(i, end));
+      html += marked[i] ? `<mark>${text}</mark>` : text;
+      i = end;
+    }
+    return html;
+  }
+
+  const elements = () => {
+    const dialog = document.querySelector<HTMLDialogElement>('#command-palette');
+    const input = document.querySelector<HTMLInputElement>('#command-palette-input');
+    const results = document.querySelector<HTMLUListElement>('#command-palette-results');
+    const status = document.querySelector<HTMLElement>('#command-palette-status');
+    return dialog && input && results && status ? { dialog, input, results, status } : undefined;
+  };
+
+  let active = 0;
+  let rendered: Entry[] = [];
+
+  function setActive(index: number) {
+    const parts = elements();
+    if (!parts || !rendered.length) return;
+    active = (index + rendered.length) % rendered.length;
+    parts.results.querySelectorAll('[role="option"]').forEach((option, i) => option.setAttribute('aria-selected', String(i === active)));
+    const option = parts.results.querySelector<HTMLElement>(`#command-palette-option-${active}`);
+    parts.input.setAttribute('aria-activedescendant', option?.id ?? '');
+    option?.scrollIntoView({ block: 'nearest' });
+  }
+
+  async function render() {
+    const parts = elements();
+    if (!parts) return;
+    const raw = parts.input.value;
+    const all = await load();
+    if (parts.input.value !== raw) return;
+    const groups = search(all, raw);
+    const words = fold(raw.trim()).split(/\s+/).filter(Boolean);
+    rendered = groups.flatMap((group) => group.items);
+    let i = 0;
+    parts.results.innerHTML = groups.map((group) => `
+      <li role="presentation" class="px-4 pb-1 pt-3 text-xs font-semibold uppercase tracking-widest text-muted">${group.label}</li>
+      ${group.items.map((entry) => `
+        <li role="option" id="command-palette-option-${i}" data-index="${i++}" aria-selected="false" class="command-palette-option flex cursor-pointer flex-col gap-0.5 rounded-2xl px-4 py-2.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
+          <span class="min-w-0">${highlight(entry.title, words)}${entry.external ? '<span aria-hidden="true" class="text-muted"> ↗</span><span class="sr-only"> (external article)</span>' : ''}</span>
+          ${entry.detail ? `<span class="text-sm text-muted tabular-nums sm:max-w-[45%] sm:shrink-0 sm:truncate">${escape(entry.detail)}</span>` : ''}
+        </li>`).join('')}`).join('')
+      || '<li role="presentation" class="px-4 py-6 text-center text-muted">No matches</li>';
+    parts.status.textContent = raw.trim() ? `${rendered.length} ${rendered.length === 1 ? 'result' : 'results'}` : '';
+    setActive(0);
+  }
+
+  function go(entry: Entry | undefined, newTab: boolean) {
+    const parts = elements();
+    if (!entry || !parts) return;
+    parts.dialog.close();
+    if (newTab) window.open(entry.path, '_blank', 'noopener');
+    else if (entry.external) location.assign(entry.path);
+    else navigate(entry.path);
+  }
+
+  function open() {
+    const parts = elements();
+    if (!parts || parts.dialog.open) return;
+    parts.input.value = '';
+    parts.dialog.showModal();
+    parts.input.focus();
+    render();
+  }
+
+  document.addEventListener('keydown', (event) => {
+    const parts = elements();
+    if (!parts) return;
+    const typing = event.target instanceof HTMLElement && event.target.closest('input, textarea, select, [contenteditable]');
+    if ((event.key === 'k' && (event.metaKey || event.ctrlKey)) || (event.key === '/' && !typing && !parts.dialog.open)) {
+      event.preventDefault();
+      if (parts.dialog.open) parts.dialog.close();
+      else open();
+      return;
+    }
+    if (!parts.dialog.open) return;
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      setActive(active + (event.key === 'ArrowDown' ? 1 : -1));
+    } else if (event.key === 'Enter' && event.target === parts.input) {
+      event.preventDefault();
+      go(rendered[active], event.metaKey || event.ctrlKey);
+    }
+  });
+
+  document.addEventListener('input', (event) => {
+    if ((event.target as Element).id === 'command-palette-input') render();
+  });
+
+  document.addEventListener('click', (event) => {
+    const target = event.target as Element;
+    if (target.closest('[data-command-palette-open]')) {
+      event.preventDefault();
+      target.closest('details')?.removeAttribute('open');
+      open();
+      return;
+    }
+    const parts = elements();
+    if (!parts?.dialog.open) return;
+    const option = target.closest<HTMLElement>('[role="option"]');
+    if (option) go(rendered[Number(option.dataset.index)], event.metaKey || event.ctrlKey);
+    // A click on the dialog itself, outside the panel, is on the backdrop.
+    else if (target === parts.dialog) parts.dialog.close();
+  });
+
+  document.addEventListener('pointermove', (event) => {
+    const option = (event.target as Element).closest?.<HTMLElement>('#command-palette [role="option"]');
+    if (option && Number(option.dataset.index) !== active) setActive(Number(option.dataset.index));
+  });
+
+  // The palette is part of each page, so close it before the page it's on
+  // leaves, and show the shortcut for this platform on the header buttons.
+  document.addEventListener('astro:before-swap', () => elements()?.dialog.close());
+  document.addEventListener('astro:page-load', () => {
+    const mac = /Mac|iPhone|iPad/.test(navigator.platform);
+    document.querySelectorAll('[data-command-palette-shortcut]').forEach((shortcut) => {
+      shortcut.textContent = mac ? '⌘K' : 'Ctrl K';
+    });
+  });
+</script>
