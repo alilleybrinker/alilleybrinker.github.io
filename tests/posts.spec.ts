@@ -6,11 +6,14 @@ test('the stuck table of contents names the section being read', async ({ page }
   await expect(current).toHaveText('');
   // Jump most of the way down at once, as the End key or a link would.
   await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight * 0.7));
-  const expected = await page.evaluate(() => [...document.querySelectorAll('.post-body :is(h2, h3, h4)[id]')].filter((h) => h.getBoundingClientRect().top <= innerHeight / 3).pop()?.textContent);
-  expect(expected).toBeTruthy();
-  await expect(current).toHaveText(expected!);
+  // Paragraphs drawn after the jump take their real heights, which moves the
+  // headings, so the heading being read is found as it is checked.
+  const reading = () => page.evaluate(() => [...document.querySelectorAll('.post-body :is(h2, h3, h4)[id]')].filter((h) => h.getBoundingClientRect().top <= innerHeight / 3).pop()?.textContent);
+  await expect.poll(async () => {
+    const expected = await reading();
+    return Boolean(expected) && (await current.textContent()) === expected && (await page.locator('#table-of-contents nav a[aria-current="location"]').textContent()) === expected;
+  }).toBe(true);
   await expect(current).toBeVisible();
-  await expect(page.locator('#table-of-contents nav a[aria-current="location"]')).toHaveText(expected!);
 });
 
 test('code blocks copy their code', async ({ page, context }) => {

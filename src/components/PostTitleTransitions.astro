@@ -36,4 +36,22 @@
     const title = remembered && matching.includes(remembered) ? remembered : matching[0];
     if (title) title.style.viewTransitionName = name;
   });
+
+  // A post needs fonts the lists don't: Merriweather for its title, and often
+  // italics and code. Fetch them as soon as a visitor heads for a link or
+  // opens the palette, so the post draws in its own fonts the first time,
+  // rather than drawing once and again as they arrive, with the title
+  // changing font just after it morphs. Only their Latin files are fetched.
+  const fonts = ['400 1em Merriweather', '700 1em Merriweather', 'italic 400 1em "Public Sans Variable"', '400 1em "JetBrains Mono Variable"'];
+  const intent = new AbortController();
+  const fetchFonts = () => {
+    intent.abort();
+    for (const font of fonts) document.fonts.load(font, 'a').catch(() => {});
+  };
+  for (const type of ['pointerover', 'focusin', 'touchstart']) {
+    document.addEventListener(type, (event) => {
+      if ((event.target as Element).closest?.('a[href^="/"]')) fetchFonts();
+    }, { passive: true, signal: intent.signal });
+  }
+  document.addEventListener('page-cover', fetchFonts, { signal: intent.signal });
 </script>
