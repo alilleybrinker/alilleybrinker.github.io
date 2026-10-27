@@ -57,13 +57,13 @@ const FRAGMENT = `
     vec2 uv = vec2(cell.x / resolution.x, 1.0 - cell.y / resolution.y);
     float value = mix(field(uv, blobsFrom, rippleFrom), field(uv, blobsTo, rippleTo), morph);
     // Sparse overall, and fading out toward the bottom of the band.
-    float level = 0.26 * smoothstep(0.35, 1.2, value) * (1.0 - smoothstep(0.25, 1.0, uv.y));
-    // Near the pointer the dots gather a little and warm toward the accent.
+    float level = 0.22 * smoothstep(0.35, 1.2, value) * (1.0 - smoothstep(0.25, 1.0, uv.y));
+    // Near the pointer the dots gather a little and tint toward the accent.
     vec2 away = (cell - pointer) / 18.0;
     float warmth = heat * exp(-dot(away, away));
-    level += 0.12 * warmth;
+    level += 0.08 * warmth;
     if (level <= bayer4(cell)) discard;
-    gl_FragColor = vec4(mix(ink, hot, smoothstep(0.1, 0.5, warmth)), 1.0);
+    gl_FragColor = vec4(mix(ink, hot, 0.35 * smoothstep(0.1, 0.5, warmth)), 1.0);
   }
 `;
 

@@ -52,7 +52,7 @@
   const sendColors = () => {
     const dark = document.documentElement.classList.contains('dark');
     const accent = getComputedStyle(document.documentElement).getPropertyValue(dark ? '--color-accent-bright' : '--color-accent').trim();
-    send({ type: 'colors', ink: rgb(dark ? 'oklch(0.36 0 0)' : 'oklch(0.8 0 0)'), hot: rgb(accent || '#0560ff') });
+    send({ type: 'colors', ink: rgb(dark ? 'oklch(0.27 0 0)' : 'oklch(0.91 0 0)'), hot: rgb(accent || '#0560ff') });
   };
   sendColors();
   new MutationObserver(sendColors).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
