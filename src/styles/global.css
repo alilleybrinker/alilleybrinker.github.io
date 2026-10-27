@@ -26,6 +26,9 @@
      warmth near the cursor and featured posts' stars. Only marks and lines,
      never text or large areas; 3.2:1 on the page here and 5.3:1 in dark. */
   --color-signal: #f25a00;
+  /* The signal for the one glyph that wears it, the featured star: deeper on
+     the light page to reach 4.5:1 (4.9:1); dark mode's signal already does. */
+  --color-signal-text: #c2410c;
 
   /* Secondary text: dates, labels, metadata. Dark mode lightens it (below), so
      it keeps at least 4.5:1 contrast against either background. */
@@ -55,6 +58,7 @@
 .dark {
   --color-muted: oklch(0.64 0 0);
   --color-signal: #ff5f00;
+  --color-signal-text: #ff5f00;
 }
 
 html {
