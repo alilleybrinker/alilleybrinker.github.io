@@ -22,11 +22,24 @@
   // `attach` gives it each page's canvas.
   let send: (message: Message) => void;
   let attach: (canvas: HTMLCanvasElement) => boolean;
+
+  // During a move between pages, the old page's field holds (see
+  // ::view-transition-old(dither-field) in global.css) until the new page's
+  // field has drawn, then fades, so the field never blinks out while the new
+  // canvas is still blank. The new field starts as the old one's shape.
+  const drawn = () => {
+    try {
+      document.documentElement.animate({ opacity: [1, 0] }, { duration: 200, easing: 'ease-out', fill: 'forwards', pseudoElement: '::view-transition-old(dither-field)' });
+    } catch {
+      // No move between pages under way.
+    }
+  };
   if ('transferControlToOffscreen' in HTMLCanvasElement.prototype && typeof Worker === 'function') {
     const worker = new Worker(new URL('../lib/dither-field.worker.ts', import.meta.url), { type: 'module' });
     worker.postMessage({ type: 'start', path: location.pathname, reduce: reduceMotion.matches });
     worker.onmessage = (event) => {
       if (event.data.type === 'unavailable') document.querySelector('#dither-field')?.remove();
+      else if (event.data.type === 'drawn') drawn();
     };
     send = (message) => worker.postMessage(message);
     attach = (canvas) => {
@@ -35,7 +48,7 @@
       return true;
     };
   } else {
-    const field = createField(location.pathname, reduceMotion.matches);
+    const field = createField(location.pathname, reduceMotion.matches, drawn);
     send = field.send;
     attach = field.attach;
   }

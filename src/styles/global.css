@@ -408,6 +408,13 @@ a,
   mask-image: linear-gradient(to bottom, black 50%, transparent);
 }
 
+/* Rather than crossfading, the old page's field holds while the new page's
+   comes in live, and fades once the new one has drawn (DitherField.astro). */
+::view-transition-old(dither-field),
+::view-transition-new(dither-field) {
+  animation: none;
+}
+
 /* Post titles resolve out of the dither when a post opens, filling in through
    the 16 steps of the same 4×4 pattern as the field, one cell per 3px. The
    title that morphs in from a list skips it (PostTitleTransitions.astro). */

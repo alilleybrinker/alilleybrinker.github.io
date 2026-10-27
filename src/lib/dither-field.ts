@@ -120,8 +120,9 @@ function surfaceOn(canvas: HTMLCanvasElement | OffscreenCanvas): Surface | undef
 // `attach` binds it to. (Moving one live WebGL canvas from page to page with
 // transition:persist crashes Chrome when anything else, such as an
 // extension's element, sits directly in <html>.) `send` passes it the rest of
-// what it needs to know.
-export function createField(path: string, reduce: boolean) {
+// what it needs to know. `drawn` hears when a newly bound canvas has its first
+// frame.
+export function createField(path: string, reduce: boolean, drawn?: () => void) {
   let surface: Surface | undefined;
   let size = { width: 0, height: 0 };
   let colors = { ink: [0.8, 0.8, 0.8], hot: [0.02, 0.38, 1] };
@@ -137,6 +138,8 @@ export function createField(path: string, reduce: boolean) {
   let lastDraw = -Infinity;
   // Something changed what's on screen, so the next frame draws.
   let changed = true;
+  // The canvas was just bound and hasn't drawn yet.
+  let fresh = false;
   const start = performance.now();
 
   const resize = () => {
@@ -168,6 +171,10 @@ export function createField(path: string, reduce: boolean) {
       gl.clearColor(0, 0, 0, 0);
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
+      if (fresh) {
+        fresh = false;
+        drawn?.();
+      }
     }
     // Still settling: a morph in progress or warmth still easing.
     return t < 1 || Math.abs(heatTarget - heat) > 0.001;
@@ -199,6 +206,7 @@ export function createField(path: string, reduce: boolean) {
   const attach = (canvas: HTMLCanvasElement | OffscreenCanvas) => {
     surface?.gl.getExtension('WEBGL_lose_context')?.loseContext();
     surface = surfaceOn(canvas);
+    fresh = true;
     resize();
     update();
     return Boolean(surface);
