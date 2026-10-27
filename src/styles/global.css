@@ -248,25 +248,31 @@ a:hover .topic-badge {
   inset: 0;
   z-index: -1;
   content: "";
-  border-radius: 0.5rem;
+  border-radius: 1rem;
   pointer-events: none;
   transition: transform 300ms ease-out, opacity 300ms ease-out;
 }
 
+/* Closed, it's a quiet tinted panel like the menus' buttons; open or stuck, a
+   white panel with a hairline ring, like the menus themselves. */
 #table-of-contents::before {
-  border: 1px solid var(--color-gray-200);
-  background: var(--color-panel);
+  border: 1px solid transparent;
+  background: rgb(115 115 115 / 0.08);
 }
 
 #table-of-contents[open]::before,
 #table-of-contents.toc-is-stuck::before {
-  border-color: white;
+  border-color: rgb(0 0 0 / 0.05);
   background: white;
 }
 
 #table-of-contents::after {
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  box-shadow: 0 12px 32px -16px rgb(0 0 0 / 0.25);
   opacity: 0;
+}
+
+#table-of-contents[open]::after {
+  opacity: 1;
 }
 
 #table-of-contents.toc-is-stuck::before,
@@ -280,10 +286,13 @@ a:hover .topic-badge {
   opacity: 1;
 }
 
-.dark #table-of-contents::before,
+.dark #table-of-contents::before {
+  background: rgb(115 115 115 / 0.12);
+}
+
 .dark #table-of-contents[open]::before,
 .dark #table-of-contents.toc-is-stuck::before {
-  border-color: var(--color-neutral-700);
+  border-color: rgb(255 255 255 / 0.1);
   background: var(--color-neutral-800);
 }
 
