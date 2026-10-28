@@ -35,11 +35,17 @@ test('the share panel copies the post’s link, saying so without changing size 
   await page.goto(CODE_POST);
   const button = page.getByRole('button', { name: 'Copy link' });
   await button.scrollIntoViewIfNeeded();
-  const before = await button.boundingBox();
+  // Its size, not its place: paragraphs above it are drawn lazily and can
+  // settle as the page is read, moving the button without resizing it.
+  const size = async () => {
+    const { width, height } = (await button.boundingBox())!;
+    return { width, height };
+  };
+  const before = await size();
   await button.click();
   await expect(button).toHaveAttribute('data-copied');
   await expect(button.locator('[data-copied-label]')).toHaveCSS('opacity', '1');
-  expect(await button.boundingBox()).toEqual(before);
+  expect(await size()).toEqual(before);
   await expect(page.getByRole('button', { name: 'Copy link' })).toHaveCount(1);
   await expect(page.locator('#copy-link-status')).toHaveText('Post link copied to the clipboard.');
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(page.url());
