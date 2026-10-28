@@ -83,33 +83,20 @@ const structuredData = {
     <Content />
     <div class="post-end relative mt-20">
       <div class="post-end-field" aria-hidden="true" style={`--post-end-field: url(/field/${postSlug(post)}.svg)`}></div>
-      <aside aria-labelledby="share-post-heading" class="not-prose relative rounded-2xl border border-panel-border bg-panel p-6 text-base leading-normal dark:border-neutral-700 dark:bg-neutral-800 sm:p-8">
-        <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h2 id="share-post-heading" class="font-display text-xl font-semibold text-neutral-900 dark:text-neutral-100">Enjoyed this post?</h2>
-            <p class="mt-2 text-neutral-600 dark:text-neutral-300">Share it with someone who might find it useful.</p>
-            <p class="mt-1 text-neutral-600 dark:text-neutral-300">For new posts, follow on <a href="https://bsky.app/profile/alilleybrinker.com" class="underline decoration-rule hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white">Bluesky</a> or subscribe by <a href="/rss.xml" class="underline decoration-rule hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white">RSS</a>.</p>
-          </div>
-          <div class="flex flex-col items-center gap-3 sm:items-end">
-            <a
-              href={`https://bsky.app/intent/compose?text=${encodeURIComponent(`${post.data.title} by @alilleybrinker.com ${new URL(postPath(post), Astro.site)}`)}`}
-              class="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-accent px-5 py-3 font-semibold text-white no-underline transition-[filter] hover:brightness-90 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
-            >
-              <Icon name="bluesky" class="!h-5 !w-5" />
-              Share on Bluesky
-            </a>
-            <p class="text-sm text-neutral-600 dark:text-neutral-300">
-              <button id="copy-link" class="cursor-pointer underline decoration-rule hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white" type="button">Copy link</button>
-              <span aria-hidden="true"> · </span>
-              <a href={`mailto:?subject=${encodeURIComponent(post.data.title)}&body=${encodeURIComponent(`${post.data.title}\n\n${new URL(postPath(post), Astro.site)}`)}`} class="underline decoration-rule hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white">Share by email</a>
-            </p>
-            <p class="text-sm text-neutral-600 dark:text-neutral-300">
-              <button id="copy-markdown" data-markdown={markdown} class="cursor-pointer underline decoration-rule hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white" type="button">Copy as Markdown</button>
-              <span aria-hidden="true"> · </span>
-              <a href={`https://claude.ai/new?q=${encodeURIComponent(claudePrompt)}`} class="underline decoration-rule hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:hover:text-white">Discuss with Claude</a>
-            </p>
-          </div>
+      <aside aria-labelledby="share-post-heading" class="not-prose relative rounded-3xl bg-white p-6 text-base leading-normal shadow-[0_12px_32px_-16px_rgb(0_0_0/0.25)] ring-1 ring-black/5 dark:bg-neutral-800 dark:ring-white/10 max-sm:text-center sm:p-8">
+        <h2 id="share-post-heading" class="font-display text-xl font-semibold text-neutral-900 dark:text-neutral-100">Enjoyed this post?</h2>
+        <p class="mt-1 text-neutral-600 dark:text-neutral-300">Share it with someone who might find it useful.</p>
+        <div class="mt-5 flex flex-wrap justify-center gap-2 text-sm sm:justify-start">
+          <a href={`https://bsky.app/intent/compose?text=${encodeURIComponent(`${post.data.title} by @alilleybrinker.com ${new URL(postPath(post), Astro.site)}`)}`} class="share-action w-full justify-center bg-accent font-semibold text-white hover:brightness-90 sm:w-auto">
+            <Icon name="bluesky" class="!h-4 !w-4" />
+            Share on Bluesky
+          </a>
+          <button id="copy-link" type="button" class="share-action share-action-quiet"><span data-label>Copy link</span><span aria-hidden="true" data-copied-label>Copied!</span></button>
+          <a href={`mailto:?subject=${encodeURIComponent(post.data.title)}&body=${encodeURIComponent(`${post.data.title}\n\n${new URL(postPath(post), Astro.site)}`)}`} class="share-action share-action-quiet">Email</a>
+          <button id="copy-markdown" type="button" data-markdown={markdown} class="share-action share-action-quiet"><span data-label>Copy as Markdown</span><span aria-hidden="true" data-copied-label>Copied!</span></button>
+          <a href={`https://claude.ai/new?q=${encodeURIComponent(claudePrompt)}`} class="share-action share-action-quiet">Discuss with Claude</a>
         </div>
+        <p class="mt-6 border-t border-black/5 pt-4 text-sm text-neutral-600 dark:border-white/10 dark:text-neutral-300">For new posts, follow on <a href="https://bsky.app/profile/alilleybrinker.com" class="underline decoration-rule hover:text-neutral-900 dark:hover:text-white">Bluesky</a> or subscribe by <a href="/rss.xml" class="underline decoration-rule hover:text-neutral-900 dark:hover:text-white">RSS</a>.</p>
         <p id="copy-link-status" class="sr-only" aria-live="polite"></p>
       </aside>
     </div>
@@ -193,16 +180,20 @@ const structuredData = {
       const copyLinkStatus = document.querySelector<HTMLElement>('#copy-link-status');
       const copyButton = (button: HTMLButtonElement | null, text: () => Promise<string>, copied: string, failed: string) => {
         const defaultLabel = button?.textContent;
+        // Buttons that hold both labels swap them in place, keeping their width.
+        const swapsLabels = Boolean(button?.querySelector('[data-label]'));
         button?.addEventListener('click', async () => {
           try {
             // Safari only allows clipboard writes started synchronously from the
             // click, so hand it a pending item rather than awaiting the text first.
             const blob = text().then((value) => new Blob([value], { type: 'text/plain' }));
             await navigator.clipboard.write([new ClipboardItem({ 'text/plain': blob })]);
-            button.textContent = 'Copied!';
+            if (swapsLabels) button.dataset.copied = '';
+            else button.textContent = 'Copied!';
             copyLinkStatus!.textContent = copied;
             window.setTimeout(() => {
-              button.textContent = defaultLabel;
+              if (swapsLabels) delete button.dataset.copied;
+              else button.textContent = defaultLabel;
             }, 2_000);
           } catch {
             copyLinkStatus!.textContent = failed;
