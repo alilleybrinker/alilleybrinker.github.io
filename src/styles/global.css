@@ -5,15 +5,14 @@
    uses. */
 @import "@fontsource-variable/public-sans/wght.css";
 @import "@fontsource-variable/public-sans/wght-italic.css";
-@import "@fontsource/merriweather/400.css";
-@import "@fontsource/merriweather/700.css";
+@import "@fontsource-variable/bricolage-grotesque/opsz.css";
 @import "@fontsource-variable/jetbrains-mono/wght.css";
 
 @plugin "@tailwindcss/typography";
 
 @theme {
   --font-sans: "Public Sans Variable", sans-serif;
-  --font-display: "Merriweather", serif;
+  --font-display: "Bricolage Grotesque Variable", "Public Sans Variable", sans-serif;
   --font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
   /* The palette is grayscale, with two colors that each have one job. Blue,
@@ -417,11 +416,13 @@ a,
   text-indent: -0.239em;
 }
 
-/* Large Merriweather titles are set a little tighter than its default
-   spacing, which is drawn for text sizes. */
+/* Titles are Bricolage Grotesque, semibold and set a little tight; its
+   optical size follows the font size, so large titles take its display
+   drawing. */
 .site-prose h1 .font-display,
 .site-prose h1:not(:has(.font-display)) {
-  letter-spacing: -0.015em;
+  font-weight: 600;
+  letter-spacing: -0.025em;
 }
 
 /* The dithered field across the top of each page (DitherField.astro). It sits

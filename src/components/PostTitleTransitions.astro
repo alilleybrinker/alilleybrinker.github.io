@@ -46,12 +46,12 @@
     pageTitle?.style.setProperty('view-transition-name', 'none');
   });
 
-  // A post needs fonts the lists don't: Merriweather for its title, and often
-  // italics and code. Fetch them as soon as a visitor heads for a link or
-  // opens the palette, so the post draws in its own fonts the first time,
+  // A post needs fonts the lists don't: Bricolage Grotesque for its title,
+  // and often italics and code. Fetch them as soon as a visitor heads for a
+  // link or opens the palette, so the post draws in its own fonts the first time,
   // rather than drawing once and again as they arrive, with the title
   // changing font just after it morphs. Only their Latin files are fetched.
-  const fonts = ['400 1em Merriweather', '700 1em Merriweather', 'italic 400 1em "Public Sans Variable"', '400 1em "JetBrains Mono Variable"'];
+  const fonts = ['600 1em "Bricolage Grotesque Variable"', 'italic 400 1em "Public Sans Variable"', '400 1em "JetBrains Mono Variable"'];
   const intent = new AbortController();
   const fetchFonts = () => {
     intent.abort();
