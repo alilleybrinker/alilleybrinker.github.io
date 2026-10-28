@@ -8,11 +8,11 @@ const profileUrl = `https://bsky.app/profile/${handle}`;
 
 <a
     href={profileUrl}
-    class="group block h-fit self-start rounded-lg bg-white p-5 !no-underline shadow-sm transition hover:ring-2 hover:ring-neutral-500 dark:bg-neutral-800"
+    class="group block h-fit self-start rounded-3xl bg-white p-5 !no-underline shadow-[0_12px_32px_-16px_rgb(0_0_0/0.25)] ring-1 ring-black/5 transition-transform duration-200 ease-out hover:-translate-y-0.5 motion-reduce:transition-none dark:bg-neutral-800 dark:ring-white/10"
     data-bluesky-profile-card
 >
     <div class="flex gap-4">
-        <div class="flex size-12 shrink-0 self-center items-center justify-center rounded-full bg-panel text-neutral-500 dark:bg-neutral-700">
+        <div class="flex size-12 shrink-0 self-center items-center justify-center rounded-full bg-neutral-500/10 text-neutral-600 dark:text-neutral-300">
             <Icon name="bluesky" class="!h-6 !w-6" />
         </div>
         <div class="min-w-0">
@@ -59,7 +59,10 @@ const profileUrl = `https://bsky.app/profile/${handle}`;
             handleElement.textContent = `@${handle}`;
             const publicProfile = await fetch(
                 `https://public.api.bsky.app/xrpc/app.bsky.actor.getProfile?actor=${encodeURIComponent(did)}`,
-            ).then((response) => response.json());
+            ).then((response) => {
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                return response.json();
+            });
             const formatCount = (count) =>
                 count > 1000
                     ? `${Number((count / 1000).toPrecision(2))}K`
