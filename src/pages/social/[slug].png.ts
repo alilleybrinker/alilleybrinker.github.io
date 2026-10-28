@@ -12,7 +12,7 @@ const avatar = await readFile(resolve(process.cwd(), 'public/image/andrew_linear
 const fontFiles = [
   resolve(process.cwd(), 'src/assets/fonts/PublicSans-Regular.ttf'),
   resolve(process.cwd(), 'src/assets/fonts/PublicSans-Semibold.ttf'),
-  resolve(process.cwd(), 'src/assets/fonts/Merriweather-Regular.ttf'),
+  resolve(process.cwd(), 'src/assets/fonts/BricolageGrotesque-SemiBold.ttf'),
 ];
 
 function escapeXml(value: string) {
@@ -25,7 +25,7 @@ function escapeXml(value: string) {
   }[character] ?? character));
 }
 
-function wrapTitle(title: string, maxCharacters = 20) {
+function wrapTitle(title: string, maxCharacters = 22) {
   const lines: string[] = [];
   let line = '';
 
@@ -73,14 +73,14 @@ function socialCard(card: SocialCard) {
   const titleLines = wrapTitle(card.title);
   const titleY = titleLines.length === 1 ? 375 : titleLines.length === 2 ? 310 : 250;
   const title = titleLines
-    .map((line, index) => `<text x="130" y="${titleY + index * 108}" class="title">${escapeXml(line)}</text>`)
+    .map((line, index) => `<text x="130" y="${titleY + index * 100}" class="title">${escapeXml(line)}</text>`)
     .join('');
 
   return `
     <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
       <style>
         .brand { fill: #262626; font-family: 'Public Sans'; font-size: 30px; font-weight: 600; }
-        .title { fill: #000000; font-family: Merriweather; font-size: 92px; font-weight: 400; }
+        .title { fill: #000000; font-family: 'Bricolage Grotesque'; font-size: 92px; font-weight: 600; letter-spacing: -2.3px; }
         .date { fill: #737373; font-family: 'Public Sans'; font-size: 30px; font-weight: 400; }
       </style>
       <rect width="100%" height="100%" fill="#fafaf9" />
