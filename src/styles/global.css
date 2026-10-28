@@ -983,6 +983,41 @@ a,
   }
 }
 
+/* In forced colors (Windows high contrast and the like) the browser drops
+   fills and shadows, so pills, panels and cards drawn only with them would
+   lose their edges: each gets an outline in the text color instead, inset so
+   nothing moves. The portrait and the signal marks are drawn as fills too, so
+   they keep their own drawing, in the system's colors. */
+@media (forced-colors: active) {
+  :is(.share-action, .tag, [class*="bg-neutral-500/10"], .bg-accent, [class*="ring-black/5"]) {
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
+
+  .site-logo-face,
+  .site-logo-face-hover {
+    forced-color-adjust: none;
+    background-color: CanvasText;
+  }
+
+  .site-logo:is(:hover, :focus-visible) .site-logo-face-hover {
+    background-color: LinkText;
+  }
+
+  #table-of-contents .toc-current::before,
+  #table-of-contents nav li:has(> a[aria-current])::before,
+  .reading-progress::before {
+    forced-color-adjust: none;
+    background: Highlight;
+  }
+
+  /* The dither underline is a background, so hovered titles underline as
+     text instead. */
+  :is(.dither-underline:hover, .group:hover .dither-underline, .group:focus-visible .dither-underline) {
+    text-decoration: underline;
+  }
+}
+
 /* Printing a page, or saving it as a PDF, keeps only what's being read: no
    header, field, progress line, table of contents, share box or reading
    list, and no controls. Links to other sites give their address, and
@@ -1008,6 +1043,7 @@ a,
   #table-of-contents-sentinel,
   .post-end,
   [aria-labelledby="keep-reading-heading"],
+  .post-sequence,
   #command-palette,
   #link-preview,
   .heading-link,

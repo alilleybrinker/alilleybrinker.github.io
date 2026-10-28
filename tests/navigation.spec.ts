@@ -92,3 +92,15 @@ test('a post ends with posts to read next, which open with a title morph, as doe
     expect(transition.after.filter((name: string) => name === 'post-title')).toHaveLength(1);
   }
 });
+
+test('a post links to the posts just older and newer, which link back to it', async ({ page }) => {
+  const sequence = () => page.getByRole('navigation', { name: 'Older and newer posts' });
+  await page.goto(POST);
+  const newer = await sequence().locator('a[rel="next"]').getAttribute('href');
+  const date = await page.locator('h1 time').first().getAttribute('datetime');
+  await sequence().locator('a[rel="prev"]').click();
+  await expect(sequence().locator('a[rel="next"]')).toHaveAttribute('href', POST);
+  expect(await page.locator('h1 time').first().getAttribute('datetime') <= date!).toBe(true);
+  await page.goto(newer!);
+  await expect(sequence().locator('a[rel="prev"]')).toHaveAttribute('href', POST);
+});
