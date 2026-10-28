@@ -86,10 +86,15 @@ callout. The server binds to localhost only and is not meant to be exposed.
 This site publishes the `blog` collection to Standard.site while keeping the
 Markdown files as the source of truth.
 
-Deploys publish automatically: the deploy workflow runs the publisher before
-each build once the repository has a `STANDARD_APP_PASSWORD` Actions secret (an
-AT Protocol app password for `alilleybrinker.com`). Without the secret the step
-is skipped, and if publishing fails the site still deploys.
+Deploys publish automatically. The deploy workflow's `publish` job runs the
+publisher before the build, using a `STANDARD_APP_PASSWORD` secret (an AT
+Protocol app password for `alilleybrinker.com`) kept in the `standard-site`
+environment, which only `main` may deploy to. Without the secret the job does
+nothing, and if publishing fails the site still deploys.
+
+Unlisted posts and posts published elsewhere (`externalUrl`) are withheld:
+their records are deleted, so a post that becomes unlisted is withdrawn on the
+next deploy.
 
 To publish locally instead:
 

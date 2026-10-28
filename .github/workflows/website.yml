@@ -7,11 +7,8 @@ on:
     branches: [main]
   workflow_dispatch:
 
-# Sets permissions of the `GITHUB_TOKEN` to allow deployment to GitHub Pages
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+# Nothing by default; each job asks for only what it needs.
+permissions: {}
 
 # Allow only one concurrent deployment, skipping runs queued between the run
 # in-progress and latest queued. However, do NOT cancel in-progress runs as
@@ -20,40 +17,87 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
+# Actions are pinned to commits, with their versions beside them, so a moved
+# tag can't change what runs here.
 jobs:
-  build:
+  #==========================================================================
+  # Publish posts to Standard.site
+  #--------------------------------------------------------------------------
+  # The app password lives in the standard-site environment, which only main
+  # may use, and only this job sees it: it runs no third-party code, and the
+  # build runs on its own machine. It publishes every listed post, withdraws
+  # unlisted and externally published ones, and hands the build the record
+  # addresses it wrote. Records are replaced in place, so publishing on every
+  # deploy is safe. Without the secret it does nothing; if it fails (Bluesky
+  # down, a revoked password) the build goes ahead with the addresses already
+  # committed.
+  publish:
     runs-on: ubuntu-latest
+    environment: standard-site
+    permissions:
+      contents: read
     env:
-      # Whether the Standard.site app password is set, without exposing it to
-      # any step but the one that publishes.
+      # Whether the app password is set, without exposing it to any step but
+      # the one that publishes.
       STANDARD_PUBLISHING: ${{ secrets.STANDARD_APP_PASSWORD != '' }}
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v7
-
-      # Publishes every blog post to Standard.site, then writes each post's
-      # record address for the build to link from the post. Records are
-      # replaced in place, so publishing on every deploy is safe. It runs once
-      # the STANDARD_APP_PASSWORD secret is set, and if it fails (Bluesky down,
-      # a revoked password) the site still deploys, keeping the addresses
-      # already committed.
-      - name: Set up Node for publishing
         if: env.STANDARD_PUBLISHING == 'true'
-        uses: actions/setup-node@v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node
+        if: env.STANDARD_PUBLISHING == 'true'
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
         with:
           node-version: 22
 
       - name: Publish posts to Standard.site
         if: env.STANDARD_PUBLISHING == 'true'
-        continue-on-error: true
         run: node scripts/publish-standard-site.mjs
         env:
           STANDARD_HANDLE: alilleybrinker.com
           STANDARD_APP_PASSWORD: ${{ secrets.STANDARD_APP_PASSWORD }}
 
+      - name: Hand the record addresses to the build
+        if: env.STANDARD_PUBLISHING == 'true'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: standard-site
+          path: |
+            src/data/standard-site.json
+            public/.well-known/site.standard.publication
+          include-hidden-files: true
+          retention-days: 1
+
+  #==========================================================================
+  # Build the site
+  #--------------------------------------------------------------------------
+  build:
+    runs-on: ubuntu-latest
+    needs: publish
+    # Builds whether publishing ran, was skipped or failed.
+    if: ${{ !cancelled() }}
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Use the record addresses just published
+        if: needs.publish.result == 'success'
+        continue-on-error: true
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: standard-site
+
       - name: Build and upload website
-        uses: withastro/action@v6
+        uses: withastro/action@a8b97df764791eb61fbf3338ef713b0e61ae05c5 # v6.1.4
         env:
           # Lets the projects page read repos from the GitHub API without
           # hitting the unauthenticated rate limit.
@@ -68,7 +112,12 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
+    # Deploys whenever the build did, even if publishing failed before it.
+    if: ${{ !cancelled() && needs.build.result == 'success' }}
+    permissions:
+      pages: write
+      id-token: write
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
