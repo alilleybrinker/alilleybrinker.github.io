@@ -655,6 +655,62 @@ a,
   background: oklch(0.27 0 0);
 }
 
+/* The share panel's actions are pills, like the header's: Bluesky in the
+   accent, the rest tinted like the search button. A copy button holds both of
+   its labels in one cell, so saying "Copied!" never changes its width. */
+.share-action {
+  display: inline-grid;
+  grid-auto-flow: column;
+  align-items: center;
+  gap: 0.5rem;
+  height: 2.25rem;
+  padding-inline: 1rem;
+  border-radius: 9999px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 150ms ease-out, filter 150ms ease-out;
+}
+
+.share-action:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.share-action-quiet {
+  background: rgb(115 115 115 / 0.1);
+  color: var(--color-neutral-700);
+}
+
+.share-action-quiet:hover {
+  background: rgb(115 115 115 / 0.15);
+  color: black;
+}
+
+.dark .share-action-quiet {
+  color: var(--color-neutral-200);
+}
+
+.dark .share-action-quiet:hover {
+  color: white;
+}
+
+.share-action > [data-label],
+.share-action > [data-copied-label] {
+  grid-area: 1 / 1;
+  text-align: center;
+}
+
+/* Hidden by opacity, so the button keeps its name for assistive technology
+   while "Copied!" shows; the status message announces the copy. */
+.share-action > [data-copied-label],
+.share-action[data-copied] > [data-label] {
+  opacity: 0;
+}
+
+.share-action[data-copied] > [data-copied-label] {
+  opacity: 1;
+}
+
 /* While stuck and closed, the table of contents names the section being read
    after its title, which steps back to make room. In the open list, that
    section is marked. Either way a signal dot sits beside it, in the list out

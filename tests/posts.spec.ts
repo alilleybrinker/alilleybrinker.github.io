@@ -30,6 +30,21 @@ test('code blocks copy their code', async ({ page, context }) => {
   await expect(page.locator('.code-copy')).toHaveCount(await page.locator('pre.astro-code').count());
 });
 
+test('the share panel copies the post’s link, saying so without changing size or name', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto(CODE_POST);
+  const button = page.getByRole('button', { name: 'Copy link' });
+  await button.scrollIntoViewIfNeeded();
+  const before = await button.boundingBox();
+  await button.click();
+  await expect(button).toHaveAttribute('data-copied');
+  await expect(button.locator('[data-copied-label]')).toHaveCSS('opacity', '1');
+  expect(await button.boundingBox()).toEqual(before);
+  await expect(page.getByRole('button', { name: 'Copy link' })).toHaveCount(1);
+  await expect(page.locator('#copy-link-status')).toHaveText('Post link copied to the clipboard.');
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(page.url());
+});
+
 test('reading progress tracks the scroll', async ({ page }) => {
   await page.goto(TOC_POST);
   const supported = await page.evaluate(() => CSS.supports('animation-timeline: scroll()'));
