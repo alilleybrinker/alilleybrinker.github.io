@@ -486,6 +486,26 @@ a,
   animation-timing-function: var(--spring);
 }
 
+/* A list sets its titles in Public Sans and a post its heading in Bricolage
+   Grotesque, and the two set the same words to different widths. So the
+   morph hands over from one to the other early, in its first fifth, rather
+   than showing both, stretched across each other, for the whole move. */
+::view-transition-old(post-title) {
+  animation: 160ms ease-out both title-handover-out;
+}
+
+::view-transition-new(post-title) {
+  animation: 200ms ease-out both title-handover-in;
+}
+
+@keyframes title-handover-out {
+  to { opacity: 0; }
+}
+
+@keyframes title-handover-in {
+  from { opacity: 0; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .resolve-in {
     animation: none;
