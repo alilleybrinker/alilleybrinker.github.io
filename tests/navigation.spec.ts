@@ -56,3 +56,39 @@ test('a link to another post previews it on hover, and each page keeps one previ
   await expect(page.locator('#link-preview')).toHaveCount(1);
   await expect(page.locator('#link-preview')).toBeHidden();
 });
+
+test('a post ends with posts to read next, which open with a title morph, as does going back', async ({ page }) => {
+  await page.goto(POST);
+  await markDocument(page);
+  const next = page.locator('section[aria-labelledby="keep-reading-heading"] a');
+  await expect(next).toHaveCount(3);
+  // Records the view transition names on each side of each transition.
+  await page.evaluate(() => {
+    const start = document.startViewTransition.bind(document);
+    const names = () => [...document.querySelectorAll('*')].map((e) => getComputedStyle(e).viewTransitionName).filter((name) => name && name !== 'none');
+    document.startViewTransition = ((update: any) => {
+      const record: any = { before: names() };
+      (window as any).__transitions = [...((window as any).__transitions ?? []), record];
+      const transition = start(update);
+      transition.ready.then(() => { record.after = names(); }, (error) => { record.error = String(error); });
+      return transition;
+    }) as typeof document.startViewTransition;
+  });
+  // The first of them on this site; others may be published elsewhere.
+  const first = next.and(page.locator('[href^="/blog/"]')).first();
+  const title = await first.locator('[data-post-title]').textContent();
+  await first.scrollIntoViewIfNeeded();
+  await first.click();
+  await expect(page.locator('h1')).toContainText(title!);
+  await page.goBack();
+  await expect(page).toHaveURL(POST);
+  expect(await sameDocument(page)).toBe(true);
+  await expect.poll(() => page.evaluate(() => (window as any).__transitions?.[1]?.after)).toBeTruthy();
+  const transitions = await page.evaluate(() => (window as any).__transitions);
+  for (const transition of transitions) {
+    expect(transition.error).toBeUndefined();
+    // Exactly one title carries the morph on each side.
+    expect(transition.before.filter((name: string) => name === 'post-title')).toHaveLength(1);
+    expect(transition.after.filter((name: string) => name === 'post-title')).toHaveLength(1);
+  }
+});

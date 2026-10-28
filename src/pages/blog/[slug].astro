@@ -1,8 +1,9 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Icon from '../../components/Icon.astro';
+import PostRow from '../../components/PostRow.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { isListedPost, postDate, postPath, postReadingTime, postSlug, postUpdated, topicSlug } from '../../lib/site';
+import { byNewest, isListedPost, postDate, postPath, postReadingTime, postSlug, postUpdated, topicSlug } from '../../lib/site';
 import standardSite from '../../data/standard-site.json';
 import { markdownPath } from '../../lib/markdown';
 
@@ -22,6 +23,15 @@ const listedTopics = new Set(
     .flatMap((candidate) => candidate.data.taxonomies.topics),
 );
 const topics = post.data.taxonomies.topics.filter((topic) => listedTopics.has(topic));
+// Three posts to read next: those sharing the most topics with this one,
+// newest first among equals, so posts sharing none fall back to the newest.
+const keepReading = (await getCollection('blog'))
+  .filter((candidate) => isListedPost(candidate) && candidate.id !== post.id)
+  .sort(byNewest)
+  .map((candidate, order) => ({ candidate, order, shared: candidate.data.taxonomies.topics.filter((topic) => post.data.taxonomies.topics.includes(topic)).length }))
+  .sort((a, b) => b.shared - a.shared || a.order - b.order)
+  .slice(0, 3)
+  .map(({ candidate }) => candidate);
 const readingTime = postReadingTime(post);
 const canonical = new URL(postPath(post), Astro.site);
 const socialImage = `/social/${postSlug(post)}.png`;
@@ -49,7 +59,7 @@ const structuredData = {
 <BaseLayout title={post.data.title} description={post.data.description} canonical={canonical} type="article" socialImage={socialImage} socialImageAlt={post.data.title} structuredData={structuredData} standardDocumentUri={standardSite.documents[postSlug(post)]} markdown={markdown}>
   <div class="reading-progress" aria-hidden="true"></div>
   <article class="post-body">
-    <h1 class="block mb-5 text-3xl md:text-4xl"><span class="resolve-in leading-snug block mb-4 font-display [view-transition-name:post-title]">{post.data.title}</span><span class="font-sans flex flex-wrap items-center gap-2 text-sm md:text-base text-muted"><time datetime={date.toISOString().slice(0, 10)}>{longDate(date)}</time>{updated && <><span aria-hidden="true" class="font-black text-muted">·</span><span>Updated <time datetime={updated.toISOString().slice(0, 10)}>{longDate(updated)}</time></span></>}<span aria-hidden="true" class="font-black text-muted">·</span><span>Read in {readingTime} minutes</span>{topics.length > 0 && <><span aria-hidden="true" class="font-black text-muted">·</span><span>Topics: {topics.map((topic, index) => <><a class="!text-muted" href={`/topics/${topicSlug(topic)}/`}>{topic}</a>{index < topics.length - 1 && ', '}</>)}</span></>}</span></h1>
+    <h1 class="block mb-5 text-3xl md:text-4xl"><span data-page-title class="resolve-in leading-snug block mb-4 font-display [view-transition-name:post-title]">{post.data.title}</span><span class="font-sans flex flex-wrap items-center gap-2 text-sm md:text-base text-muted"><time datetime={date.toISOString().slice(0, 10)}>{longDate(date)}</time>{updated && <><span aria-hidden="true" class="font-black text-muted">·</span><span>Updated <time datetime={updated.toISOString().slice(0, 10)}>{longDate(updated)}</time></span></>}<span aria-hidden="true" class="font-black text-muted">·</span><span>Read in {readingTime} minutes</span>{topics.length > 0 && <><span aria-hidden="true" class="font-black text-muted">·</span><span>Topics: {topics.map((topic, index) => <><a class="!text-muted" href={`/topics/${topicSlug(topic)}/`}>{topic}</a>{index < topics.length - 1 && ', '}</>)}</span></>}</span></h1>
     {post.data.extra.toc && headings.length > 0 && (
       <div id="table-of-contents-sentinel" aria-hidden="true"></div>
       <details id="table-of-contents" aria-label="Table of contents" class="group not-prose sticky top-0 z-10 mb-10 w-full font-sans text-sm">
@@ -101,6 +111,12 @@ const structuredData = {
         <p id="copy-link-status" class="sr-only" aria-live="polite"></p>
       </aside>
     </div>
+    <section aria-labelledby="keep-reading-heading" class="not-prose mt-16">
+      <h2 id="keep-reading-heading" class="mb-3 font-sans text-sm font-semibold uppercase tracking-widest text-muted">Keep reading</h2>
+      <ul class="list-none p-0">
+        {keepReading.map((next) => <li><PostRow post={next} withYear /></li>)}
+      </ul>
+    </section>
   </article>
   <script>
     // A section heading's link (heading-links.ts) goes to its section as any
