@@ -20,6 +20,8 @@ interface Props {
   socialImageAlt?: string;
   standardDocumentUri?: string;
   markdown?: string;
+  // Keeps search engines from listing the page, as for unlisted posts.
+  noindex?: boolean;
 }
 const {
   title: pageTitle,
@@ -32,6 +34,7 @@ const {
   socialImageAlt = 'Andrew Lilley Brinker',
   standardDocumentUri,
   markdown,
+  noindex = false,
 } = Astro.props;
 const title = pageTitle ? `${pageTitle} — Andrew Lilley Brinker` : 'Andrew Lilley Brinker';
 const socialImage = new URL(pageSocialImage, Astro.site);
@@ -84,6 +87,7 @@ const jsonLd = (data: Record<string, unknown>) => JSON.stringify(data).replace(/
     <link rel="manifest" href="/site.webmanifest" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
     <meta property="og:type" content={type} />
     <meta property="og:url" content={canonical} />
     <meta property="og:title" content={title} />

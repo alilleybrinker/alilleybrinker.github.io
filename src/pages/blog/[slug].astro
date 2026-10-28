@@ -56,7 +56,7 @@ const structuredData = {
 };
 ---
 
-<BaseLayout title={post.data.title} description={post.data.description} canonical={canonical} type="article" socialImage={socialImage} socialImageAlt={post.data.title} structuredData={structuredData} standardDocumentUri={standardSite.documents[postSlug(post)]} markdown={markdown}>
+<BaseLayout title={post.data.title} description={post.data.description} canonical={canonical} type="article" socialImage={socialImage} socialImageAlt={post.data.title} structuredData={structuredData} standardDocumentUri={standardSite.documents[postSlug(post)]} markdown={markdown} noindex={post.data.unlisted}>
   <div class="reading-progress" aria-hidden="true"></div>
   <article class="post-body">
     <h1 class="block mb-5 text-3xl md:text-4xl"><span data-page-title class="resolve-in leading-snug block mb-4 font-display [view-transition-name:post-title]">{post.data.title}</span><span class="font-sans flex flex-wrap items-center gap-2 text-sm md:text-base text-muted"><time datetime={date.toISOString().slice(0, 10)}>{longDate(date)}</time>{updated && <><span aria-hidden="true" class="font-black text-muted">·</span><span>Updated <time datetime={updated.toISOString().slice(0, 10)}>{longDate(updated)}</time></span></>}<span aria-hidden="true" class="font-black text-muted">·</span><span>Read in {readingTime} minutes</span>{topics.length > 0 && <><span aria-hidden="true" class="font-black text-muted">·</span><span>Topics: {topics.map((topic, index) => <><a class="!text-muted" href={`/topics/${topicSlug(topic)}/`}>{topic}</a>{index < topics.length - 1 && ', '}</>)}</span></>}</span></h1>
