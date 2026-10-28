@@ -78,6 +78,9 @@ const jsonLd = (data: Record<string, unknown>) => JSON.stringify(data).replace(/
       // Client-side navigation replaces the root element's classes with the
       // incoming page's, so apply the theme before the new page is shown.
       document.addEventListener('astro:before-swap', (event) => applyStoredTheme(event.newDocument.documentElement));
+      // Pages print in the light theme, whichever is on screen.
+      addEventListener('beforeprint', () => document.documentElement.classList.remove('dark'));
+      addEventListener('afterprint', () => applyStoredTheme());
     </script>
     <ClientRouter />
     <link rel="icon" href="/favicon.ico" sizes="any" />

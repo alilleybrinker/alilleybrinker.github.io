@@ -905,3 +905,61 @@ a,
     white-space: nowrap;
   }
 }
+
+/* Printing a page, or saving it as a PDF, keeps only what's being read: no
+   header, field, progress line, table of contents, share box or reading
+   list, and no controls. Links to other sites give their address, and
+   headings stay with what follows them. The page prints in the light theme
+   (BaseLayout.astro takes the dark class off while it does). */
+.print-only {
+  display: none;
+}
+
+@media print {
+  .print-only {
+    display: block;
+    color: var(--color-muted);
+    font-size: 0.875rem;
+    hyphens: none;
+    overflow-wrap: anywhere;
+  }
+
+  body > div > header,
+  #dither-field,
+  .reading-progress,
+  #table-of-contents,
+  #table-of-contents-sentinel,
+  .post-end,
+  [aria-labelledby="keep-reading-heading"],
+  #command-palette,
+  #link-preview,
+  .heading-link,
+  .code-copy,
+  .sidenote,
+  a[href="#content"] {
+    display: none !important;
+  }
+
+  body {
+    background: white;
+  }
+
+  .post-body > :is(p, h2, h3, h4, h5, h6) {
+    content-visibility: visible;
+  }
+
+  .post-body a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    color: var(--color-muted);
+    font-size: 0.85em;
+    overflow-wrap: anywhere;
+  }
+
+  .post-body :is(h1, h2, h3, h4) {
+    break-after: avoid;
+  }
+
+  .post-body :is(pre, blockquote, figure, table, .code-block) {
+    break-inside: avoid;
+  }
+}
