@@ -86,9 +86,15 @@ callout. The server binds to localhost only and is not meant to be exposed.
 This site publishes the `blog` collection to Standard.site while keeping the
 Markdown files as the source of truth.
 
+Deploys publish automatically: the deploy workflow runs the publisher before
+each build once the repository has a `STANDARD_APP_PASSWORD` Actions secret (an
+AT Protocol app password for `alilleybrinker.com`). Without the secret the step
+is skipped, and if publishing fails the site still deploys.
+
+To publish locally instead:
+
 1. Create an AT Protocol app password for the account named by `STANDARD_HANDLE`.
-2. Copy `.env.example` to a private environment file, or configure those values
-   as deployment secrets.
+2. Copy `.env.example` to a private environment file.
 3. Run `npm run standard:publish` before `npm run build`.
 
 The publisher upserts one publication record and each blog post using stable

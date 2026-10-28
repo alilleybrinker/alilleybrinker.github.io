@@ -23,10 +23,34 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      # Whether the Standard.site app password is set, without exposing it to
+      # any step but the one that publishes.
+      STANDARD_PUBLISHING: ${{ secrets.STANDARD_APP_PASSWORD != '' }}
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v7
+
+      # Publishes every blog post to Standard.site, then writes each post's
+      # record address for the build to link from the post. Records are
+      # replaced in place, so publishing on every deploy is safe. It runs once
+      # the STANDARD_APP_PASSWORD secret is set, and if it fails (Bluesky down,
+      # a revoked password) the site still deploys, keeping the addresses
+      # already committed.
+      - name: Set up Node for publishing
+        if: env.STANDARD_PUBLISHING == 'true'
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Publish posts to Standard.site
+        if: env.STANDARD_PUBLISHING == 'true'
+        continue-on-error: true
+        run: node scripts/publish-standard-site.mjs
+        env:
+          STANDARD_HANDLE: alilleybrinker.com
+          STANDARD_APP_PASSWORD: ${{ secrets.STANDARD_APP_PASSWORD }}
 
       - name: Build and upload website
         uses: withastro/action@v6
