@@ -68,3 +68,18 @@ test('a section heading links to itself, copies its address, and lands clear of 
   await expect(page.locator('#table-of-contents')).not.toHaveAttribute('open');
   await expect.poll(() => clear(hash!)).toBe(true);
 });
+
+test('a post prints as just the article, in the light theme', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.goto(TOC_POST);
+  await page.evaluate(() => dispatchEvent(new Event('beforeprint')));
+  await page.emulateMedia({ media: 'print', colorScheme: 'dark' });
+  expect(await page.evaluate(() => document.documentElement.classList.contains('dark'))).toBe(false);
+  for (const hidden of ['body > div > header', '#table-of-contents', '.post-end', '[aria-labelledby="keep-reading-heading"]', '.reading-progress']) {
+    await expect(page.locator(hidden).first()).toBeHidden();
+  }
+  await expect(page.locator('.post-body h1')).toBeVisible();
+  await expect(page.locator('.print-only')).toHaveText(`https://www.alilleybrinker.com${TOC_POST}`);
+  await page.evaluate(() => dispatchEvent(new Event('afterprint')));
+  expect(await page.evaluate(() => document.documentElement.classList.contains('dark'))).toBe(true);
+});
