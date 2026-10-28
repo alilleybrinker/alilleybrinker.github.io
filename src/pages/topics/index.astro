@@ -1,0 +1,41 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { byNewest, isListedPost, postDate, topicSlug } from '../../lib/site';
+import { ditherPath, fieldFor, fieldValue, smoothstep } from '../../lib/dither-pattern';
+
+// Every topic with its count and newest post, most written about first.
+const posts = (await getCollection('blog')).filter(isListedPost).sort(byNewest);
+const topics = [...new Set(posts.flatMap((post) => post.data.taxonomies.topics))]
+  .map((topic) => {
+    const tagged = posts.filter((post) => post.data.taxonomies.topics.includes(topic));
+    return { topic, slug: topicSlug(topic), count: tagged.length, newest: postDate(tagged[0]) };
+  })
+  .sort((a, b) => b.count - a.count || a.topic.localeCompare(b.topic));
+
+// Each topic's swatch is a corner of the field at the top of its own page, in
+// the same dither, dense enough to read at 24px.
+const cells = 8;
+const cell = 3;
+const swatch = (slug: string) => {
+  const shape = fieldFor(`/topics/${slug}/`);
+  return ditherPath(cells, cells, cell, (u, v) => 0.15 + 0.7 * smoothstep(0, 1.1, fieldValue(shape, 0.1 + u * 0.4, 0.05 + v * 0.4, 96, 24)));
+};
+const month = (date: Date) => date.toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+---
+
+<BaseLayout title="Topics" description="Every topic Andrew Lilley Brinker writes about, with its posts." socialImage="/social/topics.png" socialImageAlt="Blog Topics">
+  <h1>Topics</h1>
+  <p>Everything I write about, most written about first. Each has its own page and feed.</p>
+  <ul class="not-prose mt-10 list-none p-0">
+    {topics.map(({ topic, slug, count, newest }) => (
+      <li>
+        <a class="topic-row group flex items-center gap-4 py-2.5 text-black dark:text-white" href={`/topics/${slug}/`}>
+          <svg class="topic-swatch size-6 shrink-0" viewBox={`0 0 ${cells * cell} ${cells * cell}`} shape-rendering="crispEdges" aria-hidden="true"><path d={swatch(slug)} /></svg>
+          <span class="min-w-0 flex-1 text-lg"><span class="dither-underline">{topic}</span></span>
+          <span class="shrink-0 text-right text-sm tabular-nums text-muted">{count} {count === 1 ? 'post' : 'posts'}<span class="hidden sm:inline"> · latest {month(newest)}</span></span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>
