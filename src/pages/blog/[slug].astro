@@ -32,6 +32,14 @@ const keepReading = (await getCollection('blog'))
   .sort((a, b) => b.shared - a.shared || a.order - b.order)
   .slice(0, 3)
   .map(({ candidate }) => candidate);
+// The posts just before and after this one, among those listed and on this
+// site, for reading through in order. An unlisted post isn't in the order.
+const sequence = (await getCollection('blog'))
+  .filter((candidate) => isListedPost(candidate) && !candidate.data.externalUrl)
+  .sort(byNewest);
+const place = sequence.findIndex((candidate) => candidate.id === post.id);
+const newer = place > 0 ? sequence[place - 1] : undefined;
+const older = place >= 0 ? sequence[place + 1] : undefined;
 const readingTime = postReadingTime(post);
 const canonical = new URL(postPath(post), Astro.site);
 const socialImage = `/social/${postSlug(post)}.png`;
@@ -106,6 +114,22 @@ const structuredData = {
         {keepReading.map((next) => <li><PostRow post={next} withYear /></li>)}
       </ul>
     </section>
+    {(older || newer) && (
+      <nav aria-label="Older and newer posts" class="post-sequence not-prose mt-12 grid gap-6 border-t border-black/5 pt-6 sm:grid-cols-2 dark:border-white/10">
+        {older && (
+          <a rel="prev" href={postPath(older)} class="group block text-black dark:text-white">
+            <span class="block text-sm text-muted">← Older</span>
+            <span class="mt-1 block text-lg leading-snug"><span class="dither-underline" data-post-title>{older.data.title}</span></span>
+          </a>
+        )}
+        {newer && (
+          <a rel="next" href={postPath(newer)} class="group block text-black sm:col-start-2 sm:text-right dark:text-white">
+            <span class="block text-sm text-muted">Newer →</span>
+            <span class="mt-1 block text-lg leading-snug"><span class="dither-underline" data-post-title>{newer.data.title}</span></span>
+          </a>
+        )}
+      </nav>
+    )}
   </article>
   <script>
     // A section heading's link (heading-links.ts) goes to its section as any

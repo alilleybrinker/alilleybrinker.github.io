@@ -52,3 +52,12 @@ test('the first Tab reaches a link that skips to the page’s content', async ({
   await page.keyboard.press('Tab');
   expect(await page.evaluate(() => Boolean(document.activeElement?.closest('main')))).toBe(true);
 });
+
+test('in forced colors, pills and panels keep an edge and the portrait keeps its drawing', async ({ page }) => {
+  await page.emulateMedia({ forcedColors: 'active' });
+  await page.goto(POST);
+  for (const selector of ['.share-action', 'aside[aria-labelledby="share-post-heading"]', '[data-command-palette-open]']) {
+    await expect(page.locator(selector).first()).toHaveCSS('outline-style', 'solid');
+  }
+  await expect(page.locator('.site-logo-face').first()).toHaveCSS('forced-color-adjust', 'none');
+});
