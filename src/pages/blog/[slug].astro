@@ -103,12 +103,29 @@ const structuredData = {
     </div>
   </article>
   <script>
+    // A section heading's link (heading-links.ts) goes to its section as any
+    // link would, and also copies the section's address, saying so briefly.
+    document.addEventListener('click', (event) => {
+      const link = (event.target as Element).closest?.<HTMLAnchorElement>('.heading-link');
+      if (!link || !navigator.clipboard) return;
+      navigator.clipboard.writeText(link.href).then(() => {
+        link.dataset.copied = '';
+        setTimeout(() => delete link.dataset.copied, 1500);
+      }, () => {});
+    });
+
     // Runs on the first load and after every client-side navigation to a post.
     document.addEventListener('astro:page-load', () => {
       const tableOfContents = document.querySelector<HTMLDetailsElement>('#table-of-contents');
       const tableOfContentsSentinel = document.querySelector('#table-of-contents-sentinel');
 
       if (tableOfContents && tableOfContentsSentinel) {
+        // Choosing a section closes the list before the jump, so the list
+        // doesn't cover the section, and the jump lands where it should.
+        tableOfContents.querySelector('nav')?.addEventListener('click', (event) => {
+          if ((event.target as Element).closest('a')) tableOfContents.open = false;
+        });
+
         // The table of contents is stuck once the spot it would otherwise sit in
         // has scrolled above the viewport, which an observer reports without any
         // work on each scroll.

@@ -788,6 +788,71 @@ a,
   display: none;
 }
 
+/* Each section heading's link to itself (heading-links.ts): a muted "#" after
+   the heading, shown on hover or keyboard focus, and always where nothing
+   hovers. Where the window leaves room, it hangs in the margin so the heading
+   never moves. Clicked, it says "Copied" for a moment. */
+.heading-link {
+  margin-left: 0.4em;
+  color: var(--color-muted);
+  font-weight: 400;
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 150ms ease-out;
+}
+
+.heading-link::after {
+  content: "#";
+}
+
+.heading-link[data-copied]::before {
+  content: "Copied ";
+  font-size: 0.55em;
+  vertical-align: 0.25em;
+}
+
+.post-body :is(h2, h3, h4):hover > .heading-link,
+.heading-link:focus-visible,
+.heading-link[data-copied] {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .heading-link {
+    opacity: 1;
+  }
+}
+
+/* Going to a section stops its heading a little below the top of the window,
+   and below the table of contents where a post has one, which sticks there
+   and would otherwise cover it. */
+.post-body :is(h2, h3, h4)[id] {
+  scroll-margin-top: 1rem;
+}
+
+.post-body:has(#table-of-contents) :is(h2, h3, h4)[id] {
+  scroll-margin-top: 4.5rem;
+}
+
+@media (min-width: 900px) {
+  .post-body :is(h2, h3, h4):has(> .heading-link) {
+    position: relative;
+  }
+
+  .heading-link {
+    position: absolute;
+    right: 100%;
+    margin: 0 0.4em 0 0;
+    white-space: nowrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heading-link {
+    transition: none;
+  }
+}
+
 @media (min-width: 1100px) {
   .sidenote {
     display: block;
