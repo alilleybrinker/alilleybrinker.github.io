@@ -35,7 +35,7 @@
   --color-muted: oklch(0.53 0 0);
   /* Link underlines and blockquote rules. */
   --color-rule: oklch(0.66 0 0);
-  /* Panels set off from the page: table of contents, share box, callouts. */
+  /* Panels set into the page: callouts, code blocks, the closed table of contents. */
   --color-panel: oklch(0.975 0 0);
   --color-panel-border: oklch(0.94 0 0);
 
@@ -85,6 +85,27 @@ html {
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* Small labels: publication tags, project topics, a link's file type. They sit
+   with the components, below the utilities, so a page can still recolor one,
+   as publication tags do on hover. */
+@layer components {
+  .tag {
+    border-radius: 0.125rem;
+    background: color-mix(in oklab, var(--color-stone-200) 65%, transparent);
+    padding: 0.125rem 0.375rem;
+    color: var(--color-stone-700);
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1rem;
+  }
+
+  .dark .tag {
+    background: color-mix(in oklab, var(--color-neutral-500) 70%, transparent);
+    color: var(--color-neutral-200);
+  }
+}
 
 @layer base {
   *, ::after, ::before, ::backdrop, ::file-selector-button {
@@ -222,7 +243,7 @@ a:hover .topic-badge {
   margin-block: 2rem;
   padding: 1.25rem;
   border: 1px solid var(--color-panel-border);
-  border-radius: 0.75rem;
+  border-radius: 1rem;
   background: var(--color-panel);
 }
 

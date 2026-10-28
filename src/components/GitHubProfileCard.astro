@@ -7,11 +7,11 @@ const profileUrl = `https://github.com/${username}`;
 
 <a
     href={profileUrl}
-    class="group block h-fit self-start rounded-lg bg-white p-5 !no-underline shadow-sm transition hover:ring-2 hover:ring-neutral-500 dark:bg-neutral-800"
+    class="group block h-fit self-start rounded-3xl bg-white p-5 !no-underline shadow-[0_12px_32px_-16px_rgb(0_0_0/0.25)] ring-1 ring-black/5 transition-transform duration-200 ease-out hover:-translate-y-0.5 motion-reduce:transition-none dark:bg-neutral-800 dark:ring-white/10"
     data-github-profile-card
 >
     <div class="flex gap-4">
-        <div class="flex size-12 shrink-0 self-center items-center justify-center rounded-full bg-neutral-100 text-neutral-700 dark:bg-neutral-700 dark:text-neutral-100">
+        <div class="flex size-12 shrink-0 self-center items-center justify-center rounded-full bg-neutral-500/10 text-neutral-600 dark:text-neutral-300">
             <Icon name="github" class="!h-6 !w-6" />
         </div>
         <div class="min-w-0">
@@ -33,9 +33,13 @@ const profileUrl = `https://github.com/${username}`;
         if (!card) return;
 
         try {
-            const profile = await fetch(
+            const response = await fetch(
                 `https://api.github.com/users/${username}`,
-            ).then((response) => response.json());
+            );
+            // A refused request (GitHub limits how often a visitor may ask)
+            // keeps the card's own sentence rather than showing empty counts.
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const profile = await response.json();
             const handle = card.querySelector('[data-github-handle]');
             const stats = card.querySelector('[data-github-stats]');
 
