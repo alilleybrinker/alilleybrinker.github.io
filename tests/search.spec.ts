@@ -34,3 +34,14 @@ test('the command palette holds focus, closes on Escape and on a click outside, 
   await page.mouse.click(10, 10);
   await expect(palette).toBeHidden();
 });
+
+test('the 404 page scatters its field and offers search, and leaving it mends the field', async ({ page }) => {
+  await page.goto('/404.html');
+  await expect(page.locator('html')).toHaveAttribute('data-field', 'scattered');
+  await page.getByRole('button', { name: 'Search the site' }).click();
+  await expect(page.locator('#command-palette-input')).toBeFocused();
+  await page.keyboard.press('Escape');
+  await page.getByRole('link', { name: 'Go to the home page' }).click();
+  await expect(page).toHaveURL('/');
+  await expect(page.locator('html')).not.toHaveAttribute('data-field');
+});

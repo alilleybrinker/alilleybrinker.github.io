@@ -22,6 +22,8 @@ interface Props {
   markdown?: string;
   // Keeps search engines from listing the page, as for unlisted posts.
   noindex?: boolean;
+  // Draws the page's dither field broken apart (DitherField.astro).
+  field?: 'scattered';
 }
 const {
   title: pageTitle,
@@ -35,6 +37,7 @@ const {
   standardDocumentUri,
   markdown,
   noindex = false,
+  field,
 } = Astro.props;
 const title = pageTitle ? `${pageTitle} — Andrew Lilley Brinker` : 'Andrew Lilley Brinker';
 const socialImage = new URL(pageSocialImage, Astro.site);
@@ -62,7 +65,7 @@ const jsonLd = (data: Record<string, unknown>) => JSON.stringify(data).replace(/
 ---
 
 <!doctype html>
-<html lang="en-US">
+<html lang="en-US" data-field={field}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />

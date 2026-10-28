@@ -78,7 +78,7 @@ html {
     @apply prose-a:text-black dark:prose-a:text-white prose-a:font-normal prose-a:decoration-rule prose-a:hover:decoration-black dark:prose-a:hover:decoration-white;
     @apply prose-code:after:content-none prose-code:before:content-none;
     @apply prose-blockquote:my-0 prose-blockquote:border-rule prose-blockquote:px-5 prose-blockquote:py-5 prose-blockquote:font-normal prose-blockquote:not-italic prose-blockquote:text-inherit;
-    @apply prose-figure:overflow-hidden prose-figure:bg-white dark:prose-figure:bg-neutral-800 prose-figure:rounded-xl prose-figure:shadow-lg;
+    @apply prose-figure:overflow-hidden prose-figure:bg-white dark:prose-figure:bg-neutral-800 prose-figure:rounded-3xl prose-figure:shadow-[0_12px_32px_-16px_rgb(0_0_0/0.25)] prose-figure:ring-1 prose-figure:ring-black/5 dark:prose-figure:ring-white/10;
     @apply prose-figcaption:px-5 prose-figcaption:pb-5 prose-figcaption:text-sm prose-figcaption:leading-relaxed prose-figcaption:[overflow-wrap:anywhere];
     @apply prose-pre:p-5 lg:prose-pre:p-8 prose-pre:-mx-5 lg:prose-pre:-mx-8 md:prose-pre:rounded-3xl;
   }

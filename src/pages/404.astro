@@ -2,8 +2,14 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="Page Not Found" description="There’s nothing at this address.">
+<BaseLayout title="Page Not Found" description="There’s nothing at this address." field="scattered">
   <h1>Page Not Found</h1>
   <p>There’s nothing at this address. The page may have moved, or the link may have a typo.</p>
-  <p>Try <button type="button" data-command-palette-open class="cursor-pointer text-black underline decoration-rule hover:decoration-black dark:text-white dark:hover:decoration-white">searching the site</button>, or start from <a href="/">the home page</a>.</p>
+  <div class="not-prose mt-8 flex flex-wrap gap-2 text-sm">
+    <button type="button" data-command-palette-open class="inline-flex h-9 cursor-pointer items-center gap-2 rounded-full bg-accent px-4 font-semibold text-white transition-[filter] hover:brightness-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
+      <svg aria-hidden="true" viewBox="0 0 20 20" class="size-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><circle cx="8.5" cy="8.5" r="5.75" /><path d="m13 13 4.25 4.25" /></svg>
+      Search the site
+    </button>
+    <a href="/" class="inline-flex h-9 items-center rounded-full bg-neutral-500/10 px-4 text-neutral-700 hover:bg-neutral-500/15 hover:text-black dark:text-neutral-200 dark:hover:text-white">Go to the home page</a>
+  </div>
 </BaseLayout>

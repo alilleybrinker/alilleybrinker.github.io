@@ -3,6 +3,8 @@
 // dither as the project plates and the About photo. It drifts slowly, gathers
 // and warms toward the signal orange near the cursor, and each page has its own,
 // seeded from its path, so moving between pages morphs one into the next. A
+// page can ask for its field scattered, as the 404 page does, with
+// data-field="scattered" on its root. A
 // fragment shader draws it (src/lib/dither-field.ts), in a worker where the
 // browser can, so the page's main thread only passes events along. Each page
 // has its own canvas; the field's state carries over from one to the next. It
@@ -16,6 +18,7 @@
   import { createField, type Message } from '../lib/dither-field';
 
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const scattered = () => document.documentElement.dataset.field === 'scattered';
 
   // The worker draws when the browser can hand it a canvas; otherwise the
   // field draws here. Either way, `send` passes it what it needs to know, and
@@ -36,7 +39,7 @@
   };
   if ('transferControlToOffscreen' in HTMLCanvasElement.prototype && typeof Worker === 'function') {
     const worker = new Worker(new URL('../lib/dither-field.worker.ts', import.meta.url), { type: 'module' });
-    worker.postMessage({ type: 'start', path: location.pathname, reduce: reduceMotion.matches });
+    worker.postMessage({ type: 'start', path: location.pathname, scattered: scattered(), reduce: reduceMotion.matches });
     worker.onmessage = (event) => {
       if (event.data.type === 'unavailable') document.querySelector('#dither-field')?.remove();
       else if (event.data.type === 'drawn') drawn();
@@ -48,7 +51,7 @@
       return true;
     };
   } else {
-    const field = createField(location.pathname, reduceMotion.matches, drawn);
+    const field = createField(location.pathname, scattered(), reduceMotion.matches, drawn);
     send = field.send;
     attach = field.attach;
   }
@@ -124,5 +127,5 @@
   document.documentElement.addEventListener('pointerleave', () => send({ type: 'pointer', x: -1e4, y: -1e4, inside: false }));
 
   // A new page's field grows out of the one on screen.
-  document.addEventListener('astro:after-swap', () => send({ type: 'morph', path: location.pathname }));
+  document.addEventListener('astro:after-swap', () => send({ type: 'morph', path: location.pathname, scattered: scattered() }));
 </script>

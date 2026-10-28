@@ -20,7 +20,8 @@ const VERTEX = `
 `;
 
 // A field is a few soft blobs that circle slowly around their resting places,
-// plus a faint ripple. Two fields are blended while one page's becomes
+// plus a faint ripple. A scattered field (the 404 page's) is broken into
+// blocks that drift apart, and mend near the pointer. Two fields are blended while one page's becomes
 // another's. The 4×4 Bayer threshold, the same matrix as the project plates,
 // comes from the classic recursive form, since WebGL 1 has no integer
 // operations.
@@ -32,6 +33,8 @@ const FRAGMENT = `
   uniform vec4 blobsTo[3];
   uniform vec2 rippleFrom;
   uniform vec2 rippleTo;
+  uniform float scatterFrom;
+  uniform float scatterTo;
   uniform float morph;
   uniform vec2 pointer;
   uniform float heat;
@@ -40,6 +43,13 @@ const FRAGMENT = `
 
   float bayer2(vec2 a) { a = floor(a); return fract(dot(a, vec2(0.5, a.y * 0.75))); }
   float bayer4(vec2 a) { return bayer2(0.5 * a) * 0.25 + bayer2(a); }
+
+  // A hash without sine, which stays sound at medium precision.
+  float hash(vec2 p) {
+    vec3 p3 = fract(vec3(p.xyx) * 0.1031);
+    p3 += dot(p3, p3.yzx + 33.33);
+    return fract((p3.x + p3.y) * p3.z);
+  }
 
   float field(vec2 uv, vec4 blobs[3], vec2 ripple) {
     float value = 0.0;
@@ -56,12 +66,27 @@ const FRAGMENT = `
 
   void main() {
     vec2 cell = gl_FragCoord.xy;
-    vec2 uv = vec2(cell.x / resolution.x, 1.0 - cell.y / resolution.y);
-    float value = mix(field(uv, blobsFrom, rippleFrom), field(uv, blobsTo, rippleTo), morph);
-    // Sparse overall, and fading out toward the bottom of the band.
-    float level = 0.22 * smoothstep(0.35, 1.2, value) * (1.0 - smoothstep(0.25, 1.0, uv.y));
-    // Near the pointer the dots gather a little and tint toward the signal orange.
     vec2 away = (cell - pointer) / 18.0;
+    // Each block of 8 by 8 cells shows the field from somewhere a little off
+    // and wandering, and a few blocks are missing, so the field reads as
+    // pieces; near the pointer they mend. Dots stay on the cell grid.
+    float scatter = mix(scatterFrom, scatterTo, morph);
+    vec2 source = cell;
+    if (scatter > 0.0) {
+      vec2 block = floor(cell / 8.0);
+      float a = hash(block);
+      float b = hash(block + 17.0);
+      float apart = scatter * (1.0 - heat * exp(-dot(away, away) / 9.0));
+      vec2 drift = vec2(a, b) * 2.0 - 1.0 + 0.4 * vec2(sin(time * 0.2 + a * 6.283), cos(time * 0.17 + b * 6.283));
+      source += apart * drift * 14.0;
+      if (hash(block + 41.0) < 0.2 * apart) discard;
+    }
+    vec2 uv = vec2(source.x / resolution.x, 1.0 - source.y / resolution.y);
+    float value = mix(field(uv, blobsFrom, rippleFrom), field(uv, blobsTo, rippleTo), morph);
+    // Sparse overall, a little less so scattered, and fading out toward the
+    // bottom of the band.
+    float level = mix(0.22, 0.3, scatter) * smoothstep(0.35, 1.2, value) * (1.0 - smoothstep(0.25, 1.0, uv.y));
+    // Near the pointer the dots gather a little and tint toward the signal orange.
     float warmth = heat * exp(-dot(away, away));
     level += 0.08 * warmth;
     if (level <= bayer4(cell)) discard;
@@ -73,7 +98,7 @@ export type Message =
   | { type: 'size'; width: number; height: number }
   | { type: 'colors'; ink: number[]; hot: number[] }
   | { type: 'pointer'; x: number; y: number; inside: boolean }
-  | { type: 'morph'; path: string }
+  | { type: 'morph'; path: string; scattered: boolean }
   | { type: 'visible'; visible: boolean }
   | { type: 'reduce-motion'; reduce: boolean };
 
@@ -110,7 +135,7 @@ function surfaceOn(canvas: HTMLCanvasElement | OffscreenCanvas): Surface | undef
   gl.enableVertexAttribArray(position);
   gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
   const u = Object.fromEntries(
-    ['resolution', 'time', 'blobsFrom', 'blobsTo', 'rippleFrom', 'rippleTo', 'morph', 'pointer', 'heat', 'ink', 'hot']
+    ['resolution', 'time', 'blobsFrom', 'blobsTo', 'rippleFrom', 'rippleTo', 'scatterFrom', 'scatterTo', 'morph', 'pointer', 'heat', 'ink', 'hot']
       .map((name) => [name, gl.getUniformLocation(program, name)]),
   );
   return { canvas, gl, u };
@@ -122,11 +147,14 @@ function surfaceOn(canvas: HTMLCanvasElement | OffscreenCanvas): Surface | undef
 // extension's element, sits directly in <html>.) `send` passes it the rest of
 // what it needs to know. `drawn` hears when a newly bound canvas has its first
 // frame.
-export function createField(path: string, reduce: boolean, drawn?: () => void) {
+// A page's field: its shape, from its path, and whether it's scattered.
+const shapeFor = (path: string, scattered: boolean) => ({ ...fieldFor(path), scatter: scattered ? 1 : 0 });
+
+export function createField(path: string, scattered: boolean, reduce: boolean, drawn?: () => void) {
   let surface: Surface | undefined;
   let size = { width: 0, height: 0 };
   let colors = { ink: [0.8, 0.8, 0.8], hot: [0.02, 0.38, 1] };
-  let from = fieldFor(path);
+  let from = shapeFor(path, scattered);
   let to = from;
   let morphStart = -Infinity;
   let pointer = { x: -1e4, y: -1e4 };
@@ -163,6 +191,8 @@ export function createField(path: string, reduce: boolean, drawn?: () => void) {
       gl.uniform4fv(u.blobsTo, to.blobs);
       gl.uniform2fv(u.rippleFrom, from.ripple);
       gl.uniform2fv(u.rippleTo, to.ripple);
+      gl.uniform1f(u.scatterFrom, from.scatter);
+      gl.uniform1f(u.scatterTo, to.scatter);
       gl.uniform1f(u.morph, morph);
       gl.uniform2f(u.pointer, pointer.x, pointer.y);
       gl.uniform1f(u.heat, heat);
@@ -230,7 +260,7 @@ export function createField(path: string, reduce: boolean, drawn?: () => void) {
         // A page's field grows out of the previous page's. A morph still in
         // progress jumps to its end first, which is rarely visible.
         from = to;
-        to = fieldFor(message.path);
+        to = shapeFor(message.path, message.scattered);
         morphStart = reduceMotion ? -Infinity : performance.now();
         break;
       case 'visible':
