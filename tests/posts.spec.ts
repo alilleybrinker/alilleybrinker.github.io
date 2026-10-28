@@ -45,3 +45,26 @@ test('reading progress tracks the scroll', async ({ page }) => {
     return Math.round(Math.abs(moved - scrolled) * 100);
   })).toBe(0);
 });
+
+test('a section heading links to itself, copies its address, and lands clear of the table of contents', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto(TOC_POST);
+  const heading = page.locator('.post-body h2[id]').nth(1);
+  const id = await heading.getAttribute('id');
+  const link = heading.locator('.heading-link');
+  await expect(link).toHaveAttribute('aria-label', `Link to section: ${await heading.evaluate((h) => h.firstChild!.textContent)}`);
+  await heading.hover();
+  await link.click();
+  await expect(page).toHaveURL(new RegExp(`#${id}$`));
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(page.url());
+  // Neither going to a section nor choosing one from the open list leaves the
+  // stuck table of contents over its heading.
+  const clear = (selector: string) => page.evaluate((selector) => document.querySelector(selector)!.getBoundingClientRect().top >= document.querySelector('#table-of-contents')!.getBoundingClientRect().bottom, selector);
+  await expect.poll(() => clear(`#${id}`)).toBe(true);
+  await page.locator('#table-of-contents summary').click();
+  const target = page.locator('#table-of-contents nav a').nth(4);
+  const hash = await target.getAttribute('href');
+  await target.click();
+  await expect(page.locator('#table-of-contents')).not.toHaveAttribute('open');
+  await expect.poll(() => clear(hash!)).toBe(true);
+});

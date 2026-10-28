@@ -2,7 +2,9 @@
   // Morphs a post's title between a list and the post's heading, which is named
   // post-title on every post page. Only the one list title a navigation involves
   // gets the name: each named element is captured separately, and two elements
-  // can't share a name.
+  // can't share a name. Posts end with a list of their own (Keep reading), so
+  // when a list title on a post takes the name, that post's heading gives it
+  // up.
   import type { TransitionBeforePreparationEvent, TransitionBeforeSwapEvent } from 'astro:transitions/client';
 
   const name = 'post-title';
@@ -20,21 +22,28 @@
     morphing = Boolean(title);
     if (!title) return;
     title.style.viewTransitionName = name;
+    document.querySelector<HTMLElement>('[data-page-title]')?.style.setProperty('view-transition-name', 'none');
     clicked = { path: location.pathname, index: listed.indexOf(title) };
   });
 
   // Coming back to a list from a post: name the title that was clicked to get
-  // there, or else the first one linking to that post.
+  // there, or else the first one linking to that post. A post's own list only
+  // takes the name when going back to it; going forward, its heading keeps it.
   document.addEventListener('astro:before-swap', (event) => {
-    const { from, to, newDocument } = event as TransitionBeforeSwapEvent;
-    // A heading that morphs in from a list doesn't also resolve from dither.
-    if (morphing) newDocument.querySelector('.resolve-in')?.classList.remove('resolve-in');
+    const { from, to, newDocument, navigationType } = event as TransitionBeforeSwapEvent;
+    const wasMorphing = morphing;
     morphing = false;
+    // A heading that morphs in from a list doesn't also resolve from dither.
+    if (wasMorphing) newDocument.querySelector('.resolve-in')?.classList.remove('resolve-in');
+    const pageTitle = newDocument.querySelector<HTMLElement>('[data-page-title]');
+    if (wasMorphing || (pageTitle && navigationType !== 'traverse')) return;
     const listed = titles(newDocument);
     const matching = listed.filter((title) => title.closest('a')?.getAttribute('href') === from.pathname);
     const remembered = clicked?.path === to.pathname ? listed[clicked.index] : undefined;
     const title = remembered && matching.includes(remembered) ? remembered : matching[0];
-    if (title) title.style.viewTransitionName = name;
+    if (!title) return;
+    title.style.viewTransitionName = name;
+    pageTitle?.style.setProperty('view-transition-name', 'none');
   });
 
   // A post needs fonts the lists don't: Merriweather for its title, and often
