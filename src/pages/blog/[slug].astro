@@ -83,10 +83,10 @@ const structuredData = {
     <Content />
     <div class="post-end relative mt-20">
       <div class="post-end-field" aria-hidden="true" style={`--post-end-field: url(/field/${postSlug(post)}.svg)`}></div>
-      <aside aria-labelledby="share-post-heading" class="not-prose relative rounded-3xl bg-white p-6 text-base leading-normal shadow-[0_12px_32px_-16px_rgb(0_0_0/0.25)] ring-1 ring-black/5 dark:bg-neutral-800 dark:ring-white/10 max-sm:text-center sm:p-8">
+      <aside aria-labelledby="share-post-heading" class="not-prose relative rounded-3xl bg-white p-6 text-base leading-normal shadow-[0_12px_32px_-16px_rgb(0_0_0/0.25)] ring-1 ring-black/5 dark:bg-neutral-800 dark:ring-white/10 sm:p-8">
         <h2 id="share-post-heading" class="font-display text-xl font-semibold text-neutral-900 dark:text-neutral-100">Enjoyed this post?</h2>
         <p class="mt-1 text-neutral-600 dark:text-neutral-300">Share it with someone who might find it useful.</p>
-        <div class="mt-5 flex flex-wrap justify-center gap-2 text-sm sm:justify-start">
+        <div class="mt-5 flex flex-wrap gap-2 text-sm">
           <a href={`https://bsky.app/intent/compose?text=${encodeURIComponent(`${post.data.title} by @alilleybrinker.com ${new URL(postPath(post), Astro.site)}`)}`} class="share-action w-full justify-center bg-accent font-semibold text-white hover:brightness-90 sm:w-auto">
             <Icon name="bluesky" class="!h-4 !w-4" />
             Share on Bluesky
