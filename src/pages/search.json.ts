@@ -14,6 +14,7 @@ export const GET: APIRoute = async () => {
       { title: 'About', path: '/about/' },
       { title: 'Reading', path: '/reading/' },
       { title: 'Projects', path: '/projects/' },
+      { title: 'Topics', path: '/topics/' },
       { title: 'Colophon', path: '/colophon/' },
     ],
     posts: posts.map((post) => ({

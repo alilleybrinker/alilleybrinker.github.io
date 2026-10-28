@@ -104,3 +104,16 @@ test('a post links to the posts just older and newer, which link back to it', as
   await page.goto(newer!);
   await expect(sequence().locator('a[rel="prev"]')).toHaveAttribute('href', POST);
 });
+
+test('the topics page lists every topic, reached from the Topics menu and from each topic', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('.topics-menu summary').click();
+  const menuTopics = await page.locator('.topics-menu ul a[href^="/topics/"]:not([href="/topics/"])').count();
+  await page.getByRole('link', { name: 'All topics' }).click();
+  await expect(page).toHaveURL('/topics/');
+  await expect(page.locator('h1')).toHaveText('Topics');
+  await expect(page.locator('.topic-row')).toHaveCount(menuTopics);
+  await page.locator('.topic-row').first().click();
+  await page.getByRole('link', { name: 'Topics', exact: true }).last().click();
+  await expect(page).toHaveURL('/topics/');
+});

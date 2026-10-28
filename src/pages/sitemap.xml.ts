@@ -18,6 +18,7 @@ export const GET: APIRoute = async ({ site }) => {
     ['/reading/'],
     ['/projects/'],
     ['/colophon/'],
+    ['/topics/', newest(posts)],
     ...posts.filter((post) => !post.data.externalUrl).map((post): [string, string] => [postPath(post), day(changed(post))]),
     ...topics.map((topic): [string, string] => [`/topics/${topicSlug(topic)}/`, newest(posts.filter((post) => post.data.taxonomies.topics.includes(topic)))]),
   ];

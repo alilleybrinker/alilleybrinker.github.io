@@ -425,6 +425,38 @@ a,
   letter-spacing: -0.025em;
 }
 
+/* Section headings in running text are Bricolage Grotesque too, semibold and
+   a little less tight than titles. Headings set apart from the prose, such as
+   section labels, keep their own type. */
+.site-prose :is(h2, h3, h4):not(:where(.not-prose, .not-prose *)) {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.site-prose h2:not(:where(.not-prose, .not-prose *)) {
+  line-height: 1.25;
+}
+
+/* Each topic's swatch on the topics page, in ink, turning the accent on
+   hover like the project plates. */
+.topic-swatch {
+  fill: var(--color-neutral-800);
+  transition: fill 150ms ease-out;
+}
+
+.dark .topic-swatch {
+  fill: var(--color-neutral-300);
+}
+
+.topic-row:is(:hover, :focus-visible) .topic-swatch {
+  fill: var(--color-accent);
+}
+
+.dark .topic-row:is(:hover, :focus-visible) .topic-swatch {
+  fill: var(--color-accent-bright);
+}
+
 /* The dithered field across the top of each page (DitherField.astro). It sits
    behind everything, each cell drawn crisp, and fades out downward. Its own
    view transition name keeps the incoming page's field live during a page

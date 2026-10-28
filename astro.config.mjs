@@ -13,9 +13,6 @@ export default defineConfig({
     prefetchAll: true,
     defaultStrategy: 'hover',
   },
-  redirects: {
-    '/topics/': '/',
-  },
   markdown: {
     processor: unified({ remarkPlugins: [remarkLegacyLinks], rehypePlugins: [rehypeTypeset, rehypeSidenotes, rehypeHeadingLinks] }),
     // Code is colored from CSS variables, set for each theme in global.css.

@@ -4,7 +4,7 @@ import { test, expect, POST, TOC_POST, CODE_POST } from './fixtures';
 
 // Every kind of page, and the things that open over them, pass axe's WCAG 2.2
 // AA and best-practice rules in both themes.
-const PAGES = ['/', POST, TOC_POST, CODE_POST, '/topics/rust/', '/about/', '/reading/', '/projects/', '/colophon/', '/talks/', '/404.html'];
+const PAGES = ['/', POST, TOC_POST, CODE_POST, '/topics/rust/', '/topics/', '/about/', '/reading/', '/projects/', '/colophon/', '/talks/', '/404.html'];
 
 const audit = async (page: Page) => {
   const { violations } = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice']).analyze();
