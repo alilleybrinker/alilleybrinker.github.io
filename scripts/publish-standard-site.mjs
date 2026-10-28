@@ -42,7 +42,11 @@ function frontmatter(source, filename) {
   const topicsBlock = match[1].match(/^  topics:\s*\n((?:\s{4}-\s+.+\n?)+)/m)?.[1] ?? '';
   const topics = [...topicsBlock.matchAll(/^\s{4}-\s+(.+)$/gm)].map((topic) => topic[1].trim());
   if (!title) throw new Error(`${filename} has no title.`);
-  return { title, description, topics, body: match[2] };
+  // Unlisted posts are kept out of lists and search, and posts published
+  // elsewhere have no page here, so neither is published.
+  const unlisted = /^unlisted:\s*true\s*$/m.test(match[1]);
+  const external = /^externalUrl:/m.test(match[1]);
+  return { title, description, topics, body: match[2], withheld: unlisted || external };
 }
 
 function postFromFile(filename, source) {
@@ -113,10 +117,23 @@ async function main() {
 
   const filenames = (await readdir(postsDirectory)).filter((name) => /^\d{4}-\d{2}-\d{2}-.+\.md$/.test(name));
   const documents = {};
+  let published = 0;
   for (const filename of filenames) {
     const post = postFromFile(filename, await readFile(join(postsDirectory.pathname, filename), 'utf8'));
     const rkey = `blog-${post.slug}`;
     const uri = `at://${session.did}/${collection}/${rkey}`;
+    // A withheld post's record is deleted, in case it was published before it
+    // became unlisted. Deleting a record that isn't there does nothing.
+    if (post.withheld) {
+      try {
+        await xrpc(service, 'com.atproto.repo.deleteRecord', { repo: session.did, collection, rkey }, session.accessJwt);
+      } catch (error) {
+        // The rest still publish; the run ends failed so this is noticed.
+        console.error(`Could not withdraw ${post.slug}: ${error instanceof Error ? error.message : error}`);
+        process.exitCode = 1;
+      }
+      continue;
+    }
     await xrpc(service, 'com.atproto.repo.putRecord', {
       repo: session.did,
       collection,
@@ -139,12 +156,13 @@ async function main() {
       },
     }, session.accessJwt);
     documents[post.slug] = uri;
+    published++;
   }
 
   await mkdir(new URL('../public/.well-known/', import.meta.url), { recursive: true });
   await writeFile(metadataFile, `${JSON.stringify({ publicationUri, documents }, null, 2)}\n`);
   await writeFile(verificationFile, `${publicationUri}\n`);
-  console.log(`Published ${filenames.length} documents and updated verification metadata.`);
+  console.log(`Published ${published} documents, withheld ${filenames.length - published}, and updated verification metadata.`);
 }
 
 main().catch((error) => {
