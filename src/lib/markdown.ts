@@ -1,6 +1,6 @@
 import { legacyRoute } from './remark-legacy-links';
 import type { Post } from './site';
-import { postDate, postPath, postReadingTime, postSlug } from './site';
+import { postDate, postPath, postReadingTime, postSlug, postUpdated } from './site';
 
 export function markdownPath(post: Post) {
   return `/blog/${postSlug(post)}.md`;
@@ -25,6 +25,7 @@ export function postMarkdown(post: Post, site: URL) {
   const meta = [
     `- Author: Andrew Lilley Brinker`,
     `- Published: ${date}`,
+    postUpdated(post) && `- Updated: ${postUpdated(post)!.toISOString().slice(0, 10)}`,
     `- Reading time: ${postReadingTime(post)} minutes`,
     topics.length > 0 && `- Topics: ${topics.join(', ')}`,
     `- Canonical URL: ${new URL(postPath(post), site).href}`,

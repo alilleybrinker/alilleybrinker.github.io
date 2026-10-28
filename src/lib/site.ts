@@ -32,6 +32,12 @@ export function postDate(post: Post) {
   return new Date(`${match[1]}T12:00:00Z`);
 }
 
+// When a post was last revised, if it says, at noon UTC like its date.
+export function postUpdated(post: Post) {
+  const updated = post.data.updated;
+  return updated && new Date(`${updated.toISOString().slice(0, 10)}T12:00:00Z`);
+}
+
 export function postSlug(post: Post) {
   return post.id.replace(/^\d{4}-\d{2}-\d{2}-/, '').replace(/\.md$/, '');
 }

@@ -11,6 +11,9 @@ const postSchema = z.object({
   publication: z.string().optional(),
   publicationTitle: z.string().optional(),
   readingTime: z.number().int().positive().optional(),
+  // When a post was last meaningfully revised, as YYYY-MM-DD. Shown beside its
+  // date and given to search engines; leave it out for typo fixes.
+  updated: z.coerce.date().optional(),
   unlisted: z.boolean().default(false),
   taxonomies: z.object({
     type: z.array(z.string()).default([]),
