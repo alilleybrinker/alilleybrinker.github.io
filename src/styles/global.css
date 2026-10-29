@@ -37,6 +37,8 @@
   /* Panels set into the page: callouts, code blocks, the closed table of contents. */
   --color-panel: oklch(0.975 0 0);
   --color-panel-border: oklch(0.94 0 0);
+  /* The footer's band, a step back from the page in either theme. */
+  --color-footer: oklch(0.945 0 0);
 
   --color-gray-200: oklch(0.89 0 0);
 
@@ -58,6 +60,7 @@
   --color-muted: oklch(0.64 0 0);
   --color-signal: #ff5f00;
   --color-signal-text: #ff5f00;
+  --color-footer: oklch(0.145 0 0);
 }
 
 html {
@@ -1106,6 +1109,7 @@ a,
   .post-end,
   [aria-labelledby="keep-reading-heading"],
   .post-sequence,
+  .site-footer,
   #command-palette,
   #link-preview,
   .heading-link,
