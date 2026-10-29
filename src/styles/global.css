@@ -879,6 +879,15 @@ a,
   border-color: var(--color-neutral-700);
 }
 
+/* On phones code runs to the screen's edges, so it has no corners or side
+   borders there to be cut off. */
+@media (width < 768px) {
+  .post-body pre.astro-code {
+    border-inline: 0;
+    border-radius: 0;
+  }
+}
+
 /* Comments are italic, picked out by the color Shiki gives them. */
 .post-body pre.astro-code [style*="--astro-code-token-comment"] {
   font-style: italic;

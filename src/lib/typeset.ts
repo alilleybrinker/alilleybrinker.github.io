@@ -12,8 +12,10 @@ const DECADE = /^\d\ds\b/;
 // most of them, but not those in raw HTML or front matter. Also turns curled
 // opening quotes that are really apostrophes into apostrophes: right after a
 // letter, digit or symbol, as in "C++‘s", or before a decade, as in "‘90s".
-// `before` is the text that precedes this text, so a quote at its start can
-// tell which way it faces.
+// And it turns a closing double quote at the start of a block or after a space
+// into an opening one: Markdown curls a quote that starts a heading or table
+// cell the wrong way. `before` is the text that precedes this text, so a quote
+// at its start can tell which way it faces.
 export function smartQuotes(text: string, before = '') {
   let result = '';
   let previous = before.slice(-1);
@@ -24,6 +26,7 @@ export function smartQuotes(text: string, before = '') {
     if (char === '"') result += opens ? '“' : '”';
     else if (char === "'") result += opens && !decade ? '‘' : '’';
     else if (char === '‘' && (decade || /[\p{L}\p{N}+#]/u.test(previous))) result += '’';
+    else if (char === '”' && /^$|\s$/u.test(previous)) result += '“';
     else result += char;
     previous = result.slice(-1);
   });
