@@ -18,7 +18,7 @@ test('the command palette finds a post and opens it in place', async ({ page }) 
 test('the command palette holds focus, closes on Escape and on a click outside, and says when nothing matches', async ({ page }) => {
   await page.goto('/');
   const palette = page.locator('#command-palette');
-  const button = page.locator('button[data-command-palette-open] >> visible=true');
+  const button = page.locator('header button[data-command-palette-open] >> visible=true');
   await button.click();
   await expect(palette).toBeVisible();
   await page.keyboard.type('zzzqqq');

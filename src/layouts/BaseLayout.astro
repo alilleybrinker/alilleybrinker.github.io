@@ -6,6 +6,7 @@ import CommandPalette from '../components/CommandPalette.astro';
 import LinkPreviews from '../components/LinkPreviews.astro';
 import DitherField from '../components/DitherField.astro';
 import PostTitleTransitions from '../components/PostTitleTransitions.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 import Icon from '../components/Icon.astro';
 import standardSite from '../data/standard-site.json';
 
@@ -170,7 +171,8 @@ const jsonLd = (data: Record<string, unknown>) => JSON.stringify(data).replace(/
           </div>
         </nav>
       </header>
-      <main id="content" tabindex="-1" class="outline-none pt-12 pb-24 px-5 md:px-0 md:max-w-(--breakpoint-md) md:mx-auto"><div class="prose lg:prose-lg site-prose mb-12"><slot /></div><footer class="mt-8 text-xs text-muted"><p>Copyright Andrew Lilley Brinker. Made with <Icon name="heart" class="-mt-0.5 !h-3 !w-3" /> in California · <a href="/about/#ai-policy" class="whitespace-nowrap underline decoration-rule hover:text-neutral-700 dark:hover:text-neutral-200">AI Policy</a> · <a href="/colophon/" class="whitespace-nowrap underline decoration-rule hover:text-neutral-700 dark:hover:text-neutral-200">Colophon</a></p></footer></main>
+      <main id="content" tabindex="-1" class="outline-none pt-12 pb-24 px-5 md:px-0 md:max-w-(--breakpoint-md) md:mx-auto"><div class="prose lg:prose-lg site-prose"><slot /></div></main>
+      <SiteFooter />
     </div>
     <LinkPreviews />
     <CommandPalette />

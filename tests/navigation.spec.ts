@@ -117,3 +117,19 @@ test('the topics page lists every topic, reached from the Topics menu and from e
   await page.getByRole('link', { name: 'Topics', exact: true }).last().click();
   await expect(page).toHaveURL('/topics/');
 });
+
+test('every page ends with a footer that names the newest post and opens search', async ({ page }) => {
+  await page.goto(POST);
+  const footer = page.locator('.site-footer');
+  const latest = footer.getByRole('navigation').or(footer.locator('section')).locator('a').first();
+  const href = await latest.getAttribute('href');
+  expect(href).toMatch(/^(\/blog\/|https?:)/);
+  for (const name of ['RSS', 'Bluesky', 'Topics', 'About', 'Colophon']) await expect(footer.getByRole('link', { name, exact: true })).toBeVisible();
+  // The newest post's own page doesn't point at itself.
+  if (href!.startsWith('/')) {
+    await page.goto(href!);
+    await expect(page.locator('.site-footer section a')).toHaveCount(0);
+  }
+  await footer.getByRole('button', { name: 'Search' }).click();
+  await expect(page.locator('#command-palette')).toBeVisible();
+});
