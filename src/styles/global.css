@@ -138,7 +138,19 @@ html {
 /* The avatar is black line art used as a mask. In dark mode it sits on a light
    disc, which brightens on hover. On hover, a copy of the line art in the
    accent color fades in on top, which the compositor animates without
-   repainting. */
+   repainting. Beneath it all, the head's silhouette is filled with the page's
+   color, so the field's dots don't show through the face. */
+.site-logo-fill {
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-stone-50);
+  mask: url("/image/andrew_lineart-fill.png") center / contain no-repeat;
+}
+
+.dark .site-logo-fill {
+  background-color: var(--color-neutral-900);
+}
+
 .site-logo-face {
   position: absolute;
   inset: 0;
