@@ -138,7 +138,18 @@
   let active = 0;
   let rendered: Entry[] = [];
 
-  function setActive(index: number) {
+  // Whether the results have been scrolled down since they were last shown
+  // from the top, so a new search scrolls back only when it has to.
+  let scrolledDown = false;
+  document.addEventListener('scroll', (event) => {
+    const target = event.target as Element;
+    if (target.id === 'command-palette-results') scrolledDown = target.scrollTop > 0;
+  }, { capture: true, passive: true });
+
+  // Scrolling an option into view reads layout, so it's done only when the
+  // keyboard moves the selection; the pointer is already over the option,
+  // and a new search starts from the top.
+  function setActive(index: number, reveal = false) {
     const parts = elements();
     if (!parts || !rendered.length) return;
     active = (index + rendered.length) % rendered.length;
@@ -147,7 +158,7 @@
     });
     const option = parts.results.querySelector<HTMLElement>(`#command-palette-option-${active}`);
     parts.input.setAttribute('aria-activedescendant', option?.id ?? '');
-    option?.scrollIntoView({ block: 'nearest' });
+    if (reveal) option?.scrollIntoView({ block: 'nearest' });
   }
 
   // Rows stay between searches, found again by path, and a row's title is
@@ -207,6 +218,10 @@
     while (parts.results.children.length > items.length) parts.results.lastElementChild!.remove();
     parts.status.textContent = raw.trim() ? `${rendered.length} ${rendered.length === 1 ? 'result' : 'results'}` : '';
     setActive(0);
+    if (scrolledDown) {
+      parts.results.scrollTop = 0;
+      scrolledDown = false;
+    }
   }
 
   function go(entry: Entry | undefined, newTab: boolean) {
@@ -255,7 +270,7 @@
       parts.input.focus();
     } else if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
       event.preventDefault();
-      setActive(active + (event.key === 'ArrowDown' ? 1 : -1));
+      setActive(active + (event.key === 'ArrowDown' ? 1 : -1), true);
     } else if (event.key === 'Enter' && event.target === parts.input) {
       event.preventDefault();
       go(rendered[active], event.metaKey || event.ctrlKey);

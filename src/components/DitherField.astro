@@ -57,9 +57,12 @@
   }
 
   // Colors come from the page's theme as RGB, through a 2D canvas, which
-  // understands any CSS color.
+  // understands any CSS color. The canvas is kept in memory rather than on the
+  // GPU: reading back a GPU canvas waits on the GPU, which at page load is
+  // busy starting the field, and that held up the page for as long as a second
+  // on a slow machine.
   const rgb = (color: string) => {
-    const context = Object.assign(document.createElement('canvas'), { width: 1, height: 1 }).getContext('2d')!;
+    const context = Object.assign(document.createElement('canvas'), { width: 1, height: 1 }).getContext('2d', { willReadFrequently: true })!;
     context.fillStyle = color;
     context.fillRect(0, 0, 1, 1);
     const [r, g, b] = context.getImageData(0, 0, 1, 1).data;
