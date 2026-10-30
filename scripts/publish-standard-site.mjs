@@ -1,8 +1,9 @@
+import { createHash } from 'node:crypto';
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 const siteUrl = 'https://www.alilleybrinker.com';
-const publicationRkey = 'alilleybrinker-site';
 const collection = 'site.standard.document';
 const publicationCollection = 'site.standard.publication';
 const postsDirectory = new URL('../content/blog/', import.meta.url);
@@ -22,6 +23,34 @@ async function loadDotenv() {
     if (error?.code !== 'ENOENT') throw error;
   }
 }
+
+// Standard.site's records are keyed by TIDs: a timestamp in microseconds and
+// a 10-bit clock ID, in a sortable base32. Each record's TID is made from a
+// fixed time and its own name, so a post keeps the same record from one run to
+// the next and each run replaces it in place, with nothing to remember between
+// runs.
+const TID_ALPHABET = '234567abcdefghijklmnopqrstuvwxyz';
+
+export function tid(isoTime, name) {
+  const hash = createHash('sha256').update(name).digest();
+  // The name also picks the microsecond, so posts from the same day differ.
+  const micros = BigInt(Date.parse(isoTime)) * 1000n + BigInt(hash.readUInt32BE(0) % 1_000_000);
+  let value = (micros << 10n) | BigInt(hash.readUInt16BE(4) & 0x3ff);
+  let text = '';
+  for (let i = 0; i < 13; i++) {
+    text = TID_ALPHABET[Number(value & 31n)] + text;
+    value >>= 5n;
+  }
+  return text;
+}
+
+export const publicationRkey = tid('2026-10-27T00:00:00.000Z', 'publication');
+export const documentRkey = (post) => tid(post.publishedAt, post.slug);
+
+// The keys records had before Standard.site required TIDs. Their records are
+// deleted as the new ones are written; once gone, deleting them does nothing.
+const legacyPublicationRkey = 'alilleybrinker-site';
+const legacyDocumentRkey = (post) => `blog-${post.slug}`;
 
 function required(name) {
   const value = process.env[name];
@@ -49,7 +78,7 @@ function frontmatter(source, filename) {
   return { title, description, topics, body: match[2], withheld: unlisted || external };
 }
 
-function postFromFile(filename, source) {
+export function postFromFile(filename, source) {
   const date = filename.match(/^(\d{4}-\d{2}-\d{2})-(.+)\.md$/);
   if (!date) throw new Error(`Unexpected post filename: ${filename}`);
   const data = frontmatter(source, filename);
@@ -101,6 +130,17 @@ async function main() {
     session.accessJwt,
   );
 
+  // Deleting a record can fail without stopping the run; it ends failed so
+  // it's noticed.
+  const remove = async (collectionName, rkey, what) => {
+    try {
+      await xrpc(service, 'com.atproto.repo.deleteRecord', { repo: session.did, collection: collectionName, rkey }, session.accessJwt);
+    } catch (error) {
+      console.error(`Could not delete ${what}: ${error instanceof Error ? error.message : error}`);
+      process.exitCode = 1;
+    }
+  };
+
   await xrpc(service, 'com.atproto.repo.putRecord', {
     repo: session.did,
     collection: publicationCollection,
@@ -115,23 +155,20 @@ async function main() {
     },
   }, session.accessJwt);
 
+  await remove(publicationCollection, legacyPublicationRkey, 'the old publication record');
+
   const filenames = (await readdir(postsDirectory)).filter((name) => /^\d{4}-\d{2}-\d{2}-.+\.md$/.test(name));
   const documents = {};
   let published = 0;
   for (const filename of filenames) {
     const post = postFromFile(filename, await readFile(join(postsDirectory.pathname, filename), 'utf8'));
-    const rkey = `blog-${post.slug}`;
+    const rkey = documentRkey(post);
     const uri = `at://${session.did}/${collection}/${rkey}`;
+    await remove(collection, legacyDocumentRkey(post), `the old record for ${post.slug}`);
     // A withheld post's record is deleted, in case it was published before it
     // became unlisted. Deleting a record that isn't there does nothing.
     if (post.withheld) {
-      try {
-        await xrpc(service, 'com.atproto.repo.deleteRecord', { repo: session.did, collection, rkey }, session.accessJwt);
-      } catch (error) {
-        // The rest still publish; the run ends failed so this is noticed.
-        console.error(`Could not withdraw ${post.slug}: ${error instanceof Error ? error.message : error}`);
-        process.exitCode = 1;
-      }
+      await remove(collection, rkey, `${post.slug}'s record`);
       continue;
     }
     await xrpc(service, 'com.atproto.repo.putRecord', {
@@ -165,7 +202,9 @@ async function main() {
   console.log(`Published ${published} documents, withheld ${filenames.length - published}, and updated verification metadata.`);
 }
 
-main().catch((error) => {
-  console.error(error instanceof Error ? error.message : error);
-  process.exitCode = 1;
-});
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch((error) => {
+    console.error(error instanceof Error ? error.message : error);
+    process.exitCode = 1;
+  });
+}
