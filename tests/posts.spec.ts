@@ -104,3 +104,44 @@ test('a post prints as just the article, in the light theme', async ({ page }) =
   await page.evaluate(() => dispatchEvent(new Event('afterprint')));
   expect(await page.evaluate(() => document.documentElement.classList.contains('dark'))).toBe(true);
 });
+
+test('selecting a passage offers it as a quote card, in whole words, to share', async ({ page, context }) => {
+  await page.goto(TOC_POST);
+  const paragraph = page.locator('.post-body > p').nth(2);
+  await paragraph.scrollIntoViewIfNeeded();
+  // Select from partway through the first word to partway through another.
+  const quote = await paragraph.evaluate((p) => {
+    const text = [...p.childNodes].find((node) => node.nodeType === Node.TEXT_NODE && node.textContent!.trim().split(/\s+/).length > 6)!;
+    const range = document.createRange();
+    const words = [...text.textContent!.matchAll(/\S+/g)];
+    // One letter into the first word, to one letter before the end of the sixth.
+    range.setStart(text, words[0].index! + 1);
+    range.setEnd(text, words[5].index! + words[5][0].length - 1);
+    getSelection()!.removeAllRanges();
+    getSelection()!.addRange(range);
+    return words.slice(0, 6).map((word) => word[0]).join(' ');
+  });
+  const pill = page.getByRole('button', { name: 'Share quote' });
+  await expect(pill).toBeVisible();
+  await pill.click();
+  const dialog = page.getByRole('dialog', { name: 'Share quote' });
+  await expect(dialog).toBeVisible();
+  await expect(dialog.locator('img')).toHaveAttribute('src', /^blob:/);
+  await expect(dialog.locator('img')).toHaveAttribute('alt', new RegExp(quote.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+  const bluesky = dialog.getByRole('link', { name: 'Share on Bluesky' });
+  expect(decodeURIComponent((await bluesky.getAttribute('href'))!)).toContain(`“${quote}”`);
+  // Bluesky's share link takes only text, so opening it copies the card to
+  // paste in.
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  const opened = page.context().waitForEvent('page');
+  await bluesky.click();
+  await (await opened).close();
+  await expect(dialog.locator('#quote-share-note')).toHaveText(/paste it into your Bluesky post/);
+  await expect(dialog.locator('#quote-share-note')).toBeVisible();
+  expect(await page.evaluate(async () => (await navigator.clipboard.read())[0].types)).toContain('image/png');
+  await page.keyboard.press('Escape');
+  await expect(dialog).toBeHidden();
+  // The title isn't the post's text to quote.
+  await page.locator('h1').selectText();
+  await expect(pill).toBeHidden();
+});

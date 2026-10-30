@@ -1,0 +1,221 @@
+---
+// Share a passage from a post: selecting text in a post shows a small "Share
+// quote" pill beside it, which opens a panel with the passage drawn as a card
+// (src/lib/quote-card.ts) and ways to share it. Nothing is loaded until text
+// is first selected.
+interface Props {
+  title: string;
+  slug: string;
+  url: string;
+}
+const { title, slug, url } = Astro.props;
+---
+
+<button type="button" id="quote-share-button" class="quote-share-button not-prose share-action share-action-quiet" hidden data-title={title} data-slug={slug} data-url={url}>Share quote</button>
+<dialog id="quote-share" class="quote-share not-prose" aria-labelledby="quote-share-heading">
+  <div class="quote-share-panel">
+    <div class="flex items-center justify-between gap-4">
+      <h2 id="quote-share-heading" class="font-display text-xl font-semibold tracking-[-0.01em] text-neutral-900 dark:text-neutral-100">Share quote</h2>
+      <button type="button" data-close class="share-action share-action-quiet">Close</button>
+    </div>
+    <div class="quote-share-preview"><img id="quote-share-image" alt="" /></div>
+    <div class="mt-5 flex flex-wrap gap-2 text-sm">
+      <a id="quote-share-bluesky" class="share-action w-full justify-center bg-accent font-semibold text-white hover:brightness-90 sm:w-auto" target="_blank" rel="noopener">Share on Bluesky</a>
+      <button type="button" id="quote-share-native" class="share-action share-action-quiet" hidden>Share image</button>
+      <button type="button" id="quote-share-copy" class="share-action share-action-quiet"><span data-label>Copy image</span><span aria-hidden="true" data-copied-label>Copied!</span></button>
+      <a id="quote-share-save" class="share-action share-action-quiet" download>Save image</a>
+      <button type="button" id="quote-share-link" class="share-action share-action-quiet"><span data-label>Copy link to quote</span><span aria-hidden="true" data-copied-label>Copied!</span></button>
+    </div>
+    <p id="quote-share-note" class="mt-3 text-sm text-neutral-600 dark:text-neutral-300" hidden>The card is copied: paste it into your Bluesky post.</p>
+    <p id="quote-share-status" class="sr-only" aria-live="polite"></p>
+  </div>
+</dialog>
+
+<script>
+  // The longest passage shared, and the longest Bluesky post (in characters,
+  // near enough to its 300 graphemes).
+  const MAX_QUOTE = 400;
+  const MAX_POST = 300;
+
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T | null;
+
+  // The selected passage, if it lies in the post's own text: not code, the
+  // title, the table of contents, the series list or the share box.
+  function selectedPassage() {
+    const selection = getSelection();
+    if (!selection || selection.isCollapsed || selection.rangeCount === 0) return undefined;
+    const range = selection.getRangeAt(0);
+    const body = document.querySelector('.post-body');
+    const within = (node: Node) => {
+      const element = node.nodeType === Node.ELEMENT_NODE ? (node as Element) : node.parentElement;
+      return element && body?.contains(element) && !element.closest('pre, code, h1, #table-of-contents, .post-series, .post-end, .sidenote, dialog');
+    };
+    if (!within(range.startContainer) || !within(range.endContainer)) return undefined;
+    const text = wholeWords(range).toString().replace(/\s+/g, ' ').trim();
+    if (text.length < 3 || text.length > MAX_QUOTE) return undefined;
+    return { text, rect: range.getBoundingClientRect() };
+  }
+
+  // The selection, widened to whole words, so a drag that stops partway
+  // through one never quotes half of it.
+  const WORD = /[\p{L}\p{N}’'-]/u;
+  function wholeWords(selected: Range) {
+    const range = selected.cloneRange();
+    if (range.startContainer.nodeType === Node.TEXT_NODE) {
+      const text = range.startContainer.textContent ?? '';
+      let start = range.startOffset;
+      while (start > 0 && WORD.test(text[start - 1]) && WORD.test(text[start] ?? '')) start--;
+      range.setStart(range.startContainer, start);
+    }
+    if (range.endContainer.nodeType === Node.TEXT_NODE) {
+      const text = range.endContainer.textContent ?? '';
+      let end = range.endOffset;
+      while (end < text.length && WORD.test(text[end]) && WORD.test(text[end - 1] ?? '')) end++;
+      range.setEnd(range.endContainer, end);
+    }
+    return range;
+  }
+
+  let current = '';
+  let timer = 0;
+  function place() {
+    const button = $<HTMLButtonElement>('quote-share-button');
+    if (!button) return;
+    const passage = selectedPassage();
+    if (!passage) {
+      button.hidden = true;
+      return;
+    }
+    current = passage.text;
+    button.hidden = false;
+    // Above the selection, or below it on touch screens, where the system's
+    // own menu sits above.
+    const touch = matchMedia('(pointer: coarse)').matches;
+    const top = touch ? passage.rect.bottom + 12 : passage.rect.top - button.offsetHeight - 10;
+    const left = Math.min(Math.max(8, passage.rect.left + passage.rect.width / 2 - button.offsetWidth / 2), innerWidth - button.offsetWidth - 8);
+    button.style.transform = `translate(${Math.round(left)}px, ${Math.round(Math.max(8, top))}px)`;
+  }
+  document.addEventListener('selectionchange', () => {
+    clearTimeout(timer);
+    timer = window.setTimeout(place, 150);
+  });
+  addEventListener('scroll', () => {
+    const button = $<HTMLButtonElement>('quote-share-button');
+    if (button && !button.hidden) place();
+  }, { passive: true });
+
+  // A link that opens the post at the passage, highlighted, where browsers
+  // support text fragments: long passages by their first and last words.
+  function fragmentLink(url: string, quote: string) {
+    const encode = (text: string) => encodeURIComponent(text).replace(/-/g, '%2D');
+    const words = quote.split(' ');
+    const target = words.length > 10 ? `${encode(words.slice(0, 5).join(' '))},${encode(words.slice(-5).join(' '))}` : encode(quote);
+    return `${url}#:~:text=${target}`;
+  }
+
+  function flash(button: HTMLElement, message: string) {
+    button.setAttribute('data-copied', '');
+    $('quote-share-status')!.textContent = message;
+    setTimeout(() => button.removeAttribute('data-copied'), 2000);
+  }
+
+  let card: Blob | undefined;
+  let cardUrl = '';
+
+  async function open() {
+    const button = $<HTMLButtonElement>('quote-share-button');
+    const dialog = $<HTMLDialogElement>('quote-share');
+    if (!button || !dialog || !current) return;
+    const quote = current;
+    const { title = '', slug = '', url = '' } = button.dataset;
+    button.hidden = true;
+
+    // Bluesky's share link takes only text, so the post carries the passage
+    // and the link (just the link, when the passage won't fit), and the card
+    // goes on the clipboard to paste in.
+    const bluesky = $<HTMLAnchorElement>('quote-share-bluesky')!;
+    const quoted = `“${quote}” ${url}`;
+    const post = quoted.length <= MAX_POST ? quoted : url;
+    $('quote-share-note')!.hidden = true;
+    bluesky.href = `https://bsky.app/intent/compose?text=${encodeURIComponent(post)}`;
+
+    const image = $<HTMLImageElement>('quote-share-image')!;
+    image.alt = `A card quoting “${title}”: ${quote}`;
+    image.removeAttribute('src');
+    dialog.showModal();
+
+    const { quoteCard } = await import('../lib/quote-card');
+    card = await quoteCard({ quote, title, slug });
+    if (cardUrl) URL.revokeObjectURL(cardUrl);
+    cardUrl = URL.createObjectURL(card);
+    image.src = cardUrl;
+    const save = $<HTMLAnchorElement>('quote-share-save')!;
+    save.href = cardUrl;
+    save.download = `${slug}-quote.png`;
+    const file = new File([card], `${slug}-quote.png`, { type: 'image/png' });
+    $('quote-share-native')!.hidden = !(navigator.canShare?.({ files: [file] }));
+    $('quote-share-link')!.dataset.link = fragmentLink(url, quote);
+    $('quote-share-native')!.dataset.text = post;
+  }
+
+  document.addEventListener('click', async (event) => {
+    const target = event.target as Element;
+    if (target.closest('#quote-share-button')) {
+      open();
+      return;
+    }
+    const dialog = $<HTMLDialogElement>('quote-share');
+    if (!dialog?.open) return;
+    if (target.closest('[data-close]') || target === dialog) {
+      dialog.close();
+      return;
+    }
+    // Opening Bluesky copies the card first, in the same click, so it can be
+    // pasted straight into the post; the link opens either way.
+    if (target.closest('#quote-share-bluesky') && card && 'ClipboardItem' in window) {
+      navigator.clipboard.write([new ClipboardItem({ 'image/png': card })])
+        .then(() => {
+          $('quote-share-note')!.hidden = false;
+          $('quote-share-status')!.textContent = 'Quote card copied; paste it into your Bluesky post.';
+        })
+        .catch(() => {});
+      return;
+    }
+    const copy = target.closest<HTMLElement>('#quote-share-copy');
+    if (copy && card) {
+      try {
+        await navigator.clipboard.write([new ClipboardItem({ 'image/png': card })]);
+        flash(copy, 'Quote card copied to the clipboard.');
+      } catch {
+        $('quote-share-status')!.textContent = 'This browser can’t copy images; save the image instead.';
+      }
+      return;
+    }
+    const link = target.closest<HTMLElement>('#quote-share-link');
+    if (link?.dataset.link) {
+      await navigator.clipboard.writeText(link.dataset.link);
+      flash(link, 'Link to the quote copied to the clipboard.');
+      return;
+    }
+    const native = target.closest<HTMLElement>('#quote-share-native');
+    if (native && card) {
+      const slug = $<HTMLButtonElement>('quote-share-button')?.dataset.slug ?? 'quote';
+      try {
+        await navigator.share({ files: [new File([card], `${slug}-quote.png`, { type: 'image/png' })], text: native.dataset.text });
+      } catch {
+        // Closing the share sheet isn't an error worth showing.
+      }
+    }
+  });
+
+  // Pressing the pill mustn't clear the selection it shares.
+  document.addEventListener('mousedown', (event) => {
+    if ((event.target as Element).closest('#quote-share-button')) event.preventDefault();
+  });
+
+  // A move to another page leaves no pill behind.
+  document.addEventListener('astro:before-swap', () => {
+    $<HTMLButtonElement>('quote-share-button')?.setAttribute('hidden', '');
+    current = '';
+  });
+</script>
