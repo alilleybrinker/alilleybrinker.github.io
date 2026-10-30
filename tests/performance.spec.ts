@@ -1,23 +1,36 @@
 import { test, expect, TOC_POST } from './fixtures';
 
-// A frame takes 8.3ms at 120fps. A task of 50ms or more on the main thread (a
-// "long task") drops several frames at once, and none of these interactions
-// should ever cause one.
+// A frame takes 8.3ms at 120fps. A frame held up 50ms or more drops several at
+// once, and none of these interactions should ever cause one. What counts is
+// the site's own work: its scripts, and the layout they force. CI draws pages
+// in software and shares its CPU, so frames there sometimes run long with no
+// script in them at all; those say nothing about the site, so they're left
+// out. A slow frame is caught when the site's scripts in it take 50ms or more.
 test.describe.configure({ mode: 'serial' });
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
-    (window as any).__longTasks = [];
-    new PerformanceObserver((list) => (window as any).__longTasks.push(...list.getEntries())).observe({ type: 'longtask' });
+    (window as any).__slowFrames = [];
+    new PerformanceObserver((list) => {
+      for (const frame of list.getEntries() as any[]) {
+        const own = frame.scripts.filter((script: any) => !script.sourceURL || new URL(script.sourceURL, location.href).origin === location.origin);
+        const time = own.reduce((total: number, script: any) => total + script.duration, 0);
+        if (time >= 50) (window as any).__slowFrames.push({ startTime: frame.startTime, time });
+      }
+    }).observe({ type: 'long-animation-frame' });
     document.addEventListener('astro:page-load', () => { (window as any).__pageLoadedAt = performance.now(); });
   });
 });
 
-// The long tasks since the last check, by duration; or only those that began
-// after the current page finished loading.
+// The time the site's scripts took in each slow frame that began since the
+// last check; or only in those that began after the current page finished
+// loading. A frame is reported a little after it ends, so a check also leaves
+// out frames reported late that began before the one before it.
 const longTasks = (page: import('@playwright/test').Page, { afterPageLoad = false } = {}) => page.evaluate((afterPageLoad) => {
-  const since = afterPageLoad ? (window as any).__pageLoadedAt : 0;
-  return (window as any).__longTasks.splice(0).filter((task: PerformanceEntry) => task.startTime >= since).map((task: PerformanceEntry) => Math.round(task.duration));
+  const window_ = window as any;
+  const since = Math.max(window_.__checkedAt ?? 0, afterPageLoad ? window_.__pageLoadedAt : 0);
+  window_.__checkedAt = performance.now();
+  return window_.__slowFrames.splice(0).filter((frame: { startTime: number }) => frame.startTime >= since).map((frame: { time: number }) => Math.round(frame.time));
 }, afterPageLoad);
 
 test('scrolling through a post', async ({ page }) => {
