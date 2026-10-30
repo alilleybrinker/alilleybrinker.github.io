@@ -52,13 +52,13 @@ for (const item of items) {
         items.length > 0 ? (
             <div class="not-prose mt-14">
                 {[...years.entries()].map(([year, yearItems]) => (
-                    <section class="mb-6">
-                        <h2 class="mb-1 text-sm font-normal text-muted">
+                    <section class="mb-10">
+                        <h2 class="mb-2 text-sm font-normal text-muted">
                             {year}
                         </h2>
                         <ol class="list-none p-0">
                             {yearItems.map((item) => (
-                                <li class="reading-link-item group py-2.5">
+                                <li class="reading-link-item group">
                                     <article>
                                         <div class="reading-link-preview">
                                             <h3 class="reading-link-preview-title">
@@ -84,20 +84,6 @@ for (const item of items) {
                                                 </time>
                                             )}
                                         </div>
-                                        {notesOf(item).length > 0 && (
-                                            <div class="reading-notes">
-                                                {notesOf(item).map((mention) => (
-                                                    <div class="reading-note">
-                                                        {notesOf(item).length > 1 && (
-                                                            <a class="reading-note-date" href={mention.blueskyUrl}>
-                                                                <time datetime={mention.publishedAt}>{formatDate(mention.publishedAt)}</time>
-                                                            </a>
-                                                        )}
-                                                        <Fragment set:html={mention.noteHtml} />
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        )}
                                         <div class="mt-1 flex items-baseline gap-x-2 text-xs text-muted">
                                             <span>{item.rootDomain}</span>
                                             <span aria-hidden="true">·</span>
@@ -141,6 +127,20 @@ for (const item of items) {
                                                 )}
                                             </ul>
                                         </div>
+                                        {notesOf(item).length > 0 && (
+                                            <div class="reading-notes">
+                                                {notesOf(item).map((mention) => (
+                                                    <div class="reading-note">
+                                                        {notesOf(item).length > 1 && (
+                                                            <a class="reading-note-date" href={mention.blueskyUrl}>
+                                                                <time datetime={mention.publishedAt}>{formatDate(mention.publishedAt)}</time>
+                                                            </a>
+                                                        )}
+                                                        <Fragment set:html={mention.noteHtml} />
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
                                     </article>
                                 </li>
                             ))}
@@ -184,7 +184,7 @@ for (const item of items) {
         color: black;
         font-family: var(--font-sans);
         font-size: 1.125rem;
-        font-weight: 400;
+        font-weight: 500;
         line-height: 1.35;
     }
 
@@ -193,8 +193,19 @@ for (const item of items) {
         font-weight: inherit;
     }
 
+    /* Each link is its own block: room around it, and a hairline between it
+       and the next, since a note can make one run several lines. */
     .reading-link-item {
         position: relative;
+        padding-block: 1.25rem;
+    }
+
+    .reading-link-item + .reading-link-item {
+        border-top: 1px solid var(--color-panel-border);
+    }
+
+    .dark .reading-link-item + .reading-link-item {
+        border-top-color: var(--color-neutral-800);
     }
 
     .reading-link-preview-title a::after {
@@ -216,7 +227,9 @@ for (const item of items) {
         display: grid;
         gap: 0.75rem;
         max-width: 34em;
-        margin-top: 0.375rem;
+        margin-top: 0.75rem;
+        padding-left: 0.875rem;
+        border-left: 2px solid var(--color-neutral-300);
         color: oklch(0.374 0.01 67.558);
         font-size: 0.9375rem;
         line-height: 1.6;
@@ -256,6 +269,7 @@ for (const item of items) {
     }
 
     .dark .reading-notes {
+        border-left-color: var(--color-neutral-700);
         color: oklch(0.869 0.005 56.366);
     }
 
