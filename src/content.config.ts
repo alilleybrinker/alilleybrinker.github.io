@@ -15,6 +15,9 @@ const postSchema = z.object({
   // date and given to search engines; leave it out for typo fixes.
   updated: z.coerce.date().optional(),
   unlisted: z.boolean().default(false),
+  // Posts that form a series share this name, which only groups them: each
+  // shows its place and links the others, listed by their own titles.
+  series: z.string().optional(),
   taxonomies: z.object({
     type: z.array(z.string()).default([]),
     topics: z.array(z.string()).default([]),

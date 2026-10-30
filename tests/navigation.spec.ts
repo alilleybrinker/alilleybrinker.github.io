@@ -133,3 +133,24 @@ test('every page ends with a footer that names the newest post and opens search'
   await footer.getByRole('button', { name: 'Search' }).click();
   await expect(page.locator('#command-palette')).toBeVisible();
 });
+
+test('a post in a series names its place and links the other parts', async ({ page }) => {
+  await page.goto('/blog/gas-town-and-urbit/');
+  const series = page.locator('.post-series');
+  await expect(series.getByRole('heading')).toHaveText('Part 2 of 2');
+  await expect(series.locator('[aria-current="page"]')).toHaveText('Gas Town is not Urbit');
+  await series.getByRole('link', { name: 'Gas Town Decoded' }).click();
+  await expect(page).toHaveURL('/blog/gas-town-decoded/');
+  await expect(page.locator('.post-series h2')).toHaveText('Part 1 of 2');
+  // A post in no series has no list.
+  await page.goto('/blog/cpp-must-become-safer/');
+  await expect(page.locator('.post-series')).toHaveCount(0);
+});
+
+test('the reading page offers its own feed', async ({ page, request }) => {
+  await page.goto('/reading/');
+  await expect(page.locator('link[rel="alternate"][type="application/rss+xml"]')).toHaveAttribute('href', '/reading/rss.xml');
+  const feed = await request.get('/reading/rss.xml');
+  expect(feed.ok()).toBe(true);
+  expect(await feed.text()).toContain('<title>Andrew Lilley Brinker: Reading</title>');
+});

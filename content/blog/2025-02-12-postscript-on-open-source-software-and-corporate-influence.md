@@ -2,6 +2,7 @@
 title: Postscript on “Open Source Software and Corporate Influence”
 description: "Some additional notes based on responses to 'Open Source Software
   and Corporate Influence'"
+series: corporate-influence
 taxonomies:
   type:
     - Blog
