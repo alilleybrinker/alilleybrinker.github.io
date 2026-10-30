@@ -2,6 +2,7 @@
 title: Open Source Software and Corporate Influence
 description: "Exploring how corporations gain power in open source projects,
   and how to build resilience to corporate capture."
+series: corporate-influence
 taxonomies:
   type:
     - Blog

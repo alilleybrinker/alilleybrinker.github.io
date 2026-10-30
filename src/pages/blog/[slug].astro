@@ -40,6 +40,13 @@ const sequence = (await getCollection('blog'))
 const place = sequence.findIndex((candidate) => candidate.id === post.id);
 const newer = place > 0 ? sequence[place - 1] : undefined;
 const older = place >= 0 ? sequence[place + 1] : undefined;
+// The other posts in this one's series, if it's in one, oldest first.
+const series = post.data.series
+  ? (await getCollection('blog'))
+    .filter((candidate) => isListedPost(candidate) && candidate.data.series === post.data.series)
+    .sort((a, b) => postDate(a).getTime() - postDate(b).getTime())
+  : [];
+const seriesPlace = series.findIndex((candidate) => candidate.id === post.id);
 const readingTime = postReadingTime(post);
 const canonical = new URL(postPath(post), Astro.site);
 const socialImage = `/social/${postSlug(post)}.png`;
@@ -69,6 +76,20 @@ const structuredData = {
   <article class="post-body">
     <h1 class="block mb-5 text-3xl md:text-4xl"><span data-page-title class="resolve-in leading-[1.15] block mb-4 font-display [view-transition-name:post-title]">{post.data.title}</span><span class="font-sans flex flex-wrap items-center gap-2 text-sm md:text-base text-muted"><time datetime={date.toISOString().slice(0, 10)}>{longDate(date)}</time>{updated && <><span aria-hidden="true" class="font-black text-muted">·</span><span>Updated <time datetime={updated.toISOString().slice(0, 10)}>{longDate(updated)}</time></span></>}<span aria-hidden="true" class="font-black text-muted">·</span><span>Read in {readingTime} minutes</span>{topics.length > 0 && <><span aria-hidden="true" class="font-black text-muted">·</span><span>Topics: {topics.map((topic, index) => <><a class="!text-muted" href={`/topics/${topicSlug(topic)}/`}>{topic}</a>{index < topics.length - 1 && ', '}</>)}</span></>}</span></h1>
     <p class="print-only">{canonical.href}</p>
+    {series.length > 1 && seriesPlace >= 0 && (
+      <nav class="post-series not-prose" aria-labelledby="post-series-heading">
+        <h2 id="post-series-heading" class="post-series-label">Part {seriesPlace + 1} of {series.length}</h2>
+        <ol>
+          {series.map((part) => (
+            <li>
+              {part.id === post.id
+                ? <span aria-current="page">{part.data.title}</span>
+                : <a href={postPath(part)}><span data-post-title>{part.data.title}</span></a>}
+            </li>
+          ))}
+        </ol>
+      </nav>
+    )}
     {post.data.extra.toc && headings.length > 0 && (
       <div id="table-of-contents-sentinel" aria-hidden="true"></div>
       <details id="table-of-contents" aria-label="Table of contents" class="group not-prose sticky top-0 z-10 mb-10 w-full font-sans text-sm">

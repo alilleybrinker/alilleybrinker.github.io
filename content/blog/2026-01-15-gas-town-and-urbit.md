@@ -2,6 +2,7 @@
 title: "Gas Town is not Urbit"
 description: "Explaining how Gas Town and Urbit use insular language for
   extremely different goals, one experimental, the other fascist."
+series: gas-town
 taxonomies:
   type:
     - Blog
