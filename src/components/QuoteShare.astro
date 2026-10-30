@@ -26,7 +26,7 @@ const { title, slug, url } = Astro.props;
       <a id="quote-share-save" class="share-action share-action-quiet" download>Save image</a>
       <button type="button" id="quote-share-link" class="share-action share-action-quiet"><span data-label>Copy link to quote</span><span aria-hidden="true" data-copied-label>Copied!</span></button>
     </div>
-    <p id="quote-share-note" class="mt-3 text-sm text-neutral-600 dark:text-neutral-300" hidden>This passage is too long for a Bluesky post; share the image instead.</p>
+    <p id="quote-share-note" class="mt-3 text-sm text-neutral-600 dark:text-neutral-300" hidden>The card is copied: paste it into your Bluesky post.</p>
     <p id="quote-share-status" class="sr-only" aria-live="polite"></p>
   </div>
 </dialog>
@@ -130,11 +130,13 @@ const { title, slug, url } = Astro.props;
     const { title = '', slug = '', url = '' } = button.dataset;
     button.hidden = true;
 
+    // Bluesky's share link takes only text, so the post carries the passage
+    // and the link (just the link, when the passage won't fit), and the card
+    // goes on the clipboard to paste in.
     const bluesky = $<HTMLAnchorElement>('quote-share-bluesky')!;
-    const post = `“${quote}” ${url}`;
-    const fits = post.length <= MAX_POST;
-    bluesky.hidden = !fits;
-    $('quote-share-note')!.hidden = fits;
+    const quoted = `“${quote}” ${url}`;
+    const post = quoted.length <= MAX_POST ? quoted : url;
+    $('quote-share-note')!.hidden = true;
     bluesky.href = `https://bsky.app/intent/compose?text=${encodeURIComponent(post)}`;
 
     const image = $<HTMLImageElement>('quote-share-image')!;
@@ -166,6 +168,17 @@ const { title, slug, url } = Astro.props;
     if (!dialog?.open) return;
     if (target.closest('[data-close]') || target === dialog) {
       dialog.close();
+      return;
+    }
+    // Opening Bluesky copies the card first, in the same click, so it can be
+    // pasted straight into the post; the link opens either way.
+    if (target.closest('#quote-share-bluesky') && card && 'ClipboardItem' in window) {
+      navigator.clipboard.write([new ClipboardItem({ 'image/png': card })])
+        .then(() => {
+          $('quote-share-note')!.hidden = false;
+          $('quote-share-status')!.textContent = 'Quote card copied; paste it into your Bluesky post.';
+        })
+        .catch(() => {});
       return;
     }
     const copy = target.closest<HTMLElement>('#quote-share-copy');

@@ -105,7 +105,7 @@ test('a post prints as just the article, in the light theme', async ({ page }) =
   expect(await page.evaluate(() => document.documentElement.classList.contains('dark'))).toBe(true);
 });
 
-test('selecting a passage offers it as a quote card, in whole words, to share', async ({ page }) => {
+test('selecting a passage offers it as a quote card, in whole words, to share', async ({ page, context }) => {
   await page.goto(TOC_POST);
   const paragraph = page.locator('.post-body > p').nth(2);
   await paragraph.scrollIntoViewIfNeeded();
@@ -128,7 +128,17 @@ test('selecting a passage offers it as a quote card, in whole words, to share', 
   await expect(dialog).toBeVisible();
   await expect(dialog.locator('img')).toHaveAttribute('src', /^blob:/);
   await expect(dialog.locator('img')).toHaveAttribute('alt', new RegExp(quote.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
-  expect(decodeURIComponent((await dialog.getByRole('link', { name: 'Share on Bluesky' }).getAttribute('href'))!)).toContain(`“${quote}”`);
+  const bluesky = dialog.getByRole('link', { name: 'Share on Bluesky' });
+  expect(decodeURIComponent((await bluesky.getAttribute('href'))!)).toContain(`“${quote}”`);
+  // Bluesky's share link takes only text, so opening it copies the card to
+  // paste in.
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  const opened = page.context().waitForEvent('page');
+  await bluesky.click();
+  await (await opened).close();
+  await expect(dialog.locator('#quote-share-note')).toHaveText(/paste it into your Bluesky post/);
+  await expect(dialog.locator('#quote-share-note')).toBeVisible();
+  expect(await page.evaluate(async () => (await navigator.clipboard.read())[0].types)).toContain('image/png');
   await page.keyboard.press('Escape');
   await expect(dialog).toBeHidden();
   // The title isn't the post's text to quote.
