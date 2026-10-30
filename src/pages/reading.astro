@@ -20,6 +20,9 @@ const formatUpdatedAt = new Intl.DateTimeFormat("en-US", {
     timeZoneName: "short",
     year: "numeric",
 });
+// The posts that said something about the link, newest first. When there's
+// more than one, each note carries its post's date.
+const notesOf = (item: (typeof items)[number]) => item.mentions.filter((mention) => mention.noteHtml);
 const years = new Map<number, typeof items>();
 for (const item of items) {
     const year = new Date(item.mentions[0].publishedAt).getUTCFullYear();
@@ -81,6 +84,20 @@ for (const item of items) {
                                                 </time>
                                             )}
                                         </div>
+                                        {notesOf(item).length > 0 && (
+                                            <div class="reading-notes">
+                                                {notesOf(item).map((mention) => (
+                                                    <div class="reading-note">
+                                                        {notesOf(item).length > 1 && (
+                                                            <a class="reading-note-date" href={mention.blueskyUrl}>
+                                                                <time datetime={mention.publishedAt}>{formatDate(mention.publishedAt)}</time>
+                                                            </a>
+                                                        )}
+                                                        <Fragment set:html={mention.noteHtml} />
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
                                         <div class="mt-1 flex items-baseline gap-x-2 text-xs text-muted">
                                             <span>{item.rootDomain}</span>
                                             <span aria-hidden="true">·</span>
@@ -190,6 +207,56 @@ for (const item of items) {
     .reading-link-item > article > div + div {
         position: relative;
         z-index: 1;
+    }
+
+    /* What Andrew said when he shared the link, from his Bluesky post: his
+       own words, so in the running text's color, held to the text measure.
+       Each post's note is its own block. */
+    .reading-notes {
+        display: grid;
+        gap: 0.75rem;
+        max-width: 34em;
+        margin-top: 0.375rem;
+        color: oklch(0.374 0.01 67.558);
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        overflow-wrap: anywhere;
+    }
+
+    .reading-note {
+        display: grid;
+        gap: 0.5rem;
+    }
+
+    .reading-note p {
+        margin: 0;
+    }
+
+    .reading-note .reading-note-date {
+        margin-bottom: -0.375rem;
+        color: var(--color-muted);
+        font-size: 0.75rem;
+        text-decoration: none;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .reading-note .reading-note-date:hover {
+        text-decoration: underline;
+    }
+
+    .reading-note a {
+        color: inherit;
+        text-decoration: underline;
+        text-decoration-color: var(--color-rule);
+        text-underline-offset: 0.2em;
+    }
+
+    .reading-note a:hover {
+        text-decoration-color: currentColor;
+    }
+
+    .dark .reading-notes {
+        color: oklch(0.869 0.005 56.366);
     }
 
     /* Code in a title sits on a chip, in ink. */
