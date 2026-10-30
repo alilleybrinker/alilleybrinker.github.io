@@ -22,3 +22,26 @@ test.describe('on a phone', () => {
     expect(top).toBe('/about/');
   });
 });
+
+// iOS draws a home-screen icon's transparent pixels black, which hid the
+// line-art face on a black square.
+test('the home-screen and tab icons are opaque', async ({ page }) => {
+  await page.goto('/');
+  const hrefs = await page.locator('link[rel="apple-touch-icon"], link[rel="icon"][type="image/png"]').evaluateAll((links) => links.map((link) => link.getAttribute('href')!));
+  expect(hrefs.length).toBe(3);
+  for (const href of hrefs) {
+    const minAlpha = await page.evaluate(async (src) => {
+      const img = new Image();
+      img.src = src;
+      await img.decode();
+      const canvas = Object.assign(document.createElement('canvas'), { width: img.width, height: img.height });
+      const context = canvas.getContext('2d')!;
+      context.drawImage(img, 0, 0);
+      const { data } = context.getImageData(0, 0, img.width, img.height);
+      let min = 255;
+      for (let i = 3; i < data.length; i += 4) min = Math.min(min, data[i]);
+      return min;
+    }, href);
+    expect(minAlpha, href).toBe(255);
+  }
+});
