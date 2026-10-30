@@ -1,6 +1,7 @@
 import { getDomain } from 'tldts';
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
+import { smartQuotes } from './typeset';
 
 const BLUESKY_HANDLE = 'alilleybrinker.com';
 const AUTHOR_FEED_ENDPOINT = 'https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed';
@@ -40,11 +41,13 @@ const TITLE_OVERRIDES = new Map([
 ]);
 const DEVELOPMENT_CACHE_TTL_MS = 60 * 60 * 1_000;
 const DEVELOPMENT_CACHE_PATH = join(process.cwd(), '.astro', 'reading-items.json');
-const DEVELOPMENT_CACHE_VERSION = 2;
+const DEVELOPMENT_CACHE_VERSION = 3;
 
 interface LinkFacet {
   $type?: string;
   uri?: string;
+  did?: string;
+  tag?: string;
 }
 
 interface Facet {
@@ -55,7 +58,7 @@ interface Facet {
 interface FeedPost {
   uri: string;
   author: { handle: string };
-  record: { createdAt: string; facets?: Facet[]; text: string };
+  record: { createdAt: string; facets?: Facet[]; reply?: unknown; text: string };
 }
 
 interface AuthorFeedResponse {
@@ -65,6 +68,9 @@ interface AuthorFeedResponse {
 
 interface ReadingMention {
   blueskyUrl: string;
+  // What the post said about the link, as HTML; absent for replies, which
+  // need their thread to make sense, and for posts that were only the link.
+  noteHtml?: string;
   publishedAt: string;
 }
 
@@ -185,6 +191,53 @@ function getLinkFacets(post: FeedPost) {
     if (!link?.uri || !URL.canParse(link.uri) || !/^https?:\/\//.test(link.uri) || isVideoUrl(link.uri) || !isLikelyArticleUrl(link.uri)) return [];
     return [{ ...facet.index, url: withoutFragment(link.uri) }];
   }).sort((a, b) => a.byteStart - b.byteStart);
+}
+
+const escapeHtml = (text: string) => text
+  .replace(/&/g, '&amp;')
+  .replace(/</g, '&lt;')
+  .replace(/>/g, '&gt;')
+  .replace(/"/g, '&quot;');
+
+// A post's text as HTML, with the link to the article itself taken out, since
+// the note sits under that article's title. Other links, mentions and
+// hashtags stay links. Facets mark their spans in UTF-8 bytes.
+export function noteHtml(post: FeedPost, articleUrl: string) {
+  if (post.record.reply) return undefined;
+  const bytes = new TextEncoder().encode(post.record.text);
+  const decode = (start: number, end: number) => new TextDecoder().decode(bytes.slice(start, end));
+  let html = '';
+  let at = 0;
+  let before = '';
+  const text = (start: number, end: number) => {
+    const typeset = smartQuotes(decode(start, end), before);
+    before = typeset.slice(-1) || before;
+    // Em dashes are closed up as in posts (see src/lib/typeset.ts).
+    return escapeHtml(typeset).replace(/\s*—\s*/g, '<span class="em-dash">—</span>');
+  };
+  const facets = [...(post.record.facets ?? [])].sort((a, b) => a.index.byteStart - b.index.byteStart);
+  for (const facet of facets) {
+    const { byteStart, byteEnd } = facet.index;
+    if (byteStart < at || byteEnd > bytes.length) continue;
+    const feature = facet.features?.[0];
+    html += text(at, byteStart);
+    const label = text(byteStart, byteEnd);
+    if (feature?.$type === 'app.bsky.richtext.facet#link' && feature.uri && URL.canParse(feature.uri)) {
+      if (withoutFragment(feature.uri) !== articleUrl) html += `<a href="${escapeHtml(feature.uri)}">${label}</a>`;
+    } else if (feature?.$type === 'app.bsky.richtext.facet#mention' && feature.did) {
+      html += `<a href="https://bsky.app/profile/${escapeHtml(feature.did)}">${label}</a>`;
+    } else if (feature?.$type === 'app.bsky.richtext.facet#tag' && feature.tag) {
+      html += `<a href="https://bsky.app/hashtag/${encodeURIComponent(feature.tag)}">${label}</a>`;
+    } else {
+      html += label;
+    }
+    at = byteEnd;
+  }
+  html += text(at, bytes.length);
+  // What the link leaves behind: spaces, and a colon or dash that led into it.
+  html = html.replace(/[ \t]{2,}/g, ' ').replace(/[ \t]*\n[ \t]*/g, '\n').replace(/[\s:–—-]+$/, '').trim();
+  if (!html) return undefined;
+  return html.split(/\n{2,}/).map((paragraph) => `<p>${paragraph.replace(/\n/g, '<br>')}</p>`).join('');
 }
 
 function htmlAttribute(tag: string, name: string) {
@@ -330,8 +383,8 @@ async function loadReadingItems() {
       const links = getLinkFacets(post);
       if (links.length === 0) continue;
 
-      const mention = { blueskyUrl: blueskyPostUrl(post.uri), publishedAt: post.record.createdAt };
       for (const { url: articleUrl } of new Map(links.map((link) => [link.url, link])).values()) {
+        const mention = { blueskyUrl: blueskyPostUrl(post.uri), noteHtml: noteHtml(post, articleUrl), publishedAt: post.record.createdAt };
         const item = items.get(articleUrl) ?? {
           articleTitle: new URL(articleUrl).hostname,
           articleTitleHtml: new URL(articleUrl).hostname,

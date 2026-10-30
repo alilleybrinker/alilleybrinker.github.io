@@ -1,10 +1,13 @@
 name: Deploy website
 
-# Runs on pushed to the default branch but can also be
-# run manually from the GitHub Actions page.
+# Runs on pushes to the default branch, every six hours so the reading page
+# picks up what's been shared on Bluesky since, and by hand from the GitHub
+# Actions page.
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: "17 */6 * * *"
   workflow_dispatch:
 
 # Nothing by default; each job asks for only what it needs.
