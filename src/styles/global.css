@@ -965,12 +965,6 @@ a,
   visibility: hidden;
 }
 
-.quote-share-close {
-  position: absolute;
-  top: 1.25rem;
-  right: 1.25rem;
-}
-
 /* A post in a series names its place in it and lists every part by title,
    set into the page like a callout. */
 .post-series {
