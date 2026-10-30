@@ -1,0 +1,63 @@
+name: Check links
+
+# Once a week, checks the links from the site to other sites and keeps one
+# issue, "Broken links", listing any that no longer work: opened or updated
+# when some are broken, closed when none are. It never blocks a deploy. It can
+# also be run by hand from the GitHub Actions page.
+on:
+  schedule:
+    - cron: "41 15 * * 1"
+  workflow_dispatch:
+
+# Nothing by default; the job asks for only what it needs.
+permissions: {}
+
+jobs:
+  links:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build website
+        run: npm run build
+        env:
+          # Lets the projects page read repos from the GitHub API without
+          # hitting the unauthenticated rate limit.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check links to other sites
+        id: check
+        run: echo "broken=$(node scripts/check-links.mjs dist links-report.md)" >> "$GITHUB_OUTPUT"
+
+      - name: Report in the "Broken links" issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          BROKEN: ${{ steps.check.outputs.broken }}
+        run: |
+          issue=$(gh issue list --state open --search 'in:title "Broken links"' --json number,title --jq '[.[] | select(.title == "Broken links")][0].number // empty')
+          if [ "$BROKEN" -gt 0 ]; then
+            if [ -n "$issue" ]; then
+              gh issue edit "$issue" --body-file links-report.md
+            else
+              gh issue create --title "Broken links" --body-file links-report.md
+            fi
+          elif [ -n "$issue" ]; then
+            gh issue close "$issue" --comment "No broken links in this week's check."
+          fi
