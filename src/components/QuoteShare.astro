@@ -78,20 +78,30 @@ const { title, slug, url } = Astro.props;
 
   let current = '';
   let timer = 0;
+  // On touch screens the pill is docked at the bottom of the screen (see
+  // .quote-share-button in global.css): the system's own copy menu and the
+  // selection's handles sit around the selection, above or below it, and a
+  // page can't tell where. With a mouse it sits just above the selection.
+  const touch = () => matchMedia('(pointer: coarse)').matches;
+  // A tap on the pill can clear the selection before the tap lands, so the
+  // pill stays for a moment after it's pressed.
+  let pressedAt = 0;
+
   function place() {
     const button = $<HTMLButtonElement>('quote-share-button');
     if (!button) return;
     const passage = selectedPassage();
     if (!passage) {
-      button.hidden = true;
+      if (performance.now() - pressedAt > 600) button.hidden = true;
       return;
     }
     current = passage.text;
     button.hidden = false;
-    // Above the selection, or below it on touch screens, where the system's
-    // own menu sits above.
-    const touch = matchMedia('(pointer: coarse)').matches;
-    const top = touch ? passage.rect.bottom + 12 : passage.rect.top - button.offsetHeight - 10;
+    if (touch()) {
+      button.style.transform = '';
+      return;
+    }
+    const top = passage.rect.top - button.offsetHeight - 10;
     const left = Math.min(Math.max(8, passage.rect.left + passage.rect.width / 2 - button.offsetWidth / 2), innerWidth - button.offsetWidth - 8);
     button.style.transform = `translate(${Math.round(left)}px, ${Math.round(Math.max(8, top))}px)`;
   }
@@ -101,7 +111,7 @@ const { title, slug, url } = Astro.props;
   });
   addEventListener('scroll', () => {
     const button = $<HTMLButtonElement>('quote-share-button');
-    if (button && !button.hidden) place();
+    if (button && !button.hidden && !touch()) place();
   }, { passive: true });
 
   // A link that opens the post at the passage, highlighted, where browsers
@@ -211,6 +221,9 @@ const { title, slug, url } = Astro.props;
   // Pressing the pill mustn't clear the selection it shares.
   document.addEventListener('mousedown', (event) => {
     if ((event.target as Element).closest('#quote-share-button')) event.preventDefault();
+  });
+  document.addEventListener('pointerdown', (event) => {
+    if ((event.target as Element).closest('#quote-share-button')) pressedAt = performance.now();
   });
 
   // A move to another page leaves no pill behind.

@@ -905,6 +905,19 @@ a,
   box-shadow: 0 12px 32px -16px rgb(0 0 0 / 0.25), 0 0 0 1px rgb(0 0 0 / 0.05);
 }
 
+/* On touch screens it's docked at the bottom, centered and clear of the home
+   indicator, away from the system's copy menu and the selection's handles. */
+@media (pointer: coarse) {
+  .quote-share-button {
+    top: auto;
+    bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+    left: 50%;
+    height: 2.75rem;
+    padding-inline: 1.25rem;
+    translate: -50% 0;
+  }
+}
+
 .dark .quote-share-button {
   background: var(--color-neutral-800);
   box-shadow: 0 12px 32px -16px rgb(0 0 0 / 0.7), 0 0 0 1px rgb(255 255 255 / 0.1);
