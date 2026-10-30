@@ -104,3 +104,34 @@ test('a post prints as just the article, in the light theme', async ({ page }) =
   await page.evaluate(() => dispatchEvent(new Event('afterprint')));
   expect(await page.evaluate(() => document.documentElement.classList.contains('dark'))).toBe(true);
 });
+
+test('selecting a passage offers it as a quote card, in whole words, to share', async ({ page }) => {
+  await page.goto(TOC_POST);
+  const paragraph = page.locator('.post-body > p').nth(2);
+  await paragraph.scrollIntoViewIfNeeded();
+  // Select from partway through the first word to partway through another.
+  const quote = await paragraph.evaluate((p) => {
+    const text = [...p.childNodes].find((node) => node.nodeType === Node.TEXT_NODE && node.textContent!.trim().split(/\s+/).length > 6)!;
+    const range = document.createRange();
+    const words = [...text.textContent!.matchAll(/\S+/g)];
+    // One letter into the first word, to one letter before the end of the sixth.
+    range.setStart(text, words[0].index! + 1);
+    range.setEnd(text, words[5].index! + words[5][0].length - 1);
+    getSelection()!.removeAllRanges();
+    getSelection()!.addRange(range);
+    return words.slice(0, 6).map((word) => word[0]).join(' ');
+  });
+  const pill = page.getByRole('button', { name: 'Share quote' });
+  await expect(pill).toBeVisible();
+  await pill.click();
+  const dialog = page.getByRole('dialog', { name: 'Share quote' });
+  await expect(dialog).toBeVisible();
+  await expect(dialog.locator('img')).toHaveAttribute('src', /^blob:/);
+  await expect(dialog.locator('img')).toHaveAttribute('alt', new RegExp(quote.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+  expect(decodeURIComponent((await dialog.getByRole('link', { name: 'Share on Bluesky' }).getAttribute('href'))!)).toContain(`“${quote}”`);
+  await page.keyboard.press('Escape');
+  await expect(dialog).toBeHidden();
+  // The title isn't the post's text to quote.
+  await page.locator('h1').selectText();
+  await expect(pill).toBeHidden();
+});

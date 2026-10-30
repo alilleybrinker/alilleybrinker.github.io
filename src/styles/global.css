@@ -894,6 +894,83 @@ a,
   border-color: var(--color-neutral-700);
 }
 
+/* Sharing a quote (QuoteShare.astro): a pill that follows the selection, and
+   a panel like the share box with the card and its actions. */
+.quote-share-button {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 50;
+  background: white;
+  box-shadow: 0 12px 32px -16px rgb(0 0 0 / 0.25), 0 0 0 1px rgb(0 0 0 / 0.05);
+}
+
+.dark .quote-share-button {
+  background: var(--color-neutral-800);
+  box-shadow: 0 12px 32px -16px rgb(0 0 0 / 0.7), 0 0 0 1px rgb(255 255 255 / 0.1);
+}
+
+.quote-share {
+  width: min(40rem, calc(100% - 2rem));
+  max-width: none;
+  margin: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 1.5rem;
+  background: white;
+  color: inherit;
+  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.4), 0 0 0 1px rgb(0 0 0 / 0.05);
+}
+
+.dark .quote-share {
+  background: var(--color-neutral-800);
+  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.7), 0 0 0 1px rgb(255 255 255 / 0.1);
+}
+
+.quote-share::backdrop {
+  background: rgb(250 250 249 / 0.6);
+}
+
+.dark .quote-share::backdrop {
+  background: rgb(23 23 23 / 0.7);
+}
+
+.quote-share-panel {
+  position: relative;
+  padding: 1.5rem;
+}
+
+@media (width >= 640px) {
+  .quote-share-panel {
+    padding: 2rem;
+  }
+}
+
+.quote-share-preview {
+  margin-top: 1rem;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  background: #f9f9f9;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.08);
+}
+
+.quote-share-preview img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+}
+
+.quote-share-preview img:not([src]) {
+  visibility: hidden;
+}
+
+.quote-share-close {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+}
+
 /* A post in a series names its place in it and lists every part by title,
    set into the page like a callout. */
 .post-series {
@@ -1180,6 +1257,7 @@ a,
   [aria-labelledby="keep-reading-heading"],
   .post-sequence,
   .post-series,
+  .quote-share-button,
   .site-footer,
   #command-palette,
   #link-preview,
