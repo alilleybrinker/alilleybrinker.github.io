@@ -51,6 +51,10 @@ contents") wins over the defaults below.
   Add a new topic only if he names it; a new one gets its own page and feed.
 - **Table of contents**: on (`toc: true`) when the body has four or more `##`
   sections, as on the long posts; off otherwise.
+- **Series**: if he says the post continues earlier ones, give it the same
+  `series:` as they have (add one to them too if they have none, with a short
+  lowercase name such as `gas-town`). The name only groups posts and is never
+  shown; each post lists the others by title.
 - **Listed**: posts are listed unless he says unlisted.
 - **Images**: put them in `public/image/blog/<slug>/` and link them from the
   post with his alt text.
@@ -65,6 +69,8 @@ node scripts/writer/new-post.mjs spec.json
 
 with `spec.json` like
 `{"title": "…", "date": "2026-10-30", "description": "…", "topics": ["Rust"], "toc": false, "bodyFile": "body.md"}`.
+A series isn't part of the spec: add its `series:` line to the new post's
+front matter afterwards, beside `title:`.
 It creates `content/blog/<date>-<slug>.md` with front matter in the house
 style and prints the writing UI's checklist. Any `error` stops here; read
 each `warn` and either fix the metadata or mention it in the PR.
