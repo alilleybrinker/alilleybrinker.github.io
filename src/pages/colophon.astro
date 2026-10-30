@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { standardReaderUrl } from '../lib/site';
 ---
 
 <BaseLayout
@@ -24,6 +25,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <a href="https://standard.site/">standard.site</a>{" "}format to my PDS.
   </p>
   <p>
-    You can{" "}<a href="https://standard-reader.app/p/did:plc:geozyv62fx63m7jhr4eraubc/alilleybrinker-site">view it in Standard Reader</a>.
+    You can{" "}<a href={standardReaderUrl}>view it in Standard Reader</a>.
   </p>
 </BaseLayout>

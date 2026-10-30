@@ -1,4 +1,5 @@
 import type { CollectionEntry } from 'astro:content';
+import standardSite from '../data/standard-site.json';
 
 export type Post = CollectionEntry<'blog'>;
 
@@ -58,3 +59,6 @@ export function byNewest(a: Post, b: Post) {
 export function topicSlug(topic: string) {
   return topic.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 }
+
+// The site's publication in Standard Reader, from its record's address.
+export const standardReaderUrl = `https://standard-reader.app/p/${standardSite.publicationUri.replace(/^at:\/\//, '').replace('/site.standard.publication/', '/')}`;
