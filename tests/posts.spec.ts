@@ -145,3 +145,26 @@ test('selecting a passage offers it as a quote card, in whole words, to share', 
   await page.locator('h1').selectText();
   await expect(pill).toBeHidden();
 });
+
+test('on touch screens the quote pill docks at the bottom, clear of the system menu', async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+  const page = await context.newPage();
+  await page.goto(TOC_POST);
+  const paragraph = page.locator('.post-body > p').nth(2);
+  await paragraph.scrollIntoViewIfNeeded();
+  await paragraph.evaluate((p) => {
+    const range = document.createRange();
+    range.selectNodeContents(p);
+    getSelection()!.removeAllRanges();
+    getSelection()!.addRange(range);
+  });
+  const pill = page.getByRole('button', { name: 'Share quote' });
+  await expect(pill).toBeVisible();
+  // Centered, near the bottom, wherever the selection is.
+  const box = (await pill.boundingBox())!;
+  expect(Math.abs(box.x + box.width / 2 - 195)).toBeLessThan(2);
+  expect(844 - (box.y + box.height)).toBeLessThan(40);
+  await pill.tap();
+  await expect(page.getByRole('dialog', { name: 'Share quote' })).toBeVisible();
+  await context.close();
+});
