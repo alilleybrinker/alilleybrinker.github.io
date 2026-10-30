@@ -84,9 +84,12 @@ export async function quoteCard({ quote, title, slug }: { quote: string; title: 
     wrapped = lines(context, text, WIDTH - MARGIN * 2);
     if (wrapped.length * size * 1.2 <= quoteBottom - quoteTop) break;
   }
+  // The opening quote hangs into the margin by its own width, so the words'
+  // left edge stays straight, as quotes hang in posts.
+  const hang = context.measureText('“').width;
   context.fillStyle = INK;
   context.textBaseline = 'top';
-  wrapped.forEach((line, index) => context.fillText(line, MARGIN, quoteTop + index * size * 1.2));
+  wrapped.forEach((line, index) => context.fillText(line, index === 0 ? MARGIN - hang : MARGIN, quoteTop + index * size * 1.2));
 
   // The post and the site, under a hairline.
   context.fillStyle = 'rgb(0 0 0 / 0.08)';
