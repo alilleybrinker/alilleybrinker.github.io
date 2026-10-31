@@ -1036,9 +1036,10 @@ a,
   color: white;
 }
 
-/* On phones code runs to the screen's edges, so it has no corners or side
-   borders there to be cut off. */
-@media (width < 768px) {
+/* Until the column has room beside it (768px and its 20px gutters), code
+   runs to the screen's edges, so it has no corners or side borders there to
+   be cut off. */
+@media (width < 808px) {
   .post-body pre.astro-code {
     border-inline: 0;
     border-radius: 0;
