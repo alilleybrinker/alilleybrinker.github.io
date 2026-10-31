@@ -1,8 +1,8 @@
 import rss from '@astrojs/rss';
 import { getReadingItems } from '../../lib/bluesky';
 
-// The reading page as a feed: each article Andrew has shared on Bluesky, newest
-// share first, with what he said about it.
+// The reading page's old RSS feed, kept for those already subscribed to it.
+// It isn't listed: the reading page's feed is Atom (atom.xml.ts beside this).
 // A note's text without its markup, for readers that show only a summary.
 const plain = (html: string) => html
   .replace(/<[^>]+>/g, ' ')

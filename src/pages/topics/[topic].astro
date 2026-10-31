@@ -13,7 +13,7 @@ export async function getStaticPaths() {
 const { topic, posts } = Astro.props;
 ---
 
-<BaseLayout title={`${topic} Posts`} feed={`/topics/${topicSlug(topic)}/atom.xml`} socialImage={`/social/topic-${topicSlug(topic)}.png`} socialImageAlt={`${topic} Posts`}>
+<BaseLayout title={`${topic} Posts`} feed={`/topics/${topicSlug(topic)}/atom.xml`} feedTitle={`Andrew Lilley Brinker — ${topic}`} socialImage={`/social/topic-${topicSlug(topic)}.png`} socialImageAlt={`${topic} Posts`}>
   <div class="flex items-end justify-between">
     <h1 class="!mb-0"><a href="/topics/" class="mb-1 block w-fit font-sans text-base font-semibold uppercase tracking-widest !text-muted !no-underline hover:!underline">Topics</a>{topic}</h1>
     <a class="not-prose text-neutral-400 hover:text-black dark:hover:text-white" href={`/topics/${topicSlug(topic)}/atom.xml`} aria-label={`RSS feed for ${topic} posts`}><Icon name="rss" class="!h-5 !w-5" /></a>

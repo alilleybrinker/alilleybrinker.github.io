@@ -12,15 +12,15 @@ const latestPath = latest && postPath(latest);
 const showLatest = latest && latestPath !== Astro.url.pathname;
 
 // Every feed, for the Feeds menu: all posts, the reading list, and each
-// topic's own, the topics with the most posts first.
+// topic's own, the topics with the most posts first. All are Atom.
 const topicCounts = new Map<string, number>();
 for (const topic of posts.flatMap((post) => post.data.taxonomies.topics)) topicCounts.set(topic, (topicCounts.get(topic) ?? 0) + 1);
 const feedGroups = [
-  { name: 'All posts', feeds: [{ label: 'All posts', format: 'RSS', href: '/rss.xml' }, { label: 'All posts', format: 'Atom', href: '/atom.xml' }] },
-  { name: 'Reading', feeds: [{ label: 'Reading', format: 'RSS', href: '/reading/rss.xml' }] },
+  { name: 'All posts', feeds: [{ label: 'All posts', href: '/atom.xml' }] },
+  { name: 'Reading', feeds: [{ label: 'Reading', href: '/reading/atom.xml' }] },
   {
     name: 'Topics',
-    feeds: [...topicCounts].sort(([, a], [, b]) => b - a).map(([topic, count]) => ({ label: topic, count, format: 'Atom', href: `/topics/${topicSlug(topic)}/atom.xml` })),
+    feeds: [...topicCounts].sort(([, a], [, b]) => b - a).map(([topic, count]) => ({ label: topic, count, href: `/topics/${topicSlug(topic)}/atom.xml` })),
   },
 ];
 const follow = [
@@ -71,9 +71,8 @@ const fine = 'whitespace-nowrap underline decoration-rule hover:text-black dark:
                     <a href={feed.href} class="feeds-menu-link">
                       <span class="truncate">{feed.label}</span>
                       {'count' in feed && <span class="text-xs tabular-nums text-muted">{feed.count}<span class="sr-only"> posts</span></span>}
-                      <span class="tag ml-auto">{feed.format}</span>
                     </a>
-                    <button type="button" class="feeds-menu-copy" data-feed-copy={feed.href} aria-label={`Copy the ${feed.label} ${feed.format} feed's address`}><span data-label>Copy</span><span aria-hidden="true" data-copied-label>Copied</span></button>
+                    <button type="button" class="feeds-menu-copy" data-feed-copy={feed.href} aria-label={`Copy the ${feed.label} feed's address`}><span data-label>Copy</span><span aria-hidden="true" data-copied-label>Copied</span></button>
                   </li>
                 ))}
               </ul>

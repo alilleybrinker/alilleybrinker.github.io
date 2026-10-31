@@ -150,8 +150,8 @@ test('a post in a series names its place and links the other parts', async ({ pa
 
 test('the reading page offers its own feed', async ({ page, request }) => {
   await page.goto('/reading/');
-  await expect(page.locator('link[rel="alternate"][type="application/rss+xml"]')).toHaveAttribute('href', '/reading/rss.xml');
-  const feed = await request.get('/reading/rss.xml');
+  await expect(page.locator('link[rel="alternate"][type="application/atom+xml"]')).toHaveAttribute('href', '/reading/atom.xml');
+  const feed = await request.get('/reading/atom.xml');
   expect(feed.ok()).toBe(true);
   expect(await feed.text()).toContain('<title>Andrew Lilley Brinker: Reading</title>');
 });
@@ -242,13 +242,29 @@ test('the footer keeps feeds apart from profiles elsewhere, every feed in one me
   const links = menu.locator('.feeds-menu-link');
   await expect(links.first()).toBeVisible();
   const hrefs = await links.evaluateAll((all) => all.map((link) => link.getAttribute('href')!));
-  expect(hrefs.slice(0, 3)).toEqual(['/rss.xml', '/atom.xml', '/reading/rss.xml']);
+  expect(hrefs.slice(0, 2)).toEqual(['/atom.xml', '/reading/atom.xml']);
   expect(hrefs.length).toBeGreaterThan(8);
-  expect(hrefs.filter((href) => href.startsWith('/topics/')).length).toBe(hrefs.length - 3);
+  expect(hrefs.filter((href) => href.startsWith('/topics/')).length).toBe(hrefs.length - 2);
   expect(hrefs).not.toContain('/mini/atom.xml');
   for (const href of hrefs) expect((await request.get(href)).status(), href).toBe(200);
-  await menu.getByRole('button', { name: /Copy the All posts RSS feed/ }).click();
-  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(new URL('/rss.xml', page.url()).href);
+  await menu.getByRole('button', { name: /Copy the All posts feed/ }).click();
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(new URL('/atom.xml', page.url()).href);
   await page.keyboard.press('Escape');
   await expect(menu).not.toHaveAttribute('open');
+});
+
+test('the main feed is Atom, with each post in full and its links absolute; the old RSS addresses still answer', async ({ request }) => {
+  const feed = await request.get('/atom.xml');
+  const xml = await feed.text();
+  expect(xml).toContain('<feed xmlns="http://www.w3.org/2005/Atom">');
+  const entry = xml.slice(xml.indexOf('<entry>'), xml.indexOf('</entry>'));
+  expect(entry).toMatch(/<id>https:\/\/[^<]+<\/id>/);
+  expect(entry).toMatch(/<updated>\d{4}-\d\d-\d\dT/);
+  expect(xml).toContain('<content type="html" xml:base="https://');
+  expect(xml).not.toMatch(/(href|src)=&quot;\/[^/]/);
+  for (const old of ['/rss.xml', '/reading/rss.xml']) {
+    const response = await request.get(old);
+    expect(response.ok(), old).toBe(true);
+    expect(await response.text()).toContain('<rss version="2.0">');
+  }
 });

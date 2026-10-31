@@ -1,8 +1,11 @@
-import rss from '@astrojs/rss';
+import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
-import { byNewest, isListedPost, postDate, postPath } from '../../lib/site';
+import { atomFeed, postEntry } from '../../lib/atom';
+import { byNewest, isListedPost } from '../../lib/site';
 
-export async function GET(context: { site?: URL }) {
+// The old blog feed's address, kept for those subscribed to it: the same as
+// the main feed (atom.xml.ts).
+export const GET: APIRoute = async ({ site }) => {
   const posts = (await getCollection('blog')).filter(isListedPost).sort(byNewest);
-  return rss({ title: 'Andrew Lilley Brinker — Blog', description: 'Posts by Andrew Lilley Brinker', site: context.site, items: posts.map((post) => ({ title: post.data.title, description: post.data.description, link: postPath(post), pubDate: postDate(post) })) });
-}
+  return atomFeed({ title: 'Andrew Lilley Brinker', subtitle: 'Posts by Andrew Lilley Brinker', path: '/blog/atom.xml', alternate: '/', site: site!, entries: posts.map((post) => postEntry(post, site!)) });
+};
