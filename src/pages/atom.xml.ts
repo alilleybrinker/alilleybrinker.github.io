@@ -1,8 +1,10 @@
-import rss from '@astrojs/rss';
+import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
-import { byNewest, isListedPost, postDate, postPath } from '../lib/site';
+import { atomFeed, postEntry } from '../lib/atom';
+import { byNewest, isListedPost } from '../lib/site';
 
-export async function GET(context: { site?: URL }) {
+// Every listed post, in full: the site's main feed.
+export const GET: APIRoute = async ({ site }) => {
   const posts = (await getCollection('blog')).filter(isListedPost).sort(byNewest);
-  return rss({ title: 'Andrew Lilley Brinker', description: 'Posts by Andrew Lilley Brinker', site: context.site, items: posts.map((post) => ({ title: post.data.title, description: post.data.description, link: postPath(post), pubDate: postDate(post) })) });
-}
+  return atomFeed({ title: 'Andrew Lilley Brinker', subtitle: 'Posts by Andrew Lilley Brinker', path: '/atom.xml', alternate: '/', site: site!, entries: posts.map((post) => postEntry(post, site!)) });
+};

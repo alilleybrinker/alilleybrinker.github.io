@@ -1,19 +1,27 @@
 ---
 import { getCollection } from 'astro:content';
 import Icon from './Icon.astro';
-import { byNewest, isListedPost, postPath } from '../lib/site';
+import { byNewest, isListedPost, postPath, topicSlug } from '../lib/site';
 
 // The footer at the bottom of every page, set on a band of its own: who writes
 // the site, its feeds, where else to follow along, where to go next, and the
 // fine print.
-const latest = (await getCollection('blog')).filter(isListedPost).sort(byNewest)[0];
+const posts = (await getCollection('blog')).filter(isListedPost).sort(byNewest);
+const latest = posts[0];
 const latestPath = latest && postPath(latest);
 const showLatest = latest && latestPath !== Astro.url.pathname;
 
-const feeds = [
-  { label: 'RSS', href: '/rss.xml' },
-  { label: 'Atom', href: '/atom.xml' },
-  { label: 'Reading feed', href: '/reading/rss.xml' },
+// Every feed, for the Feeds menu: all posts, the reading list, and each
+// topic's own, the topics with the most posts first. All are Atom.
+const topicCounts = new Map<string, number>();
+for (const topic of posts.flatMap((post) => post.data.taxonomies.topics)) topicCounts.set(topic, (topicCounts.get(topic) ?? 0) + 1);
+const feedGroups = [
+  { name: 'All posts', feeds: [{ label: 'All posts', href: '/atom.xml' }] },
+  { name: 'Reading', feeds: [{ label: 'Reading', href: '/reading/atom.xml' }] },
+  {
+    name: 'Topics',
+    feeds: [...topicCounts].sort(([, a], [, b]) => b - a).map(([topic, count]) => ({ label: topic, count, href: `/topics/${topicSlug(topic)}/atom.xml` })),
+  },
 ];
 const follow = [
   { label: 'Bluesky', href: 'https://bsky.app/profile/alilleybrinker.com' },
@@ -48,10 +56,30 @@ const fine = 'whitespace-nowrap underline decoration-rule hover:text-black dark:
     </section>
     <nav aria-labelledby="footer-feeds-heading">
       <h2 id="footer-feeds-heading" class={label}>Feeds</h2>
-      <ul class="grid list-none grid-cols-2 gap-x-8 gap-y-1 p-0 md:grid-cols-1">
-        {feeds.map(({ label, href }) => <li><a href={href} class={link}>{label}</a></li>)}
-      </ul>
-      <p class="mt-3 max-w-[22ch] text-xs text-neutral-600 dark:text-muted">Every <a href="/topics/" class={fine}>topic</a> has a feed of its own, too.</p>
+      <details class="feeds-menu group relative" data-feeds-menu>
+        <summary class="flex h-8 w-fit cursor-pointer list-none items-center gap-1.5 rounded-full bg-neutral-500/10 px-3.5 text-neutral-600 hover:bg-neutral-500/15 hover:text-black group-open:bg-neutral-500/15 group-open:text-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent dark:text-muted dark:hover:text-white dark:group-open:text-white [&::-webkit-details-marker]:hidden">
+          Choose a feed
+          <span aria-hidden="true" class="text-[0.7em] transition-transform duration-150 group-open:rotate-180 motion-reduce:transition-none">▾</span>
+        </summary>
+        <div class="feeds-menu-panel">
+          {feedGroups.map((group) => (
+            <div role="group" aria-label={group.name}>
+              {group.name === 'Topics' && <p class="feeds-menu-group">Topics</p>}
+              <ul class="list-none p-0">
+                {group.feeds.map((feed) => (
+                  <li class="feeds-menu-item">
+                    <a href={feed.href} class="feeds-menu-link">
+                      <span class="truncate">{feed.label}</span>
+                      {'count' in feed && <span class="text-xs tabular-nums text-muted">{feed.count}<span class="sr-only"> posts</span></span>}
+                    </a>
+                    <button type="button" class="feeds-menu-copy" data-feed-copy={feed.href} aria-label={`Copy the ${feed.label} feed's address`}><span data-label>Copy</span><span aria-hidden="true" data-copied-label>Copied</span></button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </details>
     </nav>
     <nav aria-labelledby="footer-follow-heading">
       <h2 id="footer-follow-heading" class={label}>Follow</h2>
@@ -71,3 +99,31 @@ const fine = 'whitespace-nowrap underline decoration-rule hover:text-black dark:
     <p class="px-5 py-5 text-xs text-neutral-600 mx-auto max-w-[calc(var(--breakpoint-md)+2.5rem)] dark:text-muted">Copyright Andrew Lilley Brinker. Made with <Icon name="heart" class="-mt-0.5 !h-3 !w-3" /> in California · <a href="/ai/" class={fine}>AI Policy</a> · <a href="/colophon/" class={fine}>Colophon</a></p>
   </div>
 </footer>
+
+<script>
+  // The Feeds menu closes on Escape or a click outside it, like the site's
+  // other menus, and each feed's Copy button puts its full address on the
+  // clipboard, which is what a feed reader wants.
+  document.addEventListener('astro:page-load', () => {
+    const menu = document.querySelector<HTMLDetailsElement>('[data-feeds-menu]');
+    if (!menu) return;
+    const listeners = new AbortController();
+    const { signal } = listeners;
+    document.addEventListener('click', async (event) => {
+      const target = event.target as Element;
+      if (menu.open && !menu.contains(target)) menu.open = false;
+      const copy = target.closest<HTMLButtonElement>('[data-feed-copy]');
+      if (!copy) return;
+      await navigator.clipboard.writeText(new URL(copy.dataset.feedCopy!, location.origin).href);
+      copy.setAttribute('data-copied', '');
+      setTimeout(() => copy.removeAttribute('data-copied'), 2000);
+    }, { signal });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && menu.open) {
+        menu.open = false;
+        menu.querySelector('summary')?.focus();
+      }
+    }, { signal });
+    document.addEventListener('astro:before-swap', () => listeners.abort(), { once: true });
+  });
+</script>

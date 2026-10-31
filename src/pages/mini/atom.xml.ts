@@ -1,8 +1,10 @@
-import rss from '@astrojs/rss';
+import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
-import { byNewest, isListedPost, legacyMiniSlugs, postDate, postPath, postSlug } from '../../lib/site';
+import { atomFeed, postEntry } from '../../lib/atom';
+import { byNewest, isListedPost, legacyMiniSlugs, postSlug } from '../../lib/site';
 
-export async function GET(context: { site?: URL }) {
+// The old mini posts' feed, kept for those subscribed to it. It isn't listed.
+export const GET: APIRoute = async ({ site }) => {
   const posts = (await getCollection('blog')).filter((post) => isListedPost(post) && legacyMiniSlugs.has(postSlug(post))).sort(byNewest);
-  return rss({ title: 'Andrew Lilley Brinker — Blog', description: 'Posts by Andrew Lilley Brinker', site: context.site, items: posts.map((post) => ({ title: post.data.title, description: post.data.description, link: postPath(post), pubDate: postDate(post) })) });
-}
+  return atomFeed({ title: 'Andrew Lilley Brinker — Mini', subtitle: 'Posts by Andrew Lilley Brinker', path: '/mini/atom.xml', alternate: '/', site: site!, entries: posts.map((post) => postEntry(post, site!)) });
+};
