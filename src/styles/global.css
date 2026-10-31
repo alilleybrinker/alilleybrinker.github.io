@@ -1479,3 +1479,163 @@ a,
     gap: 1rem;
   }
 }
+
+/* Where to find Andrew (ContactList.astro): one raised panel of places, each
+   with a pixel-art mark in 3px cells, Bluesky across the top and the rest in
+   pairs, split by hairlines. A hovered place's mark turns accent and redraws
+   in the field's dither order. */
+.contact-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  list-style: none;
+  border-radius: 1.5rem;
+  background: white;
+  box-shadow: 0 12px 32px -16px rgb(0 0 0 / 0.25), 0 0 0 1px rgb(0 0 0 / 0.05);
+}
+
+.dark .contact-list {
+  background: var(--color-neutral-800);
+  box-shadow: 0 12px 32px -16px rgb(0 0 0 / 0.7), 0 0 0 1px rgb(255 255 255 / 0.1);
+}
+
+@media (min-width: 640px) {
+  .contact-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .contact-place-lead {
+    grid-column: 1 / -1;
+  }
+
+  .contact-place:nth-child(odd):not(.contact-place-lead) {
+    border-left: 1px solid rgb(0 0 0 / 0.05);
+  }
+
+  .dark .contact-place:nth-child(odd):not(.contact-place-lead) {
+    border-left-color: rgb(255 255 255 / 0.1);
+  }
+}
+
+.contact-place + .contact-place {
+  border-top: 1px solid rgb(0 0 0 / 0.05);
+}
+
+.dark .contact-place + .contact-place {
+  border-top-color: rgb(255 255 255 / 0.1);
+}
+
+.contact-link {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  height: 100%;
+  padding: 1rem 1.25rem;
+  transition: background-color 200ms;
+}
+
+.contact-place-lead .contact-link {
+  flex-wrap: wrap;
+  padding-block: 1.25rem;
+}
+
+/* The lead's note runs the panel's width under its name, set in from the
+   mark. */
+.contact-note {
+  flex-basis: 100%;
+  padding-left: 4rem;
+  color: var(--color-neutral-700);
+}
+
+.dark .contact-note {
+  color: var(--color-neutral-300);
+}
+
+.contact-link:hover {
+  background: rgb(0 0 0 / 0.025);
+}
+
+.dark .contact-link:hover {
+  background: rgb(255 255 255 / 0.04);
+}
+
+.contact-link:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -4px;
+  border-radius: 1.25rem;
+}
+
+.contact-mark {
+  flex: none;
+  width: 48px;
+  height: 48px;
+  fill: var(--color-neutral-700);
+  transition: fill 200ms;
+}
+
+.dark .contact-mark {
+  fill: var(--color-neutral-200);
+}
+
+.contact-link:hover .contact-mark,
+.contact-link:focus-visible .contact-mark {
+  fill: var(--color-accent);
+}
+
+.dark .contact-link:hover .contact-mark,
+.dark .contact-link:focus-visible .contact-mark {
+  fill: var(--color-accent-bright);
+}
+
+.contact-link:hover .contact-mark rect {
+  animation: contact-pixel 1ms calc(var(--order) * 240ms) both;
+}
+
+@keyframes contact-pixel {
+  from { opacity: 0; }
+}
+
+.contact-detail {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.contact-detail:not(:empty)::before {
+  content: " · ";
+}
+
+.contact-arrow {
+  flex: none;
+  color: var(--color-neutral-400);
+  transition: color 200ms, translate 200ms;
+}
+
+.contact-link:hover .contact-arrow {
+  color: var(--color-neutral-900);
+  translate: 2px -2px;
+}
+
+.dark .contact-link:hover .contact-arrow {
+  color: white;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-link:hover .contact-mark rect {
+    animation: none;
+  }
+
+  .contact-link:hover .contact-arrow {
+    translate: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .contact-list {
+    outline: 1px solid CanvasText;
+  }
+
+  .contact-mark {
+    fill: CanvasText;
+  }
+}

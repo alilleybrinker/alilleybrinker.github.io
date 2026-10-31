@@ -59,3 +59,20 @@ test('every page but the home page and 404 shares an image of its own', async ({
     expect(response.headers()['content-type']).toBe('image/png');
   }
 });
+
+test('About lists every place to find Andrew, each with a pixel mark, and fills in live counts', async ({ page }) => {
+  await page.route(/public\.api\.bsky\.app|api\.github\.com/, (route) => route.fulfill({
+    contentType: 'application/json',
+    body: route.request().url().includes('bsky') ? '{"followersCount":1234}' : '{"public_repos":54}',
+  }));
+  await page.goto('/about/');
+  const places = page.locator('[data-contact-list] .contact-link');
+  await expect(places).toHaveCount(7);
+  for (const name of ['Bluesky', 'GitHub', 'Mastodon', 'LinkedIn', 'Hacker News', 'Lobste.rs', 'Reddit']) {
+    await expect(places.filter({ hasText: name })).toHaveCount(1);
+  }
+  await expect(places.first()).toContainText('Message me on Bluesky for my Signal username to chat.');
+  expect(await page.locator('.contact-mark').first().locator('rect').count()).toBeGreaterThan(40);
+  await expect(page.locator('[data-contact-live="bluesky"]')).toHaveText('1.2K followers');
+  await expect(page.locator('[data-contact-live="github"]')).toHaveText('54 repos');
+});
