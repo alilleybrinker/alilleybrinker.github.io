@@ -1,0 +1,67 @@
+---
+// Where to find Andrew: one panel of every place. Bluesky leads, across the
+// panel, with how to reach him there; the rest follow in pairs. Bluesky's
+// and GitHub's counts are fetched in the browser and left out if they can't
+// be.
+import Icon from './Icon.astro';
+
+interface Place {
+  name: string;
+  handle: string;
+  href: string;
+  live?: 'bluesky' | 'github';
+  note?: string;
+}
+
+const places: Place[] = [
+  { name: 'Bluesky', handle: '@alilleybrinker.com', href: 'https://bsky.app/profile/alilleybrinker.com', live: 'bluesky', note: 'Message me on Bluesky for my Signal username to chat.' },
+  { name: 'GitHub', handle: '@alilleybrinker', href: 'https://github.com/alilleybrinker', live: 'github' },
+  { name: 'Mastodon', handle: '@alilleybrinker@hachyderm.io', href: 'https://hachyderm.io/@alilleybrinker' },
+  { name: 'LinkedIn', handle: 'in/alilleybrinker', href: 'https://www.linkedin.com/in/alilleybrinker' },
+  { name: 'Hacker News', handle: 'alilleybrinker', href: 'https://news.ycombinator.com/user?id=alilleybrinker' },
+  { name: 'Lobste.rs', handle: '~alilleybrinker', href: 'https://lobste.rs/~alilleybrinker' },
+  { name: 'Reddit', handle: 'u/alilleybrinker', href: 'https://www.reddit.com/user/alilleybrinker/' },
+];
+---
+
+<ul class="contact-list not-prose" data-contact-list>
+  {places.map((place) => (
+    <li class:list={['contact-place', { 'contact-place-lead': place.note }]}>
+      <a class="contact-link group" href={place.href} rel="me">
+        <span class="min-w-0 flex-1">
+          <span class="block font-medium text-black dark:text-white">{place.name}</span>
+          <span class="block text-sm text-muted [overflow-wrap:anywhere]">{place.handle}{place.live && <span class="contact-detail" data-contact-live={place.live}></span>}</span>
+        </span>
+        <Icon name="arrow-up-right" class="contact-arrow !h-4 !w-4" />
+        {place.note && <span class="contact-note">{place.note}</span>}
+      </a>
+    </li>
+  ))}
+</ul>
+
+<script>
+  const count = (value: number) =>
+    value >= 1000 ? `${Number((value / 1000).toPrecision(2))}K` : new Intl.NumberFormat('en-US').format(value);
+
+  async function json(url: string) {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    return response.json();
+  }
+
+  // Each count fills in on its own; one that fails leaves its place quiet.
+  function load() {
+    const list = document.querySelector('[data-contact-list]');
+    if (!list) return;
+    const bluesky = list.querySelector('[data-contact-live="bluesky"]');
+    const github = list.querySelector('[data-contact-live="github"]');
+    json('https://public.api.bsky.app/xrpc/app.bsky.actor.getProfile?actor=alilleybrinker.com')
+      .then((profile) => bluesky && (bluesky.textContent = `${count(profile.followersCount)} followers`))
+      .catch(() => {});
+    json('https://api.github.com/users/alilleybrinker')
+      .then((profile) => github && (github.textContent = `${count(profile.public_repos)} repos`))
+      .catch(() => {});
+  }
+
+  document.addEventListener('astro:page-load', load);
+</script>

@@ -1,7 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import BlueskyProfileCard from "../components/BlueskyProfileCard.astro";
-import GitHubProfileCard from "../components/GitHubProfileCard.astro";
+import ContactList from "../components/ContactList.astro";
 import Icon from "../components/Icon.astro";
 ---
 
@@ -99,23 +98,7 @@ import Icon from "../components/Icon.astro";
         >.
     </p>
     <h2 id="where-to-find-me" class="not-prose mt-16 mb-6 font-sans text-sm font-semibold uppercase tracking-widest text-muted">Social / Contact</h2>
-    <div class="grid gap-4 md:grid-cols-2">
-        <BlueskyProfileCard />
-        <GitHubProfileCard />
-    </div>
-    <p class="!mb-2">Message me on Bluesky for my Signal username to chat.</p>
-    <p
-        class="!mt-2 !text-sm !leading-relaxed text-muted [&_a]:!text-muted"
-    >
-        You can also find me on <a href="https://hachyderm.io/@alilleybrinker"
-            >Mastodon</a
-        >, <a href="https://www.linkedin.com/in/alilleybrinker">LinkedIn</a>, <a
-            href="https://news.ycombinator.com/user?id=alilleybrinker"
-            >Hacker News</a
-        >, <a href="https://lobste.rs/~alilleybrinker">Lobste.rs</a>, and <a
-            href="https://www.reddit.com/user/alilleybrinker/">Reddit</a
-        >.
-    </p>
+    <ContactList />
     <h2 id="ai-policy" class="not-prose mt-16 mb-6 font-sans text-sm font-semibold uppercase tracking-widest text-muted">AI Policy</h2>
     <p>
         The words on this site were written by Andrew with care. Its design was
