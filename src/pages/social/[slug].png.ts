@@ -110,6 +110,7 @@ export async function getStaticPaths() {
     { slug: 'reading', title: 'Reading', path: '/reading/' },
     { slug: 'talks', title: 'Talks', path: '/talks/' },
     { slug: 'colophon', title: 'Colophon', path: '/colophon/' },
+    { slug: 'ai', title: 'AI Policy', path: '/ai/' },
     ...topics.map((topic) => ({ slug: `topic-${topicSlug(topic)}`, title: `${topic} Posts`, path: `/topics/${topicSlug(topic)}/` })),
   ];
 

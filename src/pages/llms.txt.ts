@@ -16,7 +16,7 @@ export const GET: APIRoute = async ({ site }) => {
 
 > Andrew Lilley Brinker is a Member of Technical Staff at Anthropic. He writes about software security, memory safety, Rust, and open source.
 
-Every post on this site is available as Markdown by replacing its trailing slash with \`.md\` (for example, ${url('/blog/cpp-must-become-safer.md')}). The words on this site were written by Andrew; see the AI policy at ${url('/about/#ai-policy')}. Everything here is his own view, not his employer's.
+Every post on this site is available as Markdown by replacing its trailing slash with \`.md\` (for example, ${url('/blog/cpp-must-become-safer.md')}). The words on this site were written by Andrew; see the AI policy at ${url('/ai/')}. Everything here is his own view, not his employer's.
 
 ## Posts
 

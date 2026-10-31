@@ -218,3 +218,23 @@ test('coming back to a long post offers to pick up where the reader left off', a
   await page.goto(POST);
   await expect(resume).toBeHidden();
 });
+
+test('the AI policy has its own page, linked from the footer, and old links to it on About go there', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('footer').getByRole('link', { name: 'AI Policy' }).click();
+  await expect(page).toHaveURL(/\/ai\/$/);
+  await expect(page.locator('h1')).toHaveText('AI Policy');
+  await expect(page.getByText('The words on this site were written by Andrew with care.')).toBeVisible();
+  await page.goto('/about/#ai-policy');
+  await expect(page).toHaveURL(/\/ai\/$/);
+  await page.goto('/about/#talks');
+  await expect(page).toHaveURL(/\/talks\/$/);
+});
+
+test('the footer keeps feeds apart from profiles elsewhere', async ({ page }) => {
+  await page.goto('/');
+  const feeds = page.locator('footer nav[aria-labelledby="footer-feeds-heading"]');
+  const follow = page.locator('footer nav[aria-labelledby="footer-follow-heading"]');
+  await expect(feeds.getByRole('link')).toHaveText(['RSS', 'Atom', 'Reading feed', 'topic']);
+  await expect(follow.getByRole('link')).toHaveText(['Bluesky', 'Mastodon', 'GitHub', 'LinkedIn']);
+});

@@ -4,15 +4,18 @@ import Icon from './Icon.astro';
 import { byNewest, isListedPost, postPath } from '../lib/site';
 
 // The footer at the bottom of every page, set on a band of its own: who writes
-// the site, where to follow along, where to go next, and the fine print.
+// the site, its feeds, where else to follow along, where to go next, and the
+// fine print.
 const latest = (await getCollection('blog')).filter(isListedPost).sort(byNewest)[0];
 const latestPath = latest && postPath(latest);
 const showLatest = latest && latestPath !== Astro.url.pathname;
 
-const follow = [
+const feeds = [
   { label: 'RSS', href: '/rss.xml' },
   { label: 'Atom', href: '/atom.xml' },
   { label: 'Reading feed', href: '/reading/rss.xml' },
+];
+const follow = [
   { label: 'Bluesky', href: 'https://bsky.app/profile/alilleybrinker.com' },
   { label: 'Mastodon', href: 'https://hachyderm.io/@alilleybrinker' },
   { label: 'GitHub', href: 'https://github.com/alilleybrinker' },
@@ -32,7 +35,7 @@ const fine = 'whitespace-nowrap underline decoration-rule hover:text-black dark:
 ---
 
 <footer transition:name="site-footer" transition:animate="none" class="site-footer bg-footer text-sm leading-6">
-  <div class="grid gap-10 px-5 pt-12 pb-10 md:mx-auto md:max-w-(--breakpoint-md) md:grid-cols-[1fr_auto_auto] md:gap-16 md:px-0">
+  <div class="grid gap-10 px-5 pt-12 pb-10 md:mx-auto md:max-w-(--breakpoint-md) md:grid-cols-[1fr_auto_auto_auto] md:gap-12 md:px-0">
     <section aria-labelledby="footer-about-heading">
       <h2 id="footer-about-heading" class="font-display text-lg font-semibold tracking-tight text-black dark:text-neutral-100">Andrew Lilley Brinker</h2>
       <p class="mt-2 max-w-[34ch] text-neutral-600 dark:text-muted">I’m a Member of Technical Staff at Anthropic. I write about software security, memory safety, Rust, and open source.</p>
@@ -43,12 +46,18 @@ const fine = 'whitespace-nowrap underline decoration-rule hover:text-black dark:
         </p>
       )}
     </section>
+    <nav aria-labelledby="footer-feeds-heading">
+      <h2 id="footer-feeds-heading" class={label}>Feeds</h2>
+      <ul class="grid list-none grid-cols-2 gap-x-8 gap-y-1 p-0 md:grid-cols-1">
+        {feeds.map(({ label, href }) => <li><a href={href} class={link}>{label}</a></li>)}
+      </ul>
+      <p class="mt-3 max-w-[22ch] text-xs text-neutral-600 dark:text-muted">Every <a href="/topics/" class={fine}>topic</a> has a feed of its own, too.</p>
+    </nav>
     <nav aria-labelledby="footer-follow-heading">
       <h2 id="footer-follow-heading" class={label}>Follow</h2>
       <ul class="grid list-none grid-cols-2 gap-x-8 gap-y-1 p-0 md:grid-cols-1">
         {follow.map(({ label, href }) => <li><a href={href} class={link}>{label}</a></li>)}
       </ul>
-      <p class="mt-3 max-w-[22ch] text-xs text-neutral-600 dark:text-muted">Every <a href="/topics/" class={fine}>topic</a> has a feed of its own, too.</p>
     </nav>
     <nav aria-labelledby="footer-browse-heading">
       <h2 id="footer-browse-heading" class={label}>Browse</h2>
@@ -59,6 +68,6 @@ const fine = 'whitespace-nowrap underline decoration-rule hover:text-black dark:
     </nav>
   </div>
   <div class="border-t border-black/5 dark:border-white/10">
-    <p class="px-5 py-5 text-xs text-neutral-600 md:mx-auto md:max-w-(--breakpoint-md) md:px-0 dark:text-muted">Copyright Andrew Lilley Brinker. Made with <Icon name="heart" class="-mt-0.5 !h-3 !w-3" /> in California · <a href="/about/#ai-policy" class={fine}>AI Policy</a> · <a href="/colophon/" class={fine}>Colophon</a></p>
+    <p class="px-5 py-5 text-xs text-neutral-600 md:mx-auto md:max-w-(--breakpoint-md) md:px-0 dark:text-muted">Copyright Andrew Lilley Brinker. Made with <Icon name="heart" class="-mt-0.5 !h-3 !w-3" /> in California · <a href="/ai/" class={fine}>AI Policy</a> · <a href="/colophon/" class={fine}>Colophon</a></p>
   </div>
 </footer>
