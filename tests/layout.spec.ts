@@ -89,3 +89,12 @@ test('the page column keeps a gutter at every width, and nothing runs past the w
     expect(scroll, `${width}px`).toBeLessThanOrEqual(width);
   }
 });
+
+test('About shows Andrew’s name with its two parts marked, under the My Name link', async ({ page }) => {
+  await page.goto('/about/#my-name');
+  const plate = page.locator('.name-plate');
+  await expect(plate).toBeVisible();
+  await expect(plate.locator('.name-plate-word')).toHaveText(['Andrew', 'Lilley Brinker']);
+  await expect(plate.locator('.name-plate-bracket')).toHaveText(['first name', 'last name']);
+  await expect(plate).toContainText('“Lilley Brinker” is my full last name.');
+});
