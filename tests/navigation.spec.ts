@@ -155,14 +155,16 @@ test('the reading page offers its own feed', async ({ page, request }) => {
   expect(await feed.text()).toContain('<title>Andrew Lilley Brinker: Reading</title>');
 });
 
-test('each talk has a page, linked from About, whose recording loads only when played', async ({ page }) => {
+test('each talk has a page, reached from Talks in the header, whose recording loads only when played', async ({ page }) => {
   const youtube: string[] = [];
   await page.route(/youtube/, (route) => {
     youtube.push(route.request().url());
     return route.fulfill({ body: '<!doctype html><title>Player</title>' });
   });
-  await page.goto('/about/');
-  await page.locator('#talks ~ article a', { hasText: 'A Tale of Teaching Rust' }).click();
+  await page.goto('/');
+  await page.locator('header').getByRole('link', { name: 'Talks', exact: true }).click();
+  await expect(page).toHaveURL(/\/talks\/$/);
+  await page.getByRole('link', { name: /A Tale of Teaching Rust/ }).click();
   await expect(page).toHaveURL(/\/talks\/a-tale-of-teaching-rust\/$/);
   await expect(page.locator('h1')).toContainText('A Tale of Teaching Rust');
   await expect(page.locator('.talk-plate-field path')).toHaveAttribute('d', /M/);
