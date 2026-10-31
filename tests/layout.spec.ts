@@ -75,3 +75,17 @@ test('About lists every place to find Andrew and fills in live counts', async ({
   await expect(page.locator('[data-contact-live="bluesky"]')).toHaveText('1.2K followers');
   await expect(page.locator('[data-contact-live="github"]')).toHaveText('54 repos');
 });
+
+test('the page column keeps a gutter at every width, and nothing runs past the window', async ({ page }) => {
+  for (const width of [375, 780, 900, 1280]) {
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto(POST);
+    const { left, right, scroll } = await page.evaluate(() => {
+      const box = document.querySelector('main .prose')!.getBoundingClientRect();
+      return { left: box.left, right: innerWidth - box.right, scroll: document.documentElement.scrollWidth };
+    });
+    expect(left, `${width}px`).toBeGreaterThanOrEqual(20);
+    expect(right, `${width}px`).toBeGreaterThanOrEqual(20);
+    expect(scroll, `${width}px`).toBeLessThanOrEqual(width);
+  }
+});

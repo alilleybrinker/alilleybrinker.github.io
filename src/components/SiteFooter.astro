@@ -35,7 +35,7 @@ const fine = 'whitespace-nowrap underline decoration-rule hover:text-black dark:
 ---
 
 <footer transition:name="site-footer" transition:animate="none" class="site-footer bg-footer text-sm leading-6">
-  <div class="grid gap-10 px-5 pt-12 pb-10 md:mx-auto md:max-w-(--breakpoint-md) md:grid-cols-[1fr_auto_auto_auto] md:gap-12 md:px-0">
+  <div class="grid gap-10 px-5 pt-12 pb-10 mx-auto max-w-[calc(var(--breakpoint-md)+2.5rem)] md:grid-cols-[1fr_auto_auto_auto] md:gap-12">
     <section aria-labelledby="footer-about-heading">
       <h2 id="footer-about-heading" class="font-display text-lg font-semibold tracking-tight text-black dark:text-neutral-100">Andrew Lilley Brinker</h2>
       <p class="mt-2 max-w-[34ch] text-neutral-600 dark:text-muted">I’m a Member of Technical Staff at Anthropic. I write about software security, memory safety, Rust, and open source.</p>
@@ -68,6 +68,6 @@ const fine = 'whitespace-nowrap underline decoration-rule hover:text-black dark:
     </nav>
   </div>
   <div class="border-t border-black/5 dark:border-white/10">
-    <p class="px-5 py-5 text-xs text-neutral-600 md:mx-auto md:max-w-(--breakpoint-md) md:px-0 dark:text-muted">Copyright Andrew Lilley Brinker. Made with <Icon name="heart" class="-mt-0.5 !h-3 !w-3" /> in California · <a href="/ai/" class={fine}>AI Policy</a> · <a href="/colophon/" class={fine}>Colophon</a></p>
+    <p class="px-5 py-5 text-xs text-neutral-600 mx-auto max-w-[calc(var(--breakpoint-md)+2.5rem)] dark:text-muted">Copyright Andrew Lilley Brinker. Made with <Icon name="heart" class="-mt-0.5 !h-3 !w-3" /> in California · <a href="/ai/" class={fine}>AI Policy</a> · <a href="/colophon/" class={fine}>Colophon</a></p>
   </div>
 </footer>
