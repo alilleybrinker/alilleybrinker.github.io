@@ -5,6 +5,7 @@ import { resolve } from 'node:path';
 import { Resvg } from '@resvg/resvg-js';
 import { ditherPath, fieldFor, fieldValue, smoothstep } from '../../lib/dither-pattern';
 import { isListedPost, postDate, postPath, postSlug, topicSlug } from '../../lib/site';
+import { talkDate, talkPath, talks, talkSlug } from '../../lib/talks';
 
 const width = 1356;
 const height = 628;
@@ -47,6 +48,8 @@ function wrapTitle(title: string, maxCharacters = 22) {
 interface SocialCard {
   title: string;
   date?: Date;
+  // Said before the date, as "Talk at RustConf 2017".
+  meta?: string;
   // The page the card is for, whose dithered field it carries.
   path: string;
 }
@@ -64,12 +67,13 @@ function field(path: string) {
 }
 
 function socialCard(card: SocialCard) {
-  const date = card.date?.toLocaleDateString('en-US', {
+  const day = card.date?.toLocaleDateString('en-US', {
     month: 'long',
     day: 'numeric',
     year: 'numeric',
     timeZone: 'UTC',
   });
+  const date = [card.meta, day].filter(Boolean).join(' · ');
   const titleLines = wrapTitle(card.title);
   const titleY = titleLines.length === 1 ? 375 : titleLines.length === 2 ? 310 : 250;
   const title = titleLines
@@ -103,6 +107,8 @@ export async function getStaticPaths() {
     { slug: 'about', title: 'About — Software Security', path: '/about/' },
     { slug: 'projects', title: 'Projects', path: '/projects/' },
     { slug: 'topics', title: 'Blog Topics', path: '/topics/' },
+    { slug: 'reading', title: 'Reading', path: '/reading/' },
+    { slug: 'colophon', title: 'Colophon', path: '/colophon/' },
     ...topics.map((topic) => ({ slug: `topic-${topicSlug(topic)}`, title: `${topic} Posts`, path: `/topics/${topicSlug(topic)}/` })),
   ];
 
@@ -112,6 +118,10 @@ export async function getStaticPaths() {
       props: { title: post.data.title, date: postDate(post), path: postPath(post) },
     })),
     ...pages.map((page) => ({ params: { slug: page.slug }, props: page })),
+    ...talks.map((talk) => ({
+      params: { slug: `talk-${talkSlug(talk)}` },
+      props: { title: talk.title, date: talkDate(talk), meta: `${talk.type === 'panel' ? 'Panel' : 'Talk'} at ${talk.event}`, path: talkPath(talk) },
+    })),
   ];
 }
 
