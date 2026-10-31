@@ -1480,10 +1480,8 @@ a,
   }
 }
 
-/* Where to find Andrew (ContactList.astro): one raised panel of places, each
-   with a pixel-art mark in 1.5px cells, Bluesky across the top and the rest in
-   pairs, split by hairlines. A hovered place's mark turns accent and redraws
-   in the field's dither order. */
+/* Where to find Andrew (ContactList.astro): one raised panel of places,
+   Bluesky across the top and the rest in pairs, split by hairlines. */
 .contact-list {
   display: grid;
   margin: 0;
@@ -1540,11 +1538,9 @@ a,
   padding-block: 1.25rem;
 }
 
-/* The lead's note runs the panel's width under its name, set in from the
-   mark. */
+/* The lead's note runs the panel's width under its name. */
 .contact-note {
   flex-basis: 100%;
-  padding-left: 4rem;
   color: var(--color-neutral-700);
 }
 
@@ -1564,36 +1560,6 @@ a,
   outline: 2px solid var(--color-accent);
   outline-offset: -4px;
   border-radius: 1.25rem;
-}
-
-.contact-mark {
-  flex: none;
-  width: 48px;
-  height: 48px;
-  fill: var(--color-neutral-700);
-  transition: fill 200ms;
-}
-
-.dark .contact-mark {
-  fill: var(--color-neutral-200);
-}
-
-.contact-link:hover .contact-mark,
-.contact-link:focus-visible .contact-mark {
-  fill: var(--color-accent);
-}
-
-.dark .contact-link:hover .contact-mark,
-.dark .contact-link:focus-visible .contact-mark {
-  fill: var(--color-accent-bright);
-}
-
-.contact-link:hover .contact-mark path {
-  animation: contact-pixel 1ms calc(var(--order) * 240ms) both;
-}
-
-@keyframes contact-pixel {
-  from { opacity: 0; }
 }
 
 .contact-detail {
@@ -1621,10 +1587,6 @@ a,
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .contact-link:hover .contact-mark path {
-    animation: none;
-  }
-
   .contact-link:hover .contact-arrow {
     translate: none;
   }
@@ -1633,9 +1595,5 @@ a,
 @media (forced-colors: active) {
   .contact-list {
     outline: 1px solid CanvasText;
-  }
-
-  .contact-mark {
-    fill: CanvasText;
   }
 }

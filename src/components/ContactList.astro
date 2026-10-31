@@ -1,14 +1,11 @@
 ---
-// Where to find Andrew: one panel of every place, each with a pixel-art mark
-// (src/lib/pixel-icons.ts) that redraws itself in the field's dither order on
-// hover. Bluesky leads, across the panel, with how to reach him there; the
-// rest follow in pairs. Bluesky's and GitHub's counts are fetched in the
-// browser and left out if they can't be.
-import { pixelLayers, type PixelIconName } from '../lib/pixel-icons';
+// Where to find Andrew: one panel of every place. Bluesky leads, across the
+// panel, with how to reach him there; the rest follow in pairs. Bluesky's
+// and GitHub's counts are fetched in the browser and left out if they can't
+// be.
 import Icon from './Icon.astro';
 
 interface Place {
-  icon: PixelIconName;
   name: string;
   handle: string;
   href: string;
@@ -17,13 +14,13 @@ interface Place {
 }
 
 const places: Place[] = [
-  { icon: 'bluesky', name: 'Bluesky', handle: '@alilleybrinker.com', href: 'https://bsky.app/profile/alilleybrinker.com', live: 'bluesky', note: 'Message me on Bluesky for my Signal username to chat.' },
-  { icon: 'github', name: 'GitHub', handle: '@alilleybrinker', href: 'https://github.com/alilleybrinker', live: 'github' },
-  { icon: 'mastodon', name: 'Mastodon', handle: '@alilleybrinker@hachyderm.io', href: 'https://hachyderm.io/@alilleybrinker' },
-  { icon: 'linkedin', name: 'LinkedIn', handle: 'in/alilleybrinker', href: 'https://www.linkedin.com/in/alilleybrinker' },
-  { icon: 'hackernews', name: 'Hacker News', handle: 'alilleybrinker', href: 'https://news.ycombinator.com/user?id=alilleybrinker' },
-  { icon: 'lobsters', name: 'Lobste.rs', handle: '~alilleybrinker', href: 'https://lobste.rs/~alilleybrinker' },
-  { icon: 'reddit', name: 'Reddit', handle: 'u/alilleybrinker', href: 'https://www.reddit.com/user/alilleybrinker/' },
+  { name: 'Bluesky', handle: '@alilleybrinker.com', href: 'https://bsky.app/profile/alilleybrinker.com', live: 'bluesky', note: 'Message me on Bluesky for my Signal username to chat.' },
+  { name: 'GitHub', handle: '@alilleybrinker', href: 'https://github.com/alilleybrinker', live: 'github' },
+  { name: 'Mastodon', handle: '@alilleybrinker@hachyderm.io', href: 'https://hachyderm.io/@alilleybrinker' },
+  { name: 'LinkedIn', handle: 'in/alilleybrinker', href: 'https://www.linkedin.com/in/alilleybrinker' },
+  { name: 'Hacker News', handle: 'alilleybrinker', href: 'https://news.ycombinator.com/user?id=alilleybrinker' },
+  { name: 'Lobste.rs', handle: '~alilleybrinker', href: 'https://lobste.rs/~alilleybrinker' },
+  { name: 'Reddit', handle: 'u/alilleybrinker', href: 'https://www.reddit.com/user/alilleybrinker/' },
 ];
 ---
 
@@ -31,9 +28,6 @@ const places: Place[] = [
   {places.map((place) => (
     <li class:list={['contact-place', { 'contact-place-lead': place.note }]}>
       <a class="contact-link group" href={place.href} rel="me">
-        <svg class="contact-mark" viewBox="0 0 32 32" shape-rendering="crispEdges" aria-hidden="true">
-          {pixelLayers(place.icon).map(({ d, order }) => <path d={d} style={`--order:${order}`} />)}
-        </svg>
         <span class="min-w-0 flex-1">
           <span class="block font-medium text-black dark:text-white">{place.name}</span>
           <span class="block text-sm text-muted [overflow-wrap:anywhere]">{place.handle}{place.live && <span class="contact-detail" data-contact-live={place.live}></span>}</span>
