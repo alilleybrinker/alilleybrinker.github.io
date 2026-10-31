@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { talkDate, talkPath, talkPlate, talks } from '../../lib/talks';
+
+const longDate = (date: Date) => date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+---
+
+<BaseLayout title="Talks" socialImage="/social/talks.png" socialImageAlt="Talks">
+  <h1>Talks</h1>
+  <ul class="talk-list not-prose mt-10 list-none p-0">
+    {talks.map((talk) => (
+      <li>
+        <a class="group talk-row text-black dark:text-white" href={talkPath(talk)}>
+          <svg class="talk-row-plate" viewBox="0 0 64 36" preserveAspectRatio="xMidYMid slice" shape-rendering="crispEdges" aria-hidden="true"><path d={talkPlate(talk, 64, 36)} fill="currentColor" /></svg>
+          <span class="block min-w-0">
+            <span class="block text-lg leading-snug"><span class="dither-underline">{talk.title}</span></span>
+            <span class="mt-1 block text-sm text-muted">{talk.type === 'panel' ? 'Panel at' : 'Talk at'} {talk.event} · <time datetime={talk.date}>{longDate(talkDate(talk))}</time></span>
+            {talk.description && <span class="mt-2 block text-neutral-700 dark:text-neutral-300">{talk.description}</span>}
+          </span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>
