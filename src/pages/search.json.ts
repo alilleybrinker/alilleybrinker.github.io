@@ -18,6 +18,7 @@ export const GET: APIRoute = async () => {
       { title: 'Talks', path: '/talks/' },
       { title: 'Topics', path: '/topics/' },
       { title: 'Colophon', path: '/colophon/' },
+      { title: 'AI Policy', path: '/ai/' },
       ...talks.map((talk) => ({ title: talk.title, path: talkPath(talk) })),
     ],
     posts: posts.map((post) => ({

@@ -99,14 +99,13 @@ import Icon from "../components/Icon.astro";
     </p>
     <h2 id="where-to-find-me" class="not-prose mt-16 mb-6 font-sans text-sm font-semibold uppercase tracking-widest text-muted">Social / Contact</h2>
     <ContactList />
-    <h2 id="ai-policy" class="not-prose mt-16 mb-6 font-sans text-sm font-semibold uppercase tracking-widest text-muted">AI Policy</h2>
-    <p>
-        The words on this site were written by Andrew with care. Its design was
-        implemented with the aid of AI. If AI-generated content is ever posted,
-        it will be clearly identified.
-    </p>
-    <p>
-        Disclosure: I work at Anthropic, which builds AI systems. Everything
-        here is my own view, not my employer’s.
-    </p>
 </BaseLayout>
+
+<script is:inline>
+    // Talks and the AI policy were once sections of this page; old links to
+    // them go to their own pages now.
+    {
+        const moved = { "#talks": "/talks/", "#ai-policy": "/ai/" }[location.hash];
+        if (moved) location.replace(moved);
+    }
+</script>

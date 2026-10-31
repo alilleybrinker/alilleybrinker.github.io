@@ -1,4 +1,16 @@
 ---
-const target = '/about/#ai-policy';
+import BaseLayout from '../layouts/BaseLayout.astro';
 ---
-<!doctype html><html lang="en"><head><meta charset="utf-8" /><meta http-equiv="refresh" content={`0; url=${target}`} /><link rel="canonical" href={target} /><!-- 100% privacy-first analytics --><script data-collect-dnt="true" async src="https://scripts.simpleanalyticscdn.com/latest.js"></script><script>window.location.replace('/about/#ai-policy');</script></head><body><noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif?collect-dnt=true" alt="" referrerpolicy="no-referrer-when-downgrade" /></noscript><p>Redirecting to <a href={target}>the AI policy</a>.</p></body></html>
+
+<BaseLayout title="AI Policy" socialImage="/social/ai.png" socialImageAlt="AI Policy">
+  <h1>AI Policy</h1>
+  <p>
+    The words on this site were written by Andrew with care. Its design was
+    implemented with the aid of AI. If AI-generated content is ever posted,
+    it will be clearly identified.
+  </p>
+  <p>
+    Disclosure: I work at Anthropic, which builds AI systems. Everything
+    here is my own view, not my employer’s.
+  </p>
+</BaseLayout>
