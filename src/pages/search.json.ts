@@ -1,9 +1,10 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
+import { talkPath, talks } from '../lib/talks';
 import { byNewest, isListedPost, postDate, postPath, topicSlug } from '../lib/site';
 
 // Powers the command palette (CommandPalette.astro): every listed post, topic
-// and top-level page, small enough to fetch once and search in the browser.
+// top-level page and talk, small enough to fetch once and search in the browser.
 export const GET: APIRoute = async () => {
   const posts = (await getCollection('blog')).filter(isListedPost).sort(byNewest);
   const counts = new Map<string, number>();
@@ -16,6 +17,7 @@ export const GET: APIRoute = async () => {
       { title: 'Projects', path: '/projects/' },
       { title: 'Topics', path: '/topics/' },
       { title: 'Colophon', path: '/colophon/' },
+      ...talks.map((talk) => ({ title: talk.title, path: talkPath(talk) })),
     ],
     posts: posts.map((post) => ({
       title: post.data.title,

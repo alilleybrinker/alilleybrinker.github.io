@@ -1,9 +1,10 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
+import { talkPath, talks } from '../lib/talks';
 import { byNewest, isListedPost, postDate, postPath, postUpdated, topicSlug } from '../lib/site';
 
 // Every page worth finding, for search engines: the top-level pages, each
-// listed post and each topic. Redirects (/blog/, /topics/, /mini/, /name/,
+// listed post, each topic and each talk. Redirects (/blog/, /topics/, /mini/, /name/,
 // /ai/, /talks/) and unlisted posts are left out. A post's date is when it was last
 // updated, else published; the home page and topics take their newest post's.
 export const GET: APIRoute = async ({ site }) => {
@@ -20,6 +21,7 @@ export const GET: APIRoute = async ({ site }) => {
     ['/colophon/'],
     ['/topics/', newest(posts)],
     ...posts.filter((post) => !post.data.externalUrl).map((post): [string, string] => [postPath(post), day(changed(post))]),
+    ...talks.map((talk): [string] => [talkPath(talk)]),
     ...topics.map((topic): [string, string] => [`/topics/${topicSlug(topic)}/`, newest(posts.filter((post) => post.data.taxonomies.topics.includes(topic)))]),
   ];
   const urls = pages.map(([path, lastmod]) => `  <url><loc>${new URL(path, site).href}</loc>${lastmod ? `<lastmod>${lastmod}</lastmod>` : ''}</url>`);
