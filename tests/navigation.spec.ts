@@ -265,6 +265,6 @@ test('the main feed is Atom, with each post in full and its links absolute; the 
   for (const old of ['/rss.xml', '/reading/rss.xml']) {
     const response = await request.get(old);
     expect(response.ok(), old).toBe(true);
-    expect(await response.text()).toContain('<rss version="2.0">');
+    expect(await response.text()).toMatch(/<rss version="2\.0"[ >]/);
   }
 });
