@@ -1481,7 +1481,7 @@ a,
 }
 
 /* Where to find Andrew (ContactList.astro): one raised panel of places, each
-   with a pixel-art mark in 3px cells, Bluesky across the top and the rest in
+   with a pixel-art mark in 1.5px cells, Bluesky across the top and the rest in
    pairs, split by hairlines. A hovered place's mark turns accent and redraws
    in the field's dither order. */
 .contact-list {
@@ -1588,7 +1588,7 @@ a,
   fill: var(--color-accent-bright);
 }
 
-.contact-link:hover .contact-mark rect {
+.contact-link:hover .contact-mark path {
   animation: contact-pixel 1ms calc(var(--order) * 240ms) both;
 }
 
@@ -1621,7 +1621,7 @@ a,
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .contact-link:hover .contact-mark rect {
+  .contact-link:hover .contact-mark path {
     animation: none;
   }
 

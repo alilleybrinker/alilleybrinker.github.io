@@ -4,7 +4,7 @@
 // hover. Bluesky leads, across the panel, with how to reach him there; the
 // rest follow in pairs. Bluesky's and GitHub's counts are fetched in the
 // browser and left out if they can't be.
-import { pixels, type PixelIconName } from '../lib/pixel-icons';
+import { pixelLayers, type PixelIconName } from '../lib/pixel-icons';
 import Icon from './Icon.astro';
 
 interface Place {
@@ -31,8 +31,8 @@ const places: Place[] = [
   {places.map((place) => (
     <li class:list={['contact-place', { 'contact-place-lead': place.note }]}>
       <a class="contact-link group" href={place.href} rel="me">
-        <svg class="contact-mark" viewBox="0 0 16 16" shape-rendering="crispEdges" aria-hidden="true">
-          {pixels(place.icon).map(({ x, y, order }) => <rect x={x} y={y} width="1" height="1" style={`--order:${order}`} />)}
+        <svg class="contact-mark" viewBox="0 0 32 32" shape-rendering="crispEdges" aria-hidden="true">
+          {pixelLayers(place.icon).map(({ d, order }) => <path d={d} style={`--order:${order}`} />)}
         </svg>
         <span class="min-w-0 flex-1">
           <span class="block font-medium text-black dark:text-white">{place.name}</span>

@@ -72,7 +72,7 @@ test('About lists every place to find Andrew, each with a pixel mark, and fills 
     await expect(places.filter({ hasText: name })).toHaveCount(1);
   }
   await expect(places.first()).toContainText('Message me on Bluesky for my Signal username to chat.');
-  expect(await page.locator('.contact-mark').first().locator('rect').count()).toBeGreaterThan(40);
+  await expect(page.locator('.contact-mark').first().locator('path')).toHaveCount(16);
   await expect(page.locator('[data-contact-live="bluesky"]')).toHaveText('1.2K followers');
   await expect(page.locator('[data-contact-live="github"]')).toHaveText('54 repos');
 });
