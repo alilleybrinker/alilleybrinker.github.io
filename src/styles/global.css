@@ -1704,3 +1704,87 @@ a,
   outline: 2px solid var(--color-accent);
   outline-offset: -2px;
 }
+
+/* About's note on Andrew's name (about.astro): the name set large, with a
+   bracket under each part saying which it is, so "two parts, no hyphen"
+   shows before it's read; then his own words. Set between hairlines in the
+   page rather than boxed. */
+.name-plate {
+  margin-block: 3rem;
+  padding-block: 1.75rem 0.5rem;
+  border-block: 1px solid rgb(0 0 0 / 0.08);
+}
+
+.dark .name-plate {
+  border-color: rgb(255 255 255 / 0.1);
+}
+
+.name-plate-label {
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.name-plate-name {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.32em;
+  margin-top: 1rem;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 7vw, 3.25rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  color: black;
+}
+
+.dark .name-plate-name {
+  color: white;
+}
+
+.name-plate-part {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* The bracket: a hairline under the part, turned up at both ends, with the
+   part's name beneath it. */
+.name-plate-bracket {
+  position: relative;
+  margin-top: 0.35rem;
+  padding-top: 0.9rem;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.name-plate-bracket::before {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 0.45rem;
+  border: 1px solid var(--color-muted);
+  border-top: 0;
+  content: "";
+}
+
+.name-plate > p:not(.not-prose) {
+  margin-top: 1.5rem;
+}
+
+.name-plate > p:not(.not-prose) + p {
+  margin-top: 0.75rem;
+}
+
+@media print {
+  .name-plate-bracket::before {
+    border-color: black;
+  }
+}
