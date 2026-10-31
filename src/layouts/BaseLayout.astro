@@ -128,7 +128,7 @@ const jsonLd = (data: Record<string, unknown>) => JSON.stringify(data).replace(/
       <header transition:name="site-header" transition:animate="none" class="relative z-20 pt-8 pb-0 mb-4 text-black dark:text-neutral-100 text-base md:pt-16 md:text-lg px-5 md:px-0 md:max-w-(--breakpoint-md) md:mx-auto">
         <nav class="flex items-center gap-2 font-normal" aria-label="Primary navigation">
           <a href="/" class="site-logo inline-flex min-w-0 items-center gap-2 whitespace-nowrap leading-none hover:underline font-semibold">
-            <span class="relative size-12 shrink-0 md:size-16 md:-ml-[4.5rem]">
+            <span class="relative size-12 shrink-0 md:size-16 lg:-ml-[4.5rem]">
               <span aria-hidden="true" class="site-logo-fill"></span>
               <span aria-hidden="true" class="site-logo-backdrop absolute inset-0 rounded-full dark:bg-neutral-300"></span>
               <span aria-hidden="true" class="site-logo-face"></span>
@@ -136,10 +136,11 @@ const jsonLd = (data: Record<string, unknown>) => JSON.stringify(data).replace(/
             </span>
             <span class="truncate">Andrew Lilley Brinker</span>
           </a>
-          <a href="/about/" class="hidden md:ml-4 md:inline-flex md:items-center leading-none hover:underline">About</a>
-          <a href="/reading/" class="hidden md:ml-4 md:inline-flex md:items-center leading-none hover:underline">Reading</a>
-          <a href="/projects/" class="hidden md:ml-4 md:inline-flex md:items-center leading-none hover:underline">Projects</a>
-          <div class="ml-auto hidden shrink-0 items-center gap-2 md:-mr-6 md:flex">
+          <a href="/about/" class="hidden lg:ml-4 lg:inline-flex lg:items-center leading-none hover:underline">About</a>
+          <a href="/reading/" class="hidden lg:ml-4 lg:inline-flex lg:items-center leading-none hover:underline">Reading</a>
+          <a href="/projects/" class="hidden lg:ml-4 lg:inline-flex lg:items-center leading-none hover:underline">Projects</a>
+          <a href="/talks/" class="hidden lg:ml-4 lg:inline-flex lg:items-center leading-none hover:underline">Talks</a>
+          <div class="ml-auto hidden shrink-0 items-center gap-2 lg:-mr-6 lg:flex">
             <button type="button" data-command-palette-open aria-keyshortcuts="Meta+K Control+K /" class="mr-1 flex h-8 cursor-pointer items-center gap-2 rounded-full bg-neutral-500/10 pl-3 pr-2 text-sm text-neutral-600 hover:bg-neutral-500/15 hover:text-black dark:text-muted dark:hover:text-white">
               <svg aria-hidden="true" viewBox="0 0 20 20" class="size-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><circle cx="8.5" cy="8.5" r="5.75" /><path d="m13 13 4.25 4.25" /></svg>
               <span class="sr-only">Search</span>
@@ -149,7 +150,7 @@ const jsonLd = (data: Record<string, unknown>) => JSON.stringify(data).replace(/
             <a href="https://github.com/alilleybrinker" aria-label="GitHub" class="flex size-8 items-center justify-center text-neutral-400 hover:text-neutral-500"><Icon name="github" class="!h-5 !w-5" /></a>
             <ThemeSwitcher />
           </div>
-          <div class="ml-auto flex items-center gap-2 md:hidden">
+          <div class="ml-auto flex items-center gap-2 lg:hidden">
             <button type="button" data-command-palette-open aria-label="Search" class="flex size-8 cursor-pointer items-center justify-center rounded-full bg-neutral-500/10 text-neutral-600 hover:bg-neutral-500/15 hover:text-black dark:text-muted dark:hover:text-white">
               <svg aria-hidden="true" viewBox="0 0 20 20" class="size-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><circle cx="8.5" cy="8.5" r="5.75" /><path d="m13 13 4.25 4.25" /></svg>
             </button>
@@ -162,6 +163,7 @@ const jsonLd = (data: Record<string, unknown>) => JSON.stringify(data).replace(/
                 <li><a href="/about/" class="block rounded-full px-4 py-2 hover:bg-neutral-500/10">About</a></li>
                 <li><a href="/reading/" class="block rounded-full px-4 py-2 hover:bg-neutral-500/10">Reading</a></li>
                 <li><a href="/projects/" class="block rounded-full px-4 py-2 hover:bg-neutral-500/10">Projects</a></li>
+                <li><a href="/talks/" class="block rounded-full px-4 py-2 hover:bg-neutral-500/10">Talks</a></li>
                 <li class="flex items-center gap-1 px-2.5 pb-1">
                   <a href="https://bsky.app/profile/alilleybrinker.com" aria-label="Bluesky" class="flex size-8 items-center justify-center rounded-full text-neutral-400 hover:bg-neutral-500/10 hover:text-neutral-500"><Icon name="bluesky" class="!h-5 !w-5" /></a>
                   <a href="https://github.com/alilleybrinker" aria-label="GitHub" class="flex size-8 items-center justify-center rounded-full text-neutral-400 hover:bg-neutral-500/10 hover:text-neutral-500"><Icon name="github" class="!h-5 !w-5" /></a>
