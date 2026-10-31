@@ -124,7 +124,8 @@ test('every page ends with a footer that names the newest post and opens search'
   const latest = footer.getByRole('navigation').or(footer.locator('section')).locator('a').first();
   const href = await latest.getAttribute('href');
   expect(href).toMatch(/^(\/blog\/|https?:)/);
-  for (const name of ['RSS', 'Bluesky', 'Topics', 'About', 'Colophon']) await expect(footer.getByRole('link', { name, exact: true })).toBeVisible();
+  for (const name of ['Bluesky', 'Topics', 'About', 'Colophon']) await expect(footer.getByRole('link', { name, exact: true })).toBeVisible();
+  await expect(footer.getByText('Choose a feed')).toBeVisible();
   // The newest post's own page doesn't point at itself.
   if (href!.startsWith('/')) {
     await page.goto(href!);
@@ -231,10 +232,23 @@ test('the AI policy has its own page, linked from the footer, and old links to i
   await expect(page).toHaveURL(/\/talks\/$/);
 });
 
-test('the footer keeps feeds apart from profiles elsewhere', async ({ page }) => {
+test('the footer keeps feeds apart from profiles elsewhere, every feed in one menu', async ({ page, context, request }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await page.goto('/');
-  const feeds = page.locator('footer nav[aria-labelledby="footer-feeds-heading"]');
   const follow = page.locator('footer nav[aria-labelledby="footer-follow-heading"]');
-  await expect(feeds.getByRole('link')).toHaveText(['RSS', 'Atom', 'Reading feed', 'topic']);
   await expect(follow.getByRole('link')).toHaveText(['Bluesky', 'Mastodon', 'GitHub', 'LinkedIn']);
+  const menu = page.locator('[data-feeds-menu]');
+  await menu.locator('summary').click();
+  const links = menu.locator('.feeds-menu-link');
+  await expect(links.first()).toBeVisible();
+  const hrefs = await links.evaluateAll((all) => all.map((link) => link.getAttribute('href')!));
+  expect(hrefs.slice(0, 3)).toEqual(['/rss.xml', '/atom.xml', '/reading/rss.xml']);
+  expect(hrefs.length).toBeGreaterThan(8);
+  expect(hrefs.filter((href) => href.startsWith('/topics/')).length).toBe(hrefs.length - 3);
+  expect(hrefs).not.toContain('/mini/atom.xml');
+  for (const href of hrefs) expect((await request.get(href)).status(), href).toBe(200);
+  await menu.getByRole('button', { name: /Copy the All posts RSS feed/ }).click();
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(new URL('/rss.xml', page.url()).href);
+  await page.keyboard.press('Escape');
+  await expect(menu).not.toHaveAttribute('open');
 });
