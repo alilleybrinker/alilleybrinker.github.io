@@ -45,3 +45,17 @@ test('the home-screen and tab icons are opaque', async ({ page }) => {
     expect(minAlpha, href).toBe(255);
   }
 });
+
+test('every page but the home page and 404 shares an image of its own', async ({ page, request }) => {
+  const seen = new Set<string>();
+  for (const path of ['/about/', '/projects/', '/reading/', '/colophon/', '/topics/', '/talks/a-tale-of-teaching-rust/', POST]) {
+    await page.goto(path);
+    const image = await page.locator('meta[property="og:image"]').getAttribute('content');
+    expect(image, path).not.toMatch(/\/social\/home\.png$/);
+    expect(seen.has(image!), `${path} shares ${image} with another page`).toBe(false);
+    seen.add(image!);
+    const response = await request.get(new URL(image!).pathname);
+    expect(response.status(), image!).toBe(200);
+    expect(response.headers()['content-type']).toBe('image/png');
+  }
+});

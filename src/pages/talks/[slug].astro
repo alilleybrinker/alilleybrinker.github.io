@@ -38,7 +38,7 @@ const structuredData = {
 };
 ---
 
-<BaseLayout title={talk.title} description={talk.description} structuredData={structuredData}>
+<BaseLayout title={talk.title} description={talk.description} structuredData={structuredData} socialImage={`/social/talk-${talkSlug(talk)}.png`} socialImageAlt={talk.title}>
   <article class="post-body talk">
     <h1 class="block mb-5 text-3xl md:text-4xl"><span data-page-title class="resolve-in leading-[1.15] block mb-4 font-display">{talk.title}</span><span class="font-sans flex flex-wrap items-center gap-2 text-sm md:text-base text-muted"><span>{talk.type === 'panel' ? 'Panel at' : 'Talk at'} {talk.event_link ? <a class="!text-muted" href={talk.event_link}>{talk.event}</a> : talk.event}</span><span aria-hidden="true" class="font-black text-muted">·</span><time datetime={talk.date}>{longDate}</time></span></h1>
     {talk.description && <p class="talk-lede">{talk.description}</p>}
