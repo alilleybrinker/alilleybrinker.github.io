@@ -154,3 +154,29 @@ test('the reading page offers its own feed', async ({ page, request }) => {
   expect(feed.ok()).toBe(true);
   expect(await feed.text()).toContain('<title>Andrew Lilley Brinker: Reading</title>');
 });
+
+test('each talk has a page, linked from About, whose recording loads only when played', async ({ page }) => {
+  const youtube: string[] = [];
+  await page.route(/youtube/, (route) => {
+    youtube.push(route.request().url());
+    return route.fulfill({ body: '<!doctype html><title>Player</title>' });
+  });
+  await page.goto('/about/');
+  await page.locator('#talks ~ article a', { hasText: 'A Tale of Teaching Rust' }).click();
+  await expect(page).toHaveURL(/\/talks\/a-tale-of-teaching-rust\/$/);
+  await expect(page.locator('h1')).toContainText('A Tale of Teaching Rust');
+  await expect(page.locator('.talk-plate-field path')).toHaveAttribute('d', /M/);
+  expect(youtube).toEqual([]);
+  await page.getByRole('link', { name: 'Play the recording' }).click();
+  const frame = page.locator('[data-talk-plate] iframe');
+  await expect(frame).toHaveAttribute('src', /^https:\/\/www\.youtube-nocookie\.com\/embed\/0PhfaFkzdBA\?/);
+  await expect(page.getByRole('heading', { name: 'Other talks' })).toBeVisible();
+});
+
+test('a talk lists posts on its subject, and only strong matches', async ({ page }) => {
+  await page.goto('/talks/memory-safety-and-the-future-of-vulnerabilities/');
+  await expect(page.getByRole('heading', { name: 'Writing on this' })).toBeVisible();
+  await expect(page.locator('section', { hasText: 'Writing on this' }).getByRole('link', { name: 'C++ Must Become Safer' })).toBeVisible();
+  await page.goto('/talks/a-tale-of-teaching-rust/');
+  await expect(page.getByRole('heading', { name: 'Writing on this' })).toHaveCount(0);
+});

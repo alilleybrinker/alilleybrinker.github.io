@@ -3,8 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import BlueskyProfileCard from "../components/BlueskyProfileCard.astro";
 import GitHubProfileCard from "../components/GitHubProfileCard.astro";
 import Icon from "../components/Icon.astro";
-import talksData from "../../content/talks/talks.json";
-const talks = [...talksData.talks].sort((a, b) => b.date.localeCompare(a.date));
+import { talkPath, talks } from "../lib/talks";
 ---
 
 <BaseLayout
@@ -107,7 +106,7 @@ const talks = [...talksData.talks].sort((a, b) => b.date.localeCompare(a.date));
                 <h4 class="!m-0 !mb-1 !font-sans !text-lg !font-normal">
                     <a
                         class="group !no-underline text-black dark:text-white"
-                        href={talk.talk_link}
+                        href={talkPath(talk)}
                     >
                         <span class="dither-underline">{talk.title}</span>
                     </a>
