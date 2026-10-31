@@ -5,7 +5,7 @@ import { byNewest, isListedPost, postDate, postPath, postUpdated, topicSlug } fr
 
 // Every page worth finding, for search engines: the top-level pages, each
 // listed post, each topic and each talk. Redirects (/blog/, /topics/, /mini/, /name/,
-// /ai/, /talks/) and unlisted posts are left out. A post's date is when it was last
+// /ai/) and unlisted posts are left out. A post's date is when it was last
 // updated, else published; the home page and topics take their newest post's.
 export const GET: APIRoute = async ({ site }) => {
   const posts = (await getCollection('blog')).filter(isListedPost).sort(byNewest);
@@ -18,6 +18,7 @@ export const GET: APIRoute = async ({ site }) => {
     ['/about/'],
     ['/reading/'],
     ['/projects/'],
+    ['/talks/'],
     ['/colophon/'],
     ['/topics/', newest(posts)],
     ...posts.filter((post) => !post.data.externalUrl).map((post): [string, string] => [postPath(post), day(changed(post))]),

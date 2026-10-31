@@ -1,0 +1,102 @@
+---
+// Picking a long post back up: how far through it a reader got is kept in
+// their own browser, and when they come back, a pill offers to return them
+// there and a mark on the reading-progress line shows where it is. Nothing
+// leaves the browser, and a place is forgotten after 30 days, once the post
+// is finished, or when the pill is dismissed.
+---
+
+<div class="resume-reading not-prose" data-resume hidden>
+  <button type="button" class="share-action share-action-quiet resume-reading-go" data-resume-go>Pick up where you left off</button>
+  <button type="button" class="resume-reading-close" data-resume-close aria-label="Dismiss">×</button>
+</div>
+<div class="resume-reading-mark" data-resume-mark aria-hidden="true" hidden></div>
+
+<script>
+  const KEY = 'reading-places';
+  const DAY = 24 * 60 * 60 * 1000;
+  // Places nearer the start or the end than this aren't worth offering.
+  const MIN = 0.08;
+  const MAX = 0.92;
+
+  type Places = Record<string, { at: number; saved: number }>;
+
+  function load(): Places {
+    try {
+      const places = JSON.parse(localStorage.getItem(KEY) ?? '{}') as Places;
+      for (const [path, place] of Object.entries(places)) if (Date.now() - place.saved > 30 * DAY) delete places[path];
+      return places;
+    } catch {
+      return {};
+    }
+  }
+
+  function store(places: Places) {
+    try {
+      localStorage.setItem(KEY, JSON.stringify(places));
+    } catch {
+      // Without storage there's simply nothing to pick up.
+    }
+  }
+
+  const fraction = () => scrollY / Math.max(1, document.documentElement.scrollHeight - innerHeight);
+
+  let controller: AbortController | undefined;
+
+  function init() {
+    controller?.abort();
+    const box = document.querySelector<HTMLElement>('[data-resume]');
+    const mark = document.querySelector<HTMLElement>('[data-resume-mark]');
+    if (!box || !mark) return;
+    controller = new AbortController();
+    const { signal } = controller;
+    const path = location.pathname;
+    const saved = load()[path];
+
+    const hide = () => {
+      box.hidden = true;
+      mark.hidden = true;
+    };
+    const forget = () => {
+      const places = load();
+      delete places[path];
+      store(places);
+    };
+
+    // Offered only on arriving at the top, not when a link points into the
+    // post or the browser has already restored the place.
+    if (saved && saved.at > MIN && saved.at < MAX && !location.hash && scrollY < 50) {
+      box.hidden = false;
+      mark.hidden = false;
+      mark.style.left = `${(saved.at * 100).toFixed(2)}%`;
+    }
+
+    box.addEventListener('click', (event) => {
+      const target = event.target as Element;
+      if (target.closest('[data-resume-go]') && saved) {
+        hide();
+        scrollTo({ top: saved.at * (document.documentElement.scrollHeight - innerHeight), behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      } else if (target.closest('[data-resume-close]')) {
+        hide();
+        forget();
+      }
+    }, { signal });
+
+    // Reading on past the start puts the pill away; the place is saved as
+    // the reader goes, a moment after each scroll settles.
+    let timer = 0;
+    addEventListener('scroll', () => {
+      if (!box.hidden && scrollY > innerHeight / 2) box.hidden = true;
+      clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        const at = fraction();
+        const places = load();
+        if (at >= MAX) delete places[path];
+        else if (at > MIN) places[path] = { at, saved: Date.now() };
+        store(places);
+      }, 400);
+    }, { passive: true, signal });
+  }
+
+  document.addEventListener('astro:page-load', init);
+</script>

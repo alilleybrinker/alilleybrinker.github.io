@@ -1,5 +1,6 @@
 import GithubSlugger from 'github-slugger';
 import talksData from '../../content/talks/talks.json';
+import { ditherPath, fieldFor, fieldValue, smoothstep } from './dither-pattern';
 import type { Post } from './site';
 
 export type Talk = (typeof talksData.talks)[number] & {
@@ -23,6 +24,13 @@ export function talkDate(talk: Talk) {
 
 // Newest first.
 export const talks: Talk[] = [...talksData.talks].sort((a, b) => b.date.localeCompare(a.date));
+
+// A talk's plate: its own field, as the project plates and posts have, as
+// an SVG path over a grid of columns by rows of one-unit cells.
+export function talkPlate(talk: Talk, columns: number, rows: number) {
+  const shape = fieldFor(talkPath(talk));
+  return ditherPath(columns, rows, 1, (u, v) => 0.4 * smoothstep(0.1, 1.2, fieldValue(shape, u, v, columns, rows) + 0.25));
+}
 
 // The recording's YouTube id, for the player that loads on request.
 export function youtubeId(link?: string) {

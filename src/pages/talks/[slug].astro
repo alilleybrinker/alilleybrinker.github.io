@@ -2,9 +2,8 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PostRow from '../../components/PostRow.astro';
-import { ditherPath, fieldFor, fieldValue, smoothstep } from '../../lib/dither-pattern';
 import { byNewest, isListedPost } from '../../lib/site';
-import { relatedPosts, talkDate, talkPath, talks, talkSlug, youtubeId, type Talk } from '../../lib/talks';
+import { relatedPosts, talkDate, talkPath, talkPlate, talks, talkSlug, youtubeId, type Talk } from '../../lib/talks';
 
 export function getStaticPaths() {
   return talks.map((talk) => ({ params: { slug: talkSlug(talk) }, props: { talk } }));
@@ -18,12 +17,10 @@ const related = relatedPosts(talk, posts);
 const others = talks.filter((other) => other !== talk);
 const video = youtubeId(talk.video_link);
 
-// The talk's plate: its own field, as the project plates and posts have, in
-// cells of the page's dither, drawn across a 16:9 frame.
+// The talk's plate, in cells of the page's dither, across a 16:9 frame.
 const columns = 272;
 const rows = 153;
-const shape = fieldFor(path);
-const plate = ditherPath(columns, rows, 1, (u, v) => 0.4 * smoothstep(0.1, 1.2, fieldValue(shape, u, v, columns, rows) + 0.25));
+const plate = talkPlate(talk, columns, rows);
 
 const structuredData = {
   '@context': 'https://schema.org',

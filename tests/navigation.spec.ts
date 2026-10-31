@@ -180,3 +180,39 @@ test('a talk lists posts on its subject, and only strong matches', async ({ page
   await page.goto('/talks/a-tale-of-teaching-rust/');
   await expect(page.getByRole('heading', { name: 'Writing on this' })).toHaveCount(0);
 });
+
+test('the talks page lists every talk, newest first, each opening its own page', async ({ page }) => {
+  await page.goto('/talks/');
+  await expect(page.locator('h1')).toHaveText('Talks');
+  const titles = page.locator('.talk-row .dither-underline');
+  await expect(titles).toHaveCount(4);
+  await expect(titles.first()).toHaveText('Memory Safety and the Future of Vulnerabilities');
+  await expect(titles.last()).toHaveText('Hello and Welcome: Documentation in the Rust Ecosystem');
+  await page.getByRole('link', { name: /A Tale of Teaching Rust/ }).click();
+  await expect(page).toHaveURL(/\/talks\/a-tale-of-teaching-rust\/$/);
+});
+
+test('coming back to a long post offers to pick up where the reader left off', async ({ page }) => {
+  await page.goto(POST);
+  await expect(page.locator('[data-resume]')).toBeHidden();
+  const middle = await page.evaluate(() => (document.documentElement.scrollHeight - innerHeight) * 0.5);
+  await page.evaluate((top) => scrollTo(0, top), middle);
+  await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem('reading-places') ?? '{}'))).toHaveProperty([new URL(page.url()).pathname]);
+
+  await page.goto('/');
+  await page.goto(POST);
+  const resume = page.locator('[data-resume]');
+  await expect(resume).toBeVisible();
+  await expect(page.locator('[data-resume-mark]')).toBeVisible();
+  await page.getByRole('button', { name: 'Pick up where you left off' }).click();
+  await expect(resume).toBeHidden();
+  await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(middle * 0.9);
+
+  // Dismissing it forgets the place.
+  await page.goto('/');
+  await page.goto(POST);
+  await page.getByRole('button', { name: 'Dismiss' }).click();
+  await page.goto('/');
+  await page.goto(POST);
+  await expect(resume).toBeHidden();
+});
