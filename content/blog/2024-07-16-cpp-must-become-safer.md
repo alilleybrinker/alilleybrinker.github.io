@@ -297,7 +297,7 @@ of less memory-safe languages like Java.
 
 Indeed, Sean Baxter, who proposed the vote described above on the C++
 standards committee pursuing memory, is also working on one of multiple
-successor-language projects for C++: [Circle](https://www.circle-lang.org/site/intro/).
+successor-language projects for C++: [Circle](https://www.circle-lang.org/site/).
 This is item 3 in Steve Klabnik's list, which includes (known to me, at least):
 
 - Circle
