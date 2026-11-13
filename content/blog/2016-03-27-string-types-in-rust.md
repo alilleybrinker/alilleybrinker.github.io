@@ -221,7 +221,7 @@ Updated (3/29/2016):
   on Hacker News.
 - Clarified the wording of the unicode explanation, based on feedback from
   [nothrabannosir][not], also on Hacker News.
-- Fixed a typo based on feedback from [respeccing][res] on Twitter.
+- Fixed a typo based on feedback from respeccing on Twitter.
 - Reworded the transition into the explanation of "owned" string types, based
   on feedback from [bjzaba][bjz] from the Rust subreddit.
 
@@ -246,5 +246,4 @@ Updated (3/31/2016):
 [ilo]: https://www.reddit.com/r/rust/comments/4c7wq2/string_types_in_rust/d1fyvjo "Feedback from Ilogiq on the Rust subreddit"
 [rka]: https://news.ycombinator.com/item?id=11380530 "Feedback from rkangel on Hacker News"
 [not]: https://news.ycombinator.com/item?id=11379308 "Feedback from nothrabannosir on Hacker News"
-[res]: https://twitter.com/respeccing/status/714551241615998976 "Feedback from respeccing on Twitter"
 [bjz]: https://www.reddit.com/r/rust/comments/4c7wq2/string_types_in_rust/d1hbnmp "Feedback from bjzaba on the Rust subreddit"
