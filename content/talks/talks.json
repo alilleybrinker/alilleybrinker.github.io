@@ -5,8 +5,8 @@
       "title": "Hello and Welcome: Documentation in the Rust Ecosystem",
       "event": "Rust Belt Rust 2016",
       "date": "2016-10-28",
-      "event_link": "https://conf2016.rust-belt-rust.com/",
-      "talk_link": "https://conf2016.rust-belt-rust.com/sessions/#:~:text=Hello%20and%20Welcome%20%2D%20Documentation%20in%20the%20Rust%20Ecosystem",
+      "event_link": "https://web.archive.org/web/2016/https://conf2016.rust-belt-rust.com/",
+      "talk_link": "https://web.archive.org/web/2016/https://conf2016.rust-belt-rust.com/sessions/#:~:text=Hello%20and%20Welcome%20%2D%20Documentation%20in%20the%20Rust%20Ecosystem",
       "video_link": "https://www.youtube.com/watch?v=Wz2oFEDwiOk",
       "slides_link": "https://speakerdeck.com/alilleybrinker/hello-and-welcome-documentation-in-the-rust-ecosystem",
       "description": "An examination of documentation quality in the Rust ecosystem, with practical ways maintainers and contributors can make crate documentation more discoverable, complete, and welcoming."

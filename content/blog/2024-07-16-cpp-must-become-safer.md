@@ -297,7 +297,7 @@ of less memory-safe languages like Java.
 
 Indeed, Sean Baxter, who proposed the vote described above on the C++
 standards committee pursuing memory, is also working on one of multiple
-successor-language projects for C++: [Circle](https://www.circle-lang.org/site/intro/).
+successor-language projects for C++: [Circle](https://www.circle-lang.org/site/).
 This is item 3 in Steve Klabnik's list, which includes (known to me, at least):
 
 - Circle
@@ -371,7 +371,7 @@ I hope we can all have a little more empathy, a little more nuance, and a
 little less of an Evangelism Strike Force in the future.
 
 [consumer-reports]: https://advocacy.consumerreports.org/research/report-future-of-memory-safety/
-[memory-safety-report]: https://www.whitehouse.gov/oncd/briefing-room/2024/02/26/press-release-technical-report/
+[memory-safety-report]: https://bidenwhitehouse.archives.gov/oncd/briefing-room/2024/02/26/press-release-technical-report/
 [roadmaps]: https://media.defense.gov/2023/Dec/06/2003352724/-1/-1/0/THE-CASE-FOR-MEMORY-SAFE-ROADMAPS-TLP-CLEAR.PDF
 [microsoft]: https://msrc.microsoft.com/blog/2019/07/a-proactive-approach-to-more-secure-code/
 [apple]: https://langui.sh/2019/07/23/apple-memory-safety/

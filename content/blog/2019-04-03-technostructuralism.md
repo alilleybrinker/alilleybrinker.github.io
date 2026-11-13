@@ -23,7 +23,7 @@ circles: believing working harder will solve a problem.
 
 <aside class="info-callout" aria-labelledby="twitter-thread-reproduction">
   <p id="twitter-thread-reproduction" class="info-callout-title">This is a reproduction of a Twitter thread</p>
-  <p>The following is a reproduction of a thread I'd posted on Twitter back in 2019. I am sharing it here because Twitter has increasingly locked content behind a login prompt and I'd like to be able to refer people to this material without them having to have a Twitter/X account. The original thread can be found at <a href="https://twitter.com/alilleybrinker/status/1113538427855757313">Twitter</a>. The version reproduced here is done without the thread-markers, @-references, and hashtags which were used in the original.</p>
+  <p>The following is a reproduction of a thread I'd posted on Twitter back in 2019. I am sharing it here because Twitter has increasingly locked content behind a login prompt and I'd like to be able to refer people to this material without them having to have a Twitter/X account. The original thread can be found at <a href="https://web.archive.org/web/2019/https://twitter.com/alilleybrinker/status/1113538427855757313">Twitter</a>. The version reproduced here is done without the thread-markers, @-references, and hashtags which were used in the original.</p>
 </aside>
 
 This comes up with people defending C, who argue "people should write better C." Of
@@ -71,5 +71,5 @@ I know which side I prefer. Hopefully (maybe with a name, mine or someone else's
 the technostructuralists can come out of the closet and unify their technology with
 their politics. At the very least, let's move the conversation.
 
-[twitter]: https://twitter.com/alilleybrinker/status/1113538427855757313
-[steve]: https://words.steveklabnik.com/what-comes-after-open-source
+[twitter]: https://web.archive.org/web/2019/https://twitter.com/alilleybrinker/status/1113538427855757313
+[steve]: https://steveklabnik.com/writing/what-comes-after-open-source
