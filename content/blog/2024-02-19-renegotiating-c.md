@@ -194,7 +194,7 @@ look below me and remember, "[Some Were Meant for C][3]".
 [3]: https://www.humprog.org/~stephen/research/papers/kell17some-preprint.pdf
 [4]: https://github.com/alilleybrinker
 [5]: https://www.youtube.com/watch?v=Wz2oFEDwiOk
-[6]: https://prev.rust-lang.org/en-US/faq.html
+[6]: https://web.archive.org/web/2024/https://prev.rust-lang.org/en-US/faq.html
 [7]: https://www.youtube.com/watch?v=0PhfaFkzdBA
 [8]: https://www.youtube.com/watch?v=iSmkqocn0oQ
 [9]: https://alexgaynor.net/2020/may/27/science-on-memory-unsafety-and-security/

@@ -731,7 +731,7 @@ Approved for Public Release; Distribution Unlimited. Public Release Case Number 
 
 The author's affiliation with The MITRE Corporation is provided for identification purposes only, and is not intended to convey or imply MITRE's concurrence with, or support for, the positions, opinions, or viewpoints expressed by the author. ©2025 The MITRE Corporation. ALL RIGHTS RESERVED.
 
-[Christine Peterson]: https://foresight.org/our-team/christine-peterson-co-founder-past-president/
+[Christine Peterson]: https://foresight.org/people/christine-l-peterson/
 [Open Source Initiative]: https://opensource.org/about
 ["Open Source Definition,"]: https://opensource.org/osd
 ["The New Kingmakers" by Stephen O'Grady]: https://thenewkingmakers.com/
@@ -744,7 +744,7 @@ The author's affiliation with The MITRE Corporation is provided for identificati
 [ashley]: https://oxide.computer/podcasts/oxide-and-friends/1367163
 [openssf]: https://openssf.org/
 [Scorecard]: https://scorecard.dev/
-[relicense]: https://redmonk.com/jgovernor/2024/09/13/open-source-foundations-considered-helpful/
+[relicense]: https://redmonk.com/jgovernor/open-source-foundations-considered-helpful/
 [cantrill]: https://www.youtube.com/watch?v=Xhx970_JKX4
 [single-vendor]: https://opensource.net/why-single-vendor-is-the-new-proprietary/
 [facebook_oss]: https://engineering.fb.com/2020/05/08/web/facebook-redesign/
@@ -760,6 +760,6 @@ The author's affiliation with The MITRE Corporation is provided for identificati
 [Hazel Weakly]: https://hazelweakly.me/
 [typescript]: https://bsky.app/profile/macwright.com/post/3lgiqobidzc2u
 [Nivenly Foundation Fellow]: https://nivenly.org/who/
-[Axo.dev]: https://axo.dev/
+[Axo.dev]: https://web.archive.org/web/2025/https://axo.dev/
 [Rust Foundation]: https://rustfoundation.org/
 [Haskell Foundation]: https://haskell.foundation/who-we-are/

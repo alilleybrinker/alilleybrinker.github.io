@@ -240,7 +240,7 @@ Updated (3/31/2016):
 [cow]: https://doc.rust-lang.org/std/borrow/enum.Cow.html "Rustdoc for the Cow type"
 [to_owned]: https://doc.rust-lang.org/std/borrow/trait.ToOwned.html#tymethod.to_owned "Rustdoc for the to_owned function"
 [toowned]: https://doc.rust-lang.org/std/borrow/trait.ToOwned.html "Rustdoc for the ToOwned trait"
-[why-utf8]: https://www.rust-lang.org/faq.html#why-are-strings-utf-8 "Rust FAQ answer about why UTF-8 is the standard encoding for Rust strings"
+[why-utf8]: https://web.archive.org/web/2016/https://www.rust-lang.org/faq.html#why-are-strings-utf-8 "Rust FAQ answer about why UTF-8 is the standard encoding for Rust strings"
 [rustonomicon]: https://doc.rust-lang.org/nomicon/exotic-sizes.html#dynamically-sized-types-dsts "Rustonomicon section on dynamically-sized types"
 [cry]: https://www.reddit.com/r/rust/comments/4c7wq2/string_types_in_rust/d1fsxd4 "Feedback from CryZe92 on the Rust subreddit"
 [ilo]: https://www.reddit.com/r/rust/comments/4c7wq2/string_types_in_rust/d1fyvjo "Feedback from Ilogiq on the Rust subreddit"
