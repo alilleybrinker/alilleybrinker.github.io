@@ -5,7 +5,8 @@
 //   node scripts/check-links.mjs [dist] [report.md]
 //
 // Reads every page in dist (but the reading page, whose links are articles
-// shared as they were), checks each outside link once, and writes a Markdown
+// shared as they were), checks each outside link once (but the share box's
+// links that start a conversation with Claude, which aren't pages), and writes a Markdown
 // report of the broken ones and the pages they're on. A link is broken when
 // it answers 404 or 410, or a server error or no answer at all twice in a
 // row. Sites that turn away checkers (401, 403, 429) can't be judged, so
@@ -17,6 +18,7 @@ import path from 'node:path';
 const root = path.resolve(process.argv[2] ?? 'dist');
 const reportFile = process.argv[3] ?? 'links-report.md';
 const OWN_HOSTS = new Set(['www.alilleybrinker.com', 'alilleybrinker.com']);
+const SKIPPED_HOSTS = new Set(['claude.ai']);
 const SKIPPED_PAGES = [/^reading\//];
 const BROKEN = new Set([404, 410]);
 const UNJUDGED = new Set([401, 403, 429, 999]);
@@ -47,7 +49,7 @@ for (const file of await pages(root)) {
     } catch {
       continue;
     }
-    if (OWN_HOSTS.has(url.hostname)) continue;
+    if (OWN_HOSTS.has(url.hostname) || SKIPPED_HOSTS.has(url.hostname)) continue;
     url.hash = '';
     const key = url.href;
     if (!links.has(key)) links.set(key, new Set());
