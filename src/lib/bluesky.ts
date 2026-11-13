@@ -360,6 +360,26 @@ async function withConcurrency<T, R>(items: T[], limit: number, work: (item: T) 
   return results;
 }
 
+// Bluesky's public API now and then answers slowly or with a server error
+// for a moment. Each page of the feed is tried up to three times, a few
+// seconds apart, before the build gives up; the page isn't built from a
+// partial or empty feed.
+async function fetchFeedPage(url: URL) {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      const response = await fetch(url, { signal: AbortSignal.timeout(15_000) });
+      if (response.ok) return response;
+      if (response.status < 500 || attempt === 3) throw new Error(`Unable to load Bluesky feed: ${response.status}`);
+      console.warn(`Bluesky feed: ${response.status}, trying again`);
+    } catch (error) {
+      const retryable = error instanceof Error && (error.name === 'TimeoutError' || error.name === 'TypeError');
+      if (!retryable || attempt === 3) throw error;
+      console.warn(`Bluesky feed: ${error.message}, trying again`);
+    }
+    await new Promise((resolve) => setTimeout(resolve, attempt * 3000));
+  }
+}
+
 async function loadReadingItems() {
   const items = new Map<string, ReadingItem>();
   let cursor: string | undefined;
@@ -371,8 +391,7 @@ async function loadReadingItems() {
     url.searchParams.set('limit', '100');
     if (cursor) url.searchParams.set('cursor', cursor);
 
-    const response = await fetch(url, { signal: AbortSignal.timeout(10_000) });
-    if (!response.ok) throw new Error(`Unable to load Bluesky feed: ${response.status}`);
+    const response = await fetchFeedPage(url);
 
     const data = await response.json() as AuthorFeedResponse;
     for (const { post } of data.feed) {

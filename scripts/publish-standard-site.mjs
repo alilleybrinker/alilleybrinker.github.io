@@ -89,8 +89,25 @@ export function postFromFile(filename, source) {
   };
 }
 
+// The PDS now and then answers a request with a server error, or not at
+// all, for a moment; a request that fails that way is tried twice more, a few
+// seconds apart, before the run gives up.
+async function fetchWithRetry(url, options) {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      const response = await fetch(url, options);
+      if (response.status < 500 || attempt === 3) return response;
+      console.warn(`${url}: ${response.status}, trying again`);
+    } catch (error) {
+      if (attempt === 3) throw error;
+      console.warn(`${url}: ${error.message}, trying again`);
+    }
+    await new Promise((resolve) => setTimeout(resolve, attempt * 3000));
+  }
+}
+
 async function xrpc(service, method, body, token) {
-  const response = await fetch(`${service}/xrpc/${method}`, {
+  const response = await fetchWithRetry(`${service}/xrpc/${method}`, {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
@@ -103,7 +120,7 @@ async function xrpc(service, method, body, token) {
 }
 
 async function uploadBlob(service, file, mimeType, token) {
-  const response = await fetch(`${service}/xrpc/com.atproto.repo.uploadBlob`, {
+  const response = await fetchWithRetry(`${service}/xrpc/com.atproto.repo.uploadBlob`, {
     method: 'POST',
     headers: {
       'content-type': mimeType,

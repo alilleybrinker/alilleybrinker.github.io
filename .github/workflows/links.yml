@@ -1,9 +1,9 @@
 name: Check links
 
-# Once a week, checks the links from the site to other sites and keeps one
-# issue, "Broken links", listing any that no longer work: opened or updated
-# when some are broken, closed when none are. It never blocks a deploy. It can
-# also be run by hand from the GitHub Actions page.
+# Once a week, checks the links from the site to other sites and writes a
+# report of any that no longer work on the run's summary page, under Actions.
+# Broken links don't fail the run, and it never blocks a deploy. It can also
+# be run by hand from the GitHub Actions page.
 on:
   schedule:
     - cron: "41 15 * * 1"
@@ -17,7 +17,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      issues: write
 
     steps:
       - name: Checkout Repository
@@ -45,19 +44,13 @@ jobs:
         id: check
         run: echo "broken=$(node scripts/check-links.mjs dist links-report.md)" >> "$GITHUB_OUTPUT"
 
-      - name: Report in the "Broken links" issue
+      - name: Report on the run's summary page
         env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
           BROKEN: ${{ steps.check.outputs.broken }}
         run: |
-          issue=$(gh issue list --state open --search 'in:title "Broken links"' --json number,title --jq '[.[] | select(.title == "Broken links")][0].number // empty')
-          if [ "$BROKEN" -gt 0 ]; then
-            if [ -n "$issue" ]; then
-              gh issue edit "$issue" --body-file links-report.md
-            else
-              gh issue create --title "Broken links" --body-file links-report.md
-            fi
-          elif [ -n "$issue" ]; then
-            gh issue close "$issue" --comment "No broken links in this week's check."
-          fi
+          {
+            echo "# Links to other sites"
+            echo
+            cat links-report.md
+          } >> "$GITHUB_STEP_SUMMARY"
+          cat links-report.md
