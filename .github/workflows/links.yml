@@ -53,4 +53,4 @@ jobs:
             echo
             cat links-report.md
           } >> "$GITHUB_STEP_SUMMARY"
-          echo "$BROKEN broken"
+          cat links-report.md
